@@ -40,30 +40,48 @@ function moneyFormat(value){
  const amount=Number(normalized);return Number.isFinite(amount)&&amount>0?amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'';
 }
 function spatialFields(pages){
- // Use full text items, including fragments that may lie in different PDF.js columns.
- // The value must be explicitly visible; do not infer ages or insured amounts.
+ // Read VALUE CELLS using coordinates; PDF.js sometimes splits digits into separate items.
+ // No spaces are inserted between fragments when extracting numeric fields.
  let edad='',amount='';
+ const debug=[];
  for(const items of pages){
-  const parts=items.filter(i=>typeof i.str==='string'&&i.str.trim())
-   .map(i=>({text:compact(i.str),x:Number(i.transform?.[4]||0),y:Number(i.transform?.[5]||0)}));
-  const sortedY=[...parts].sort((a,b)=>b.y-a.y);
-  function sameLine(part){return sortedY.filter(p=>Math.abs(p.y-part.y)<5).sort((a,b)=>a.x-b.x)}
-  for(const p of sortedY){
-   if(!edad && /^EDAD\s*:?$/i.test(p.text)){
-    const text=sameLine(p).filter(t=>t.x>p.x+15).map(t=>t.text).join(' ');
-    edad=match(text,/(\d{1,3})\s*años?/i);
+  const parts=items.filter(i=>typeof i.str==='string' && i.str.trim())
+   .map(i=>({text:String(i.str),x:Number(i.transform?.[4]||0),y:Number(i.transform?.[5]||0)}));
+  const labels=parts.filter(p=>/^(EDAD|C[ÚU]MULO|CREDITO|CRÉDITO)\s*:?$/i.test(compact(p.text)));
+  function rowOf(p){return parts.filter(t=>Math.abs(t.y-p.y)<4.5).sort((a,b)=>a.x-b.x)}
+  function cell(p){
+   // These auditor reports place values in the right-hand table column.
+   const right=rowOf(p).filter(t=>t.x>p.x+65 && t.x>=205);
+   const raw=right.map(t=>t.text).join('');
+   return {raw,compact:raw.replace(/\s+/g,'')};
+  }
+  for(const label of labels){
+   const name=compact(label.text).toUpperCase();
+   if(name==='EDAD' && !edad){
+    const c=cell(label);debug.push('EDAD cell: '+c.raw);
+    const m=c.compact.match(/(\d{1,3})a[ñn]os?/i);
+    if(m && Number(m[1])>=1 && Number(m[1])<=110)edad=m[1];
    }
-   if(!amount && /^(?:CUMULO|CÚMULO)\s*:?$/i.test(p.text)){
-    const text=sameLine(p).filter(t=>t.x>p.x+30).map(t=>t.text).join(' ');
-    const v=match(text,/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);
-    if(v)amount=moneyFormat(v);
+   if(/^C[ÚU]MULO$/.test(name) && !amount){
+    const c=cell(label);debug.push('CUMULO cell: '+c.raw);
+    const m=c.compact.match(/(\d[\d.,]*[.,]\d{2})USD/i);
+    if(m)amount=moneyFormat(m[1]);
    }
   }
-  const flat=parts.map(p=>p.text).join(' ');
-  if(!edad)edad=match(flat,/(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
-  if(!amount){const v=match(flat,/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);if(v)amount=moneyFormat(v)}
+  // Secondary route: reconstruct full page rows, not disjoint PDF.js fragments.
+  const yy=[];
+  for(const part of parts){let row=yy.find(r=>Math.abs(r.y-part.y)<3.5);if(!row){row={y:part.y,fragments:[]};yy.push(row)}row.fragments.push(part)}
+  for(const row of yy){
+   const full=row.fragments.sort((a,b)=>a.x-b.x).map(p=>p.text).join('').replace(/\s+/g,'');
+   if(!edad){const m=full.match(/EDAD:?([0-9]{1,3})a[ñn]os?/i);if(m)edad=m[1]}
+   if(!amount && /C[ÚU]MULO/i.test(full)){
+    const m=full.match(/(\d[\d.,]*[.,]\d{2})USD/i);if(m)amount=moneyFormat(m[1]);
+   }
+   if(!amount){const m=full.match(/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})USD/i);if(m)amount=moneyFormat(m[1])}
+   if(!edad){const m=full.match(/(?:Hombre|Mujer)de(\d{1,3})a[ñn]os?/i);if(m)edad=m[1]}
+  }
  }
- return {edad,amount};
+ return {edad,amount,debug};
 }
 function spacedSentences(s){
  // Preserve existing paragraphs and enumerated medical requirements. Add one blank line
@@ -72,7 +90,7 @@ function spacedSentences(s){
  t=t.replace(/\b(Ud|Dr|Dra|Sr|Sra|etc)\./gi,'$1§');
  t=t.replace(/(\d)\.(?=\d)/g,'$1¤');
  t=t.replace(/\.\s+(?=[A-ZÁÉÍÓÚÑ])/g,'.\n\n');
- return t.replace(/§/g,'.').replace(/¤/g,'.').replace(/\n{3,}/g,'\n\n');
+ return t.replace(/§/g,'.').replace(/¤/g,'.').replace(/\b(\d+)\.\s*\n+\s*(?=[A-ZÁÉÍÓÚÑ])/g,'$1. ').replace(/\n{3,}/g,'\n\n');
 }
 function parse(raw,file,rows=[],geometry=[]){
  const lines=rows.length?rows.map(compact):raw.split('\n').map(compact);
@@ -80,18 +98,18 @@ function parse(raw,file,rows=[],geometry=[]){
  const lineFor=(re)=>lines.find(v=>re.test(v))||'';
  let cliente=match(lineFor(/^CLIENTE\s+/i),/^CLIENTE\s+(.+)$/i)||match(t,/\bCLIENTE\s+(.+?)\s+CEDULA\b/i);
  const spatial=spatialFields(geometry);
- // Analysis prose provides an independent corroboration of the age on these reports.
+ // Prioritize the reconstructed table cell over raw-text regex fallbacks.
  const ageInAnalysis=match(t,/(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
  const ageFromRows=match(lineFor(/^EDAD\s+/i),/^EDAD\s*[:：]?\s*(\d{1,3})\s*años?/i);
- let edad=ageInAnalysis||spatial.edad||ageFromRows;
+ let edad=spatial.edad||ageInAnalysis||ageFromRows;
  if(edad)edad=edad+' AÑOS';
- const explicitAmounts=[];
- // Examine complete raw text, individual PDF items and reconstructed rows independently.
- for(const txt of [t,...geometry.flat().map(i=>String(i.str||'')),...lines]){
-  const m=txt.match(/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);
-  if(m)explicitAmounts.push(moneyFormat(m[1]));
+ let amount=spatial.amount||'';
+ if(!amount){
+  for(const txt of [t,...geometry.flat().map(i=>String(i.str||'')),...lines]){
+   const m=txt.match(/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);
+   if(m){amount=moneyFormat(m[1]);if(amount)break}
+  }
  }
- let amount=explicitAmounts.find(Boolean)||spatial.amount||'';
  let dictamen=match(lineFor(/^DICTAMEN\s+DEL\s+RIESGO/i),/DICTAMEN\s+DEL\s+RIESGO\s+(.+)/i)||match(t,/DICTAMEN\s+DEL\s+RIESGO\s+(.*?)\s+COMENTARIO\s+INTERNO/i);
  let commentLines=[],collect=false;
  for(let i=0;i<lines.length;i++){
