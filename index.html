@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="icon" type="image/png" href="./FAVICON.png?v=14">
-<title>Dicta | Lectura de informes médicos</title>
+<link rel="icon" type="image/png" href="./FAVICON.png?v=15">
+<title>EXT | Exámenes</title>
 <style>
 :root{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#152e3b;background:#f5f7f8}*{box-sizing:border-box}body{margin:0}header{background:#092b39;color:white;padding:24px max(20px,calc((100vw - 1050px)/2))}header strong{font-size:23px;letter-spacing:-.9px}header span{display:block;font-size:12px;color:#b1cad1;margin-top:3px}main{max-width:1090px;margin:36px auto;padding:0 20px}.intro{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:22px}.intro h1{font-size:29px;letter-spacing:-1px;margin:0 0 8px}.intro p{margin:0;color:#60707a;font-size:14px}.tag{font-size:12px;background:#e4f2ed;color:#207556;padding:8px 12px;border-radius:999px;white-space:nowrap}.drop{border:1.7px dashed #92abb5;background:#fff;border-radius:16px;padding:35px 20px;text-align:center;cursor:pointer;transition:.2s}.drop.drag{border-color:#2e8295;background:#effaff}.drop svg{display:block;margin:auto auto 13px}.drop h2{font-size:16px;margin:0 0 6px}.drop p{font-size:13px;color:#71848c;margin:0 0 19px}button,.btn{cursor:pointer;font:inherit}button{border:0;border-radius:9px;padding:10px 15px;background:#092b39;color:white;font-size:13px;font-weight:600}button:hover{background:#195063}button.outline{background:white;color:#163949;border:1px solid #cddce3}button.outline:hover{background:#f0f6f8}input[type=file]{display:none}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 15px}.toolbar h3{margin:0;font-size:16px}.actions{display:flex;gap:8px;flex-wrap:wrap}.card{border:1px solid #d6e0e4;border-radius:12px;background:white;margin-bottom:18px;overflow:hidden;box-shadow:0 2px 7px #092b3908}.meta{display:flex;justify-content:space-between;align-items:center;background:#f5f9fa;padding:10px 13px;color:#637b86;font-size:11px}.meta .warn{color:#a15c11}.summary{display:grid;grid-template-columns:3.2fr .8fr 1.45fr 1.8fr .8fr;text-align:center}.heading{background:#092e3e;color:white;padding:9px 5px;font-size:12px;font-weight:800;letter-spacing:.3px;border-right:1px solid #40606c}.val{padding:9px 5px;min-height:43px;border-right:1px solid #d3dadd;border-bottom:1px solid #d3dadd;font-size:13px;display:flex;justify-content:center;align-items:center;text-align:center}.val:last-child,.heading:last-child{border-right:0}.val input,.val select{min-width:0;width:100%;border:1px solid transparent;background:transparent;color:inherit;text-align:center;font:inherit;padding:4px}.val input:focus,.val select:focus{border-color:#78b4cc;outline:0;background:white}.risk{font-weight:800}.risk.alto{background:#f7cbd0;color:#9a1425}.risk.moderado{background:#d8edf3;color:#0c4b64}.risk.normal{background:#e4f2e6;color:#126234}.risk.otro{background:#f2e9d7;color:#79500b}.appeal-yes{color:#11804a;font-weight:800}.appeal-no{color:#6a8390}.details{padding:16px 17px}.details label{display:block;font-weight:700;font-size:11px;letter-spacing:.3px;color:#60747d;text-transform:uppercase;margin-bottom:7px}.details textarea{width:100%;resize:vertical;min-height:64px;border:1px solid #d6e0e4;border-radius:8px;background:white;padding:11px 12px;font:13px/1.6 inherit;color:#243944;margin-bottom:13px}.details textarea.appeal{min-height:105px;background:#fff0e6;border-color:#eed2bc}.notice{font-size:12px;color:#6a7c85;border-top:1px solid #e3ebee;padding:11px 17px}.empty{border:1px solid #dde5e8;padding:28px;text-align:center;color:#84939a;border-radius:12px;background:white}.small{font-size:12px;color:#6f818a;margin-top:17px;line-height:1.6}.delete{border:0;background:transparent;color:#8f3c40;padding:5px 8px}.delete:hover{background:#fae9e8}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}@media(max-width:680px){.intro{display:block}.tag{display:inline-block;margin-top:15px}.summary{grid-template-columns:1fr 1fr}.heading{display:none}.val{display:block;min-height:0}.val:before{content:attr(data-label);display:block;font-size:10px;color:#77909b;margin-bottom:5px}.val:first-of-type{grid-column:span 2}.val input,.val select{font-size:12px}.toolbar{align-items:start;flex-direction:column}.drop{padding:28px 15px}}@media print{header,.intro,.drop,.toolbar,.meta button,.small,.notice{display:none!important}body{background:white}main{margin:0;max-width:100%;padding:0}.card{break-inside:avoid;box-shadow:none;border-radius:0;margin-bottom:12px}textarea,input,select{appearance:none!important;border:0!important;resize:none!important}.heading{print-color-adjust:exact;-webkit-print-color-adjust:exact}.risk,.details textarea.appeal{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 
@@ -11,11 +11,11 @@
 .editable-text:focus{border-color:#70b3c7}.editable-text.appeal{background:#fff0e6;border-color:#eed2bc}
 .capture-area .card{margin-bottom:12px;border-radius:0;box-shadow:none}.capture-area .val{font-size:14px;min-height:45px}.capture-details{font-family:Arial,sans-serif;font-size:15px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.capture-comment{padding:14px 12px}.capture-appeal{padding:12px;background:#fae5d9;border:1px solid #d9c7bb}.capture-area .summary{grid-template-columns: 3.2fr .8fr 1.45fr 1.8fr .8fr}
 @media print{body.printing>header,body.printing>main{display:none!important}body.printing>.print-capture{display:block!important;position:static!important}.capture-area .heading,.capture-area .risk,.capture-area .capture-appeal{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
-.brand-logo{max-width:145px;max-height:50px;object-fit:contain;vertical-align:middle;margin-right:12px} .capture-area .val{overflow:visible;overflow-wrap:anywhere;white-space:normal} .capture-area .summary{min-width:0}
+.brand-logo{display:block;max-width:min(300px,85vw);width:auto;max-height:100px;object-fit:contain;margin:0 auto}header{display:flex;align-items:center;justify-content:center;min-height:120px;padding:14px 20px} .capture-area .val{overflow:visible;overflow-wrap:anywhere;white-space:normal} .capture-area .summary{min-width:0}
 </style>
 </head>
 <body>
-<header><img src="./LOGO.png?v=14" alt="Logo DICTA" class="brand-logo" onerror="this.style.display='none'"><strong>DICTA<span style="display:inline;color:#51b9c5">.</span></strong><span>Extractores de informes de auditoría médica · v1.4</span></header>
+<header><img src="./LOGO.png?v=15" alt="EXÁMENES TÉCNICO" class="brand-logo"></header>
 <main><div class="intro"><div><h1>Informes, sin transcribir.</h1><p>Convierte PDF de auditoría médica en fichas listas para revisar, copiar como imagen o imprimir.</p></div><div class="tag">&#9679; Procesamiento local en el navegador</div></div>
 <div id="drop" class="drop" role="button" tabindex="0"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="5" width="36" height="38" rx="9" fill="#e5f3f6"/><path d="M24 31V15m0 0-6 6m6-6 6 6M15 35h18" stroke="#0f6079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Arrastra tus informes PDF aquí</h2><p>También puedes seleccionar varios archivos a la vez</p><button type="button" id="choose">Seleccionar PDFs</button><input id="files" type="file" accept="application/pdf,.pdf" multiple></div>
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
@@ -40,27 +40,28 @@ function moneyFormat(value){
  const amount=Number(normalized);return Number.isFinite(amount)&&amount>0?amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'';
 }
 function spatialFields(pages){
- // Read PDF.js text-items literally before reconstructing lines. Geometry is used only
- // to associate a label with its value on the same horizontal PDF table row.
+ // Use full text items, including fragments that may lie in different PDF.js columns.
+ // The value must be explicitly visible; do not infer ages or insured amounts.
  let edad='',amount='';
  for(const items of pages){
-  const parts=items.filter(i=>typeof i.str==='string' && i.str.trim())
-    .map(i=>({text:compact(i.str),x:i.transform[4],y:i.transform[5]}));
-  function sameLine(part){return parts.filter(p=>Math.abs(p.y-part.y)<3).sort((a,b)=>a.x-b.x)}
-  for(const p of parts){
+  const parts=items.filter(i=>typeof i.str==='string'&&i.str.trim())
+   .map(i=>({text:compact(i.str),x:Number(i.transform?.[4]||0),y:Number(i.transform?.[5]||0)}));
+  const sortedY=[...parts].sort((a,b)=>b.y-a.y);
+  function sameLine(part){return sortedY.filter(p=>Math.abs(p.y-part.y)<5).sort((a,b)=>a.x-b.x)}
+  for(const p of sortedY){
    if(!edad && /^EDAD\s*:?$/i.test(p.text)){
-    const candidate=sameLine(p).filter(t=>t.x>p.x+20).map(t=>t.text).join(' ');
-    edad=match(candidate,/\b(\d{1,3})\s*años?\b/i);
+    const text=sameLine(p).filter(t=>t.x>p.x+15).map(t=>t.text).join(' ');
+    edad=match(text,/(\d{1,3})\s*años?/i);
    }
    if(!amount && /^(?:CUMULO|CÚMULO)\s*:?$/i.test(p.text)){
-    const candidate=sameLine(p).filter(t=>t.x>p.x+20).map(t=>t.text).join(' ');
-    const rawMoney=match(candidate,/(\d[\d.,]*)(?=\s*USD\b)/i);
-    if(rawMoney)amount=moneyFormat(rawMoney);
+    const text=sameLine(p).filter(t=>t.x>p.x+30).map(t=>t.text).join(' ');
+    const v=match(text,/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);
+    if(v)amount=moneyFormat(v);
    }
   }
-  // Last resort for these report templates: value snippets are standalone PDF objects.
-  if(!edad){for(const p of parts){if(/^(\d{1,3})\s*años?$/i.test(p.text)){edad=match(p.text,/^(\d{1,3})\s*años?$/i);break}}}
-  if(!amount){for(const p of parts){if(/^\d[\d.,]*\s+USD\b/i.test(p.text)){amount=moneyFormat(p.text);break}}}
+  const flat=parts.map(p=>p.text).join(' ');
+  if(!edad)edad=match(flat,/(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
+  if(!amount){const v=match(flat,/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);if(v)amount=moneyFormat(v)}
  }
  return {edad,amount};
 }
@@ -79,11 +80,18 @@ function parse(raw,file,rows=[],geometry=[]){
  const lineFor=(re)=>lines.find(v=>re.test(v))||'';
  let cliente=match(lineFor(/^CLIENTE\s+/i),/^CLIENTE\s+(.+)$/i)||match(t,/\bCLIENTE\s+(.+?)\s+CEDULA\b/i);
  const spatial=spatialFields(geometry);
- let edad=spatial.edad||match(lineFor(/^EDAD\s+/i),/^EDAD\s*[:：]?\s*(\d{1,3})\s*años?/i);
- if(!edad)edad=match(t,/\b(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
+ // Analysis prose provides an independent corroboration of the age on these reports.
+ const ageInAnalysis=match(t,/(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
+ const ageFromRows=match(lineFor(/^EDAD\s+/i),/^EDAD\s*[:：]?\s*(\d{1,3})\s*años?/i);
+ let edad=ageInAnalysis||spatial.edad||ageFromRows;
  if(edad)edad=edad+' AÑOS';
- const amtRow=lineFor(/^(?:CUMULO|CÚMULO)\s+TOTAL\b/i)||lineFor(/\d[\d.,]+\s*USD/i);
- let amount=spatial.amount||moneyFormat(match(amtRow,/(\d[\d.,]*)\s*USD/i)||match(t,/(\d[\d.,]*)\s*USD/i));
+ const explicitAmounts=[];
+ // Examine complete raw text, individual PDF items and reconstructed rows independently.
+ for(const txt of [t,...geometry.flat().map(i=>String(i.str||'')),...lines]){
+  const m=txt.match(/(\d{1,3}(?:[.,]\d{3})+[.,]\d{2})\s*USD/i);
+  if(m)explicitAmounts.push(moneyFormat(m[1]));
+ }
+ let amount=explicitAmounts.find(Boolean)||spatial.amount||'';
  let dictamen=match(lineFor(/^DICTAMEN\s+DEL\s+RIESGO/i),/DICTAMEN\s+DEL\s+RIESGO\s+(.+)/i)||match(t,/DICTAMEN\s+DEL\s+RIESGO\s+(.*?)\s+COMENTARIO\s+INTERNO/i);
  let commentLines=[],collect=false;
  for(let i=0;i<lines.length;i++){
@@ -117,7 +125,7 @@ $('#results').addEventListener('input',e=>{let el=e.target.closest('[data-field]
 $('#choose').addEventListener('click',e=>{e.stopPropagation();$('#files').click()});$('#drop').addEventListener('click',()=>$('#files').click());$('#drop').addEventListener('keydown',e=>{if(e.key==='Enter')$('#files').click()});$('#files').addEventListener('change',e=>{load(e.target.files);e.target.value=''});['dragenter','dragover'].forEach(v=>$('#drop').addEventListener(v,e=>{e.preventDefault();$('#drop').classList.add('drag')}));['dragleave','drop'].forEach(v=>$('#drop').addEventListener(v,e=>{e.preventDefault();$('#drop').classList.remove('drag')}));$('#drop').addEventListener('drop',e=>load(e.dataTransfer.files));
 function captureNode(){
  const area=document.createElement('div');area.className='capture-area';
- area.innerHTML=state.map(r=>`<section class="card"><div class="summary"><div class="heading">CLIENTE</div><div class="heading">EDAD</div><div class="heading">CRÉDITO</div><div class="heading">DICTAMEN</div><div class="heading">APELABLE</div><div class="val">${escapeHtml(r.cliente)}</div><div class="val">${escapeHtml(r.edad)}</div><div class="val">${r.amount?`USD. ${escapeHtml(r.amount)}`:"SIN EXTRAER"}</div><div class="val risk ${riskClass(r.dictamen)}">${escapeHtml(r.dictamen)}</div><div class="val">${escapeHtml(r.apelable)}</div></div>${r.comentario?`<div class="capture-details"><div class="capture-comment">${escapeHtml(r.comentario)}</div>${r.apelacion?`<div class="capture-appeal">${escapeHtml(r.apelacion)}</div>`:''}</div>`:''}</section>`).join('');
+ area.innerHTML=state.map(r=>`<section class="card"><div class="summary"><div class="heading">CLIENTE</div><div class="heading">EDAD</div><div class="heading">CRÉDITO</div><div class="heading">DICTAMEN</div><div class="heading">APELABLE</div><div class="val">${escapeHtml(r.cliente)}</div><div class="val">${escapeHtml(r.edad)}</div><div class="val">${r.amount?`USD. ${escapeHtml(r.amount)}`:"SIN EXTRAER"}</div><div class="val risk ${riskClass(r.dictamen)}">${escapeHtml(r.dictamen)}</div><div class="val">${escapeHtml(r.apelable)}</div></div>${r.comentario?`<div class="capture-details"><div class="capture-comment">${escapeHtml(r.comentario)}</div>${r.apelacion && !r.comentario.includes(r.apelacion)?`<div class="capture-appeal">${escapeHtml(r.apelacion)}</div>`:''}</div>`:''}</section>`).join('');
  area.style.cssText='position:fixed;top:0;left:-20000px;width:1050px;background:white;padding:8px;z-index:-1';
  document.body.appendChild(area);return area;
 }
