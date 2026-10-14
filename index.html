@@ -21,19 +21,39 @@ const state=[],$=s=>document.querySelector(s);const escapeHtml=s=>String(s??'').
 function match(text,regex){return (text.match(regex)||[])[1]?.trim()||''}
 function segment(t,start,end){let i=t.search(start);if(i<0)return '';let s=t.slice(i).replace(start,'');let j=s.search(end);return (j>=0?s.slice(0,j):s).trim()}
 function compact(t){return t.replace(/\s+/g,' ').trim()}
-function parse(raw,file){const t=compact(raw);
+function normalizeRisk(value){return compact(value).replace(/\bRIESG\s+O\b/gi,'RIESGO').replace(/\bRIESG\s*O\b/gi,'RIESGO').toUpperCase()}
+function parse(raw,file,rows=[]){const t=compact(raw);
 let cliente=match(t,/\bCLIENTE\s+(.+?)\s+CEDULA\b/i);
-let edad=match(t,/\bEDAD\s+(\d{1,3}\s*años?)/i);
-let credit=match(t,/\bCUMULO\s+TOTAL\s+CREDITO\s+(.+?)\s+FECHA\s+ELABORACION/i);
-let amount=match(credit,/(\d[\d.,]*)\s*USD/i);
+// Prefer values from reconstructed visual rows, not PDF's internal text sequence.
+let edad='';let amount='';
+for(let i=0;i<rows.length;i++){
+ const row=compact(rows[i]);
+ if(!edad&&/\bEDAD\b/i.test(row)&&!/FECHA|ELABORACION|RESULTADOS/i.test(row)){
+  edad=match(row,/\bEDAD\s*[:：]?\s*(\d{1,3}\s*años?)/i)||match(compact((rows[i+1]||'')),/^(\d{1,3}\s*años?)/i);
+ }
+ if(!amount&&(/\bCUMULO\b/i.test(row)||/\bCREDITO\b/i.test(row))){
+  const candidate=rows.slice(i,i+3).join(' ');
+  amount=match(candidate,/(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{2})?)\s*USD/i)||match(candidate,/(\d[\d.,]{4,})\s*USD/i);
+ }
+}
+if(!edad)edad=match(t,/\bEDAD\s*[:：]?\s*(\d{1,3}\s*años?)/i)||match(t,/\b(?:Hombre|Mujer)\s+de\s+(\d{1,3}\s*años?)/i);
+if(!amount)amount=match(t,/(\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{2})?)\s*USD/i);
+// The auditor sometimes writes 350.000.00: display it as USD 350,000.00.
+if(amount){let digits=amount.replace(/\D/g,'');if(digits.length>2){amount=Number(digits.slice(0,-2)+'.'+digits.slice(-2)).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}}
 let dictamen=match(t,/DICTAMEN\s+DEL\s+RIESGO\s+(.*?)\s+COMENTARIO\s+INTERNO/i);
 let comentario=segment(t,/COMENTARIO\s+PARA\s+EL\s+CLIENTE\b/i,/\bAtentamente\b|\bFirmado digitalmente\b/i).replace(/^\s*CLIENTE\b\s*/i,'');
 let analisis=segment(t,/\bANALISIS\s+(?=(?:Hombre|Mujer|Paciente|Varón|Persona)\b)/i,/\bDICTAMEN\s+DEL\s+RIESGO\b/i);
 let apelable=/\b(reconsiderar|reconsideraci[oó]n|reevaluar|reevaluaci[oó]n|apelar|apelaci[oó]n)\b/i.test(comentario)?'SI':comentario?'REVISAR':'N/A';
 let req=match(comentario,/(?:\b1[.)]\s*)?((?:Una|Un|Presentar|Valoraci[oó]n|Certificado|Informe|Examen)\s+.+)$/i);
 let appealText=req|| (apelable==='SI'?comentario:'');
-return {file,cliente,edad,amount,dictamen:dictamen.toUpperCase(),apelable,comentario,apelacion:appealText,analisis,warning:!cliente||!dictamen||!amount};}
-async function load(files){for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let lines=[],prevY=null;for(const it of items){let y=it.transform?.[5]??0;if(prevY!==null&&Math.abs(y-prevY)>3)lines.push('\n');lines.push(it.str,' ');prevY=y}pages.push(lines.join(''))}const raw=pages.join('\n');let record=parse(raw,f.name);if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true})}}render()}
+return {file,cliente,edad,amount,dictamen:normalizeRisk(dictamen),apelable,comentario,apelacion:appealText,analisis,warning:!cliente||!edad||!dictamen||!amount};}
+function rowsFromItems(items){
+ // PDF.js supplies text fragments with baseline coordinates; rebuild physical rows.
+ const groups=[];
+ for(const it of items){const y=it.transform?.[5]??0,x=it.transform?.[4]??0;let group=groups.find(g=>Math.abs(g.y-y)<3);if(!group){group={y,parts:[]};groups.push(group)}group.parts.push({x,text:it.str})}
+ return groups.sort((a,b)=>b.y-a.y).map(g=>g.parts.sort((a,b)=>a.x-b.x).map(v=>v.text).join(' '));
+}
+async function load(files){for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[],allRows=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let rows=rowsFromItems(items);pages.push(rows.join('\n'));allRows.push(...rows)}const raw=pages.join('\n');let record=parse(raw,f.name,allRows);if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true})}}render()}
 function riskClass(r){let d=r.toLowerCase();return d.includes('alto')?'alto':d.includes('moderado')?'moderado':d.includes('normal')||d.includes('bajo')?'normal':'otro'}
 function render(){ $('#counter').textContent=`Resultados (${state.length})`;$('#results').innerHTML=state.length?state.map((r,i)=>`<section class="card" data-index="${i}"><div class="meta"><span>${escapeHtml(r.file)} ${r.warning?'<b class="warn"> • Revisar extracción</b>':''}</span><button class="delete" data-remove="${i}" title="Eliminar registro">✕</button></div><div class="summary"><div class="heading">CLIENTE</div><div class="heading">EDAD</div><div class="heading">CRÉDITO</div><div class="heading">DICTAMEN</div><div class="heading">APELABLE</div><div class="val" data-label="CLIENTE"><input data-field="cliente" value="${escapeHtml(r.cliente)}"></div><div class="val" data-label="EDAD"><input data-field="edad" value="${escapeHtml(r.edad)}"></div><div class="val" data-label="CRÉDITO"><input data-field="amount" value="${escapeHtml(r.amount)}"></div><div class="val risk ${riskClass(r.dictamen)}" data-label="DICTAMEN"><input data-field="dictamen" value="${escapeHtml(r.dictamen)}"></div><div class="val ${r.apelable==='SI'?'appeal-yes':'appeal-no'}" data-label="APELABLE"><select data-field="apelable">${['N/A','SI','NO','REVISAR'].map(v=>`<option ${v===r.apelable?'selected':''}>${v}</option>`).join('')}</select></div></div>${r.comentario||r.apelable==='SI'?`<div class="details"><label>Comentario para el cliente (editable)</label><textarea data-field="comentario">${escapeHtml(r.comentario)}</textarea><label>Requisitos para reconsideración (editable)</label><textarea class="appeal" data-field="apelacion">${escapeHtml(r.apelacion)}</textarea></div>`:''}<div class="notice">Dictamen transcrito del PDF. Confirma datos y apelabilidad antes de comunicar al cliente.</div></section>`).join(''):'<div class="empty">Sube el primer PDF para mostrar sus datos.</div>'}
 $('#results').addEventListener('input',e=>{let el=e.target.closest('[data-field]');if(!el)return;let i=Number(el.closest('[data-index]').dataset.index);state[i][el.dataset.field]=el.value});$('#results').addEventListener('change',e=>{let el=e.target.closest('[data-field]');if(!el)return;let i=Number(el.closest('[data-index]').dataset.index);state[i][el.dataset.field]=el.value});$('#results').addEventListener('click',e=>{let el=e.target.closest('[data-remove]');if(!el)return;state.splice(Number(el.dataset.remove),1);render()});
