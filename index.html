@@ -28,19 +28,47 @@ function match(text,regex){return (text.match(regex)||[])[1]?.trim()||''}
 function segment(t,start,end){let i=t.search(start);if(i<0)return '';let s=t.slice(i).replace(start,'');let j=s.search(end);return (j>=0?s.slice(0,j):s).trim()}
 function compact(t){return t.replace(/\s+/g,' ').trim()}
 function normalizeRisk(value){return compact(value).replace(/\bRIESG\s+O\b/gi,'RIESGO').replace(/\bRIESG\s*O\b/gi,'RIESGO').toUpperCase()}
-function parse(raw,file,rows=[]){
+function moneyFormat(value){
+ const source=String(value||'').replace(/\s/g,'');
+ const n=source.match(/\d[\d.,]*/)?.[0];if(!n)return '';
+ // Medical auditor formats 350.000.00 meaning three hundred fifty thousand.
+ const parts=n.split(/[.,]/);let normalized;
+ if(parts.length>1&&parts.at(-1).length===2)normalized=parts.slice(0,-1).join('')+'.'+parts.at(-1);
+ else normalized=parts.join('');
+ const amount=Number(normalized);return Number.isFinite(amount)&&amount>0?amount.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'';
+}
+function spatialFields(pages){
+ let edad='',amount='';
+ for(const items of pages){
+  const parts=items.filter(it=>typeof it.str==='string'&&it.str.trim()).map(it=>({text:compact(it.str),x:it.transform[4],y:it.transform[5]}));
+  // Keep the field's label and value associated spatially, not via the order PDF.js returns text.
+  const anchor=(re)=>parts.find(p=>re.test(p.text));
+  function nearRight(label,range=10){return parts.filter(p=>p.x>label.x+8&&Math.abs(p.y-label.y)<=range).sort((a,b)=>a.x-b.x).map(p=>p.text).join(' ')}
+  const e=anchor(/^EDAD\s*:?$/i);if(e&&!edad){const next=nearRight(e,8);edad=match(next,/(?:^|\s)(\d{1,3})\s*años?/i)||match(next,/^(\d{1,3})$/)}
+  const c=anchor(/^(?:CUMULO|CÚMULO)\b/i);if(c&&!amount){const next=nearRight(c,9);amount=moneyFormat(match(next,/(\d[\d.,]*)(?=\s*USD)/i)||next)}
+ }
+ return {edad,amount};
+}
+function spacedSentences(s){
+ // Separate sentences visually without splitting decimals, common abbreviations or list numbering.
+ let t=String(s||'').trim();
+ t=t.replace(/\b(Ud|Dr|Dra|Sr|Sra|etc)\./gi,'$1§');
+ t=t.replace(/(\d)\.(?=\d)/g,'$1¤');
+ t=t.replace(/\s*\.\s+(?=[A-ZÁÉÍÓÚÑ1-9])/g,'.\n\n');
+ return t.replace(/§/g,'.').replace(/¤/g,'.').replace(/\n{3,}/g,'\n\n');
+}
+function parse(raw,file,rows=[],geometry=[]){
  const lines=rows.length?rows.map(compact):raw.split('\n').map(compact);
  const t=compact(raw);
  const lineFor=(re)=>lines.find(v=>re.test(v))||'';
  let cliente=match(lineFor(/^CLIENTE\s+/i),/^CLIENTE\s+(.+)$/i)||match(t,/\bCLIENTE\s+(.+?)\s+CEDULA\b/i);
- let edad=match(lineFor(/^EDAD\s+/i),/^EDAD\s*[:：]?\s*(\d{1,3})\s*años?/i);
+ const spatial=spatialFields(geometry);
+ let edad=spatial.edad||match(lineFor(/^EDAD\s+/i),/^EDAD\s*[:：]?\s*(\d{1,3})\s*años?/i);
  if(!edad)edad=match(t,/\b(?:Hombre|Mujer)\s+de\s+(\d{1,3})\s*años?/i);
  if(edad)edad=edad+' AÑOS';
- const amtRow=lineFor(/^CUMULO\s+TOTAL\b/i)||lineFor(/\d[\d.,]+\s*USD/i);
- let amount=match(amtRow,/(\d[\d.,]{3,})\s*USD/i)||match(t,/(\d[\d.,]{3,})\s*USD/i);
- if(amount){const digits=amount.replace(/\D/g,'');if(digits.length>=3){amount=Number(digits.slice(0,-2)+'.'+digits.slice(-2)).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}else amount=''}
+ const amtRow=lineFor(/^(?:CUMULO|CÚMULO)\s+TOTAL\b/i)||lineFor(/\d[\d.,]+\s*USD/i);
+ let amount=spatial.amount||moneyFormat(match(amtRow,/(\d[\d.,]*)\s*USD/i)||match(t,/(\d[\d.,]*)\s*USD/i));
  let dictamen=match(lineFor(/^DICTAMEN\s+DEL\s+RIESGO/i),/DICTAMEN\s+DEL\s+RIESGO\s+(.+)/i)||match(t,/DICTAMEN\s+DEL\s+RIESGO\s+(.*?)\s+COMENTARIO\s+INTERNO/i);
- // Capture comment as a multi-line, complete field. Preserve paragraph breaks.
  let commentLines=[],collect=false;
  for(let i=0;i<lines.length;i++){
    let l=lines[i];
@@ -53,9 +81,9 @@ function parse(raw,file,rows=[]){
    else if(commentLines.length&&commentLines.at(-1)!=='')commentLines.push('');
  }
  let comentario=commentLines.join('\n').replace(/\n{3,}/g,'\n\n').trim();
- // Normalize wrapped sentences but preserve visible paragraph breaks.
  comentario=comentario.replace(/([^.!?:;\n])\n(?=[a-záéíóúüñ])/g,'$1 ').replace(/\n(?=[a-záéíóúüñ])/g,' ');
- const apela= /(?:reconsiderar|reconsideraci[oó]n|reevaluar|reevaluaci[oó]n|apelar|apelaci[oó]n)/i.test(comentario);
+ comentario=spacedSentences(comentario);
+ const apela=/(?:reconsiderar|reconsideraci[oó]n|reevaluar|reevaluaci[oó]n|apelar|apelaci[oó]n)/i.test(comentario);
  let apelable=apela?'SI':comentario?'REVISAR':'N/A';
  let req='';const pos=comentario.search(/(?:^|\n)\s*(?:1[.)]\s*)?(?:Una valoraci[oó]n|Un informe|Presentar|Certificado)/im);
  if(pos>=0)req=comentario.slice(pos).replace(/^\s*1[.)]\s*/,'').trim();
@@ -66,7 +94,7 @@ function rowsFromItems(items){
  for(const it of items){if(!it.str?.trim())continue;const y=it.transform?.[5]??0,x=it.transform?.[4]??0;let group=groups.find(g=>Math.abs(g.y-y)<2.4);if(!group){group={y,parts:[]};groups.push(group)}group.parts.push({x,text:it.str})}
  return groups.sort((a,b)=>b.y-a.y).map(g=>g.parts.sort((a,b)=>a.x-b.x).map(v=>v.text).join(' '));
 }
-async function load(files){for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[],allRows=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let rows=rowsFromItems(items);pages.push(rows.join('\n'));allRows.push(...rows)}const raw=pages.join('\n');let record=parse(raw,f.name,allRows);if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true})}}render()}
+async function load(files){for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[],allRows=[],geometry=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let rows=rowsFromItems(items);geometry.push(items);pages.push(rows.join('\n'));allRows.push(...rows)}const raw=pages.join('\n');let record=parse(raw,f.name,allRows,geometry);if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true})}}render()}
 function riskClass(r){let d=r.toLowerCase();return d.includes('alto')?'alto':d.includes('moderado')?'moderado':d.includes('normal')||d.includes('bajo')?'normal':'otro'}
 function render(){ $('#counter').textContent=`Resultados (${state.length})`;$('#results').innerHTML=state.length?state.map((r,i)=>`<section class="card" data-index="${i}"><div class="meta"><span>${escapeHtml(r.file)} ${r.warning?'<b class="warn"> • Revisar extracción</b>':''}</span><button class="delete" data-remove="${i}" title="Eliminar registro">✕</button></div><div class="summary"><div class="heading">CLIENTE</div><div class="heading">EDAD</div><div class="heading">CRÉDITO</div><div class="heading">DICTAMEN</div><div class="heading">APELABLE</div><div class="val" data-label="CLIENTE"><input data-field="cliente" value="${escapeHtml(r.cliente)}"></div><div class="val" data-label="EDAD"><input data-field="edad" value="${escapeHtml(r.edad)}"></div><div class="val" data-label="CRÉDITO"><input data-field="amount" value="${escapeHtml(r.amount)}"></div><div class="val risk ${riskClass(r.dictamen)}" data-label="DICTAMEN"><input data-field="dictamen" value="${escapeHtml(r.dictamen)}"></div><div class="val ${r.apelable==='SI'?'appeal-yes':'appeal-no'}" data-label="APELABLE"><select data-field="apelable">${['N/A','SI','NO','REVISAR'].map(v=>`<option ${v===r.apelable?'selected':''}>${v}</option>`).join('')}</select></div></div>${r.comentario||r.apelable==='SI'?`<div class="details"><label>Comentario para el cliente (editable)</label><div class="editable-text" contenteditable="true" role="textbox" aria-multiline="true" data-field="comentario">${escapeHtml(r.comentario)}</div><label>Requisitos para reconsideración (editable)</label><div class="editable-text appeal" contenteditable="true" role="textbox" aria-multiline="true" data-field="apelacion">${escapeHtml(r.apelacion)}</div></div>`:''}<div class="notice">Dictamen transcrito del PDF. Confirma datos y apelabilidad antes de comunicar al cliente.</div></section>`).join(''):'<div class="empty">Sube el primer PDF para mostrar sus datos.</div>'}
 $('#results').addEventListener('input',e=>{let el=e.target.closest('[data-field]');if(!el)return;let i=Number(el.closest('[data-index]').dataset.index);state[i][el.dataset.field]=el.isContentEditable?el.innerText:el.value});$('#results').addEventListener('change',e=>{let el=e.target.closest('[data-field]');if(!el)return;let i=Number(el.closest('[data-index]').dataset.index);state[i][el.dataset.field]=el.isContentEditable?el.innerText:el.value});$('#results').addEventListener('click',e=>{let el=e.target.closest('[data-remove]');if(!el)return;state.splice(Number(el.dataset.remove),1);render()});
