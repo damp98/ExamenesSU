@@ -821,6 +821,38 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extKpiView .kt-footnote{font-size:11px;line-height:1.6;color:#8291a6;margin:16px 0 0}
 @media(max-width:950px){#extKpiView .kt-filters{grid-template-columns:repeat(2,minmax(0,1fr))}#extKpiView .kt-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){#extKpiView .kt-panel{padding:16px}#extKpiView .kt-heading{align-items:flex-start;flex-direction:column}#extKpiView .kt-export{width:100%}#extKpiView .kt-filters{grid-template-columns:1fr 1fr}#extKpiView .kt-filters label:nth-child(3){grid-column:1/-1}}
+
+/* EXT 4.9 · Perfiles individuales */
+#extProfileView .pf-grid{display:grid;grid-template-columns:minmax(320px,1fr) minmax(340px,1.1fr);gap:20px;align-items:start;margin-top:22px}
+#extProfileView .pf-right{display:grid;gap:20px}
+#extProfileView .pf-card{background:#fff;border:1px solid #e5eaf1;border-radius:19px;padding:28px;box-shadow:0 5px 22px rgba(31,47,89,.035);min-width:0}
+#extProfileView .pf-card-kicker{font-size:10px;letter-spacing:.16em;font-weight:800;color:#8b99af;margin-bottom:24px}
+#extProfileView .pf-hero{display:flex;gap:19px;align-items:center;min-width:0}
+#extProfileView .pf-avatar{flex:none;width:76px;height:76px;border-radius:22px;background:#1f2f59;color:#fff;display:grid;place-items:center;font-size:25px;font-weight:750;letter-spacing:.04em}
+#extProfileView .pf-person{min-width:0}
+#extProfileView .pf-person h2{font-size:23px!important;line-height:1.2!important;margin:0 0 6px!important;color:#1f2f59!important;font-weight:750!important;overflow-wrap:anywhere}
+#extProfileView .pf-person p{margin:0;color:#75839a;font-size:14px}
+#extProfileView .pf-admin-badge{display:inline-flex;margin-top:10px;padding:5px 10px;border-radius:7px;background:#eaf0fb;color:#1f2f59;font-size:11px;font-weight:750}
+#extProfileView .pf-admin-badge[hidden]{display:none!important}
+#extProfileView .pf-divider{height:1px;background:#edf0f5;margin:26px 0 8px}
+#extProfileView .pf-detail{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:15px 0;border-bottom:1px solid #f0f2f6;font-size:13px}
+#extProfileView .pf-detail:last-child{border-bottom:0;padding-bottom:0}
+#extProfileView .pf-detail span{color:#8390a3}
+#extProfileView .pf-detail strong{font-weight:650;color:#1f2f59;text-align:right;overflow-wrap:anywhere}
+#extProfileView .pf-active{display:flex;align-items:center;gap:7px}
+#extProfileView .pf-dot{width:7px;height:7px;border-radius:50%;background:#36a574;display:inline-block}
+#extProfileView .pf-section-title{margin:0 0 7px!important;font-size:20px!important;color:#1f2f59!important}
+#extProfileView .pf-section-subtitle{margin:0 0 23px;color:#8490a2;font-size:13px;line-height:1.6}
+#extProfileView .pf-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+#extProfileView .pf-stat{padding:18px 12px;border:1px solid #edf0f6;background:#f8fafd;border-radius:12px;display:flex;flex-direction:column;gap:11px}
+#extProfileView .pf-stat span{color:#77869c;font-size:11px;line-height:1.4}
+#extProfileView .pf-stat strong{color:#1f2f59;font-size:28px;font-weight:750;line-height:1}
+#extProfileView .pf-note{display:flex;gap:14px;align-items:flex-start;background:#f8fafd}
+#extProfileView .pf-note-icon{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;background:#e7edf8;color:#1f2f59;font-size:19px}
+#extProfileView .pf-note h3{margin:1px 0 7px;font-size:14px;color:#1f2f59}
+#extProfileView .pf-note p{margin:0;font-size:12px;line-height:1.7;color:#748198}
+@media(max-width:850px){#extProfileView .pf-grid{grid-template-columns:1fr}#extProfileView .pf-card{padding:22px}}
+@media(max-width:450px){#extProfileView .pf-stats{grid-template-columns:1fr}#extProfileView .pf-stat{flex-direction:row;align-items:center;justify-content:space-between}#extProfileView .pf-hero{gap:12px}#extProfileView .pf-avatar{width:60px;height:60px;border-radius:16px;font-size:20px}#extProfileView .pf-person h2{font-size:19px!important}}
 </style>
 </head>
 <body>
@@ -868,7 +900,27 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient" contenteditable="true" role="textbox" aria-label="Editar Client" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct" contenteditable="true" role="textbox" aria-label="Editar Product" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount" contenteditable="true" role="textbox" aria-label="Editar Amount" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm" contenteditable="true" role="textbox" aria-label="Editar Term" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><select id="dsDecision" class="ds-decision" aria-label="Aprobación de riesgo"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
 <div class="ds-response-footer"><button type="button" id="dsCopy" class="ds-primary">Copiar imagen y guardar</button><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div></div>
 </aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
-<section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
+<section id="extProfileView" class="ext-view" hidden>
+  <div class="ext-view-head"><span class="ext-eyebrow">CUENTA · PERSONAL</span><h1>Mi perfil</h1><p>Tu información de acceso y un resumen de tu actividad en EXT.</p></div>
+  <div class="pf-grid">
+    <article class="pf-card pf-identity">
+      <div class="pf-card-kicker">IDENTIDAD PROFESIONAL</div>
+      <div class="pf-hero"><div id="pfAvatar" class="pf-avatar">AM</div><div class="pf-person"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p><span id="pfAdminBadge" class="pf-admin-badge" hidden>✦ Administrador de EXT</span></div></div>
+      <div class="pf-divider"></div>
+      <div class="pf-detail"><span>Nombre completo</span><strong id="pfFullName">—</strong></div>
+      <div class="pf-detail"><span>Usuario</span><strong id="pfUsername">—</strong></div>
+      <div class="pf-detail"><span>Cargo</span><strong id="pfPosition">—</strong></div>
+      <div class="pf-detail"><span>Tipo de cuenta</span><strong id="pfAccountType">—</strong></div>
+      <div class="pf-detail"><span>Estado</span><strong class="pf-active"><span class="pf-dot"></span> Activo</strong></div>
+    </article>
+    <div class="pf-right">
+      <article class="pf-card"><div class="pf-card-kicker">RESUMEN PERSONAL</div><h2 class="pf-section-title">Mi actividad</h2><p class="pf-section-subtitle">Registros guardados en este navegador para tu cuenta.</p>
+        <div class="pf-stats"><div class="pf-stat"><span>Exámenes médicos</span><strong id="pfMedicalCount">0</strong></div><div class="pf-stat"><span>Declaraciones de salud</span><strong id="pfDeclarationCount">0</strong></div><div class="pf-stat"><span>KPI registrados</span><strong id="pfKpiCount">0</strong></div></div>
+      </article>
+      <article class="pf-card pf-note"><div class="pf-note-icon">ⓘ</div><div><h3>Sobre tu cuenta</h3><p>Tu historial y tus indicadores se guardan por usuario en este navegador. La autenticación real y la consulta centralizada de otros suscriptores se incorporarán en una actualización posterior.</p></div></article>
+    </div>
+  </div>
+</section>
 <section id="extKpiView" class="ext-view" hidden>
 <div class="ext-view-head"><span class="ext-eyebrow">GESTIÓN · PERSONAL</span><h1>KPI</h1><p>Seguimiento de los exámenes médicos entregados. Los indicadores y la exportación corresponden exclusivamente a tu usuario y este navegador.</p></div>
 <div class="kt-panel"><div class="kt-heading"><div><h2>Gestión técnica</h2><p>Filtra los registros por fecha de procesamiento y contratante.</p></div><button type="button" id="ktExport" class="kt-export">↓ Descargar Excel (.xlsx)</button></div>
@@ -901,7 +953,7 @@ const USERS=[
  {username:'amendoza',name:'Alexander Mendoza',password:'DaMp.5993',role:'admin',initials:'AM',aliases:['amendoza','alexander mendoza','alexander','am']},
  {username:'jamaguana',name:'Javier Amaguaña',password:'jamaguana2026',role:'operator',initials:'JA',aliases:['jamaguana','javier amaguana','javier amaguaña','javier','ja']},
  {username:'jsampedro',name:'Jonathan Sampedro',password:'jsampedro',role:'operator',initials:'JS',aliases:['jsampedro','jonathan sampedro','jonathan','js']},
- {username:'lbravo',name:'Lady Bravo',password:'lbravo2026',role:'operator',initials:'LB',aliases:['lbravo','lady bravo','lady','lb']}
+ {username:'lbravo',name:'Ladi Bravo',password:'lbravo2026',role:'operator',initials:'LB',aliases:['lbravo','lady bravo','lady','lb']}
 ];
 let currentUser=null;
 let historyEntries=[];
@@ -1165,6 +1217,7 @@ function extNavigate(view){
  document.getElementById('extProfileRole').textContent=currentUser?roleLabel(currentUser.role):'';
  document.querySelector('#appShell').classList.remove('nav-open');
  if(view==='declaraciones')dsRefresh();
+ if(view==='perfil')pfRender();
  window.scrollTo({top:0,behavior:'instant'});
 }
 navButtons.forEach(btn=>btn.addEventListener('click',()=>{
@@ -1406,5 +1459,22 @@ for(const id of ['ktFrom','ktTo','ktContractor'])document.getElementById(id).add
 document.getElementById('ktReset').addEventListener('click',()=>{document.getElementById('ktFrom').value='';document.getElementById('ktTo').value='';document.getElementById('ktContractor').value='';ktRender()});
 document.getElementById('ktExport').addEventListener('click',ktExportExcel);
 const ktPreviousNavigate=extNavigate;extNavigate=function(view){ktPreviousNavigate(view);if(view==='kpi')ktRender()};
+
+
+// EXT 4.9 · Perfil de la sesión actual, sin cambiar el mecanismo de acceso existente.
+const PF_POSITIONS={amendoza:'Suscriptor Senior',jamaguana:'Jefe Técnico',jsampedro:'Suscriptor',lbravo:'Suscriptor'};
+function pfStoredCount(key){try{const data=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(data)?data.length:0}catch{return 0}}
+function pfRender(){
+ if(!currentUser)return;
+ const u=currentUser,admin=u.username==='amendoza';
+ const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
+ put('pfAvatar',u.initials);put('extProfileName',u.name);put('extProfileRole',PF_POSITIONS[u.username]||'Suscriptor');
+ put('pfFullName',u.name);put('pfUsername',u.username);put('pfPosition',PF_POSITIONS[u.username]||'Suscriptor');
+ put('pfAccountType',admin?'Administrador':'Usuario');
+ document.getElementById('pfAdminBadge').hidden=!admin;
+ put('pfMedicalCount',pfStoredCount(historyKey()));
+ put('pfDeclarationCount',pfStoredCount('ext_declaraciones_v1_'+u.username));
+ put('pfKpiCount',pfStoredCount('ext_kpi_medicos_v1_'+u.username));
+}
 
 </script></body></html>
