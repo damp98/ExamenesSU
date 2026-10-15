@@ -209,11 +209,84 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 #appShell .summary .heading{color:var(--ext-brand-blue)!important}
 #appShell .session-avatar{background:var(--ext-brand-blue)!important}
 @media(max-width:750px){.login-brand-image{width:190px;max-height:66px}}
+/* EXT 2.1 — Apple-inspired dashboard. Solo presentación; no modifica lógica. */
+:root{--ext-ink:#1f2f59;--ext-muted:#78859c;--ext-line:#e5eaf2;--ext-canvas:#f5f7fb}
+body.authenticated{background:var(--ext-canvas)!important}
+#appShell{color:var(--ext-ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+#appShell .app-header{height:82px;min-height:82px!important;background:rgba(255,255,255,.88)!important;backdrop-filter:saturate(160%) blur(18px);-webkit-backdrop-filter:saturate(160%) blur(18px);border-bottom:1px solid #e8edf4!important;position:sticky;top:0;z-index:50}
+#appShell .header-inner{min-height:82px;max-width:1530px;padding:0 10px}
+#appShell .brand-logo{max-width:170px!important;width:170px!important;max-height:60px!important}
+#appShell .session-chip{background:#f5f7fc;border-color:#e6ebf4;padding:6px 16px 6px 7px;gap:12px;box-shadow:none}
+#appShell .session-avatar{width:38px;height:38px;box-shadow:0 2px 7px #1f2f5918}
+#appShell .session-meta strong{font-size:12px;letter-spacing:-.2px}
+#appShell .session-meta span{color:#8491a8;font-size:11px}
+#appShell .logout-btn{border-radius:13px!important;padding:12px 19px!important}
+#appShell .menu-trigger{background:#f3f6fb;border:1px solid #e2e9f3;width:44px;height:44px;border-radius:13px}
+#appShell .menu-trigger:hover{background:#e8eef9}
+#appShell main.ext-main{max-width:1530px;margin:0 auto;padding:36px 28px 50px}
+#appShell .ext-layout{grid-template-columns:minmax(0,1fr) 322px;gap:23px;align-items:start}
+#appShell .dashboard-welcome{margin:0 0 29px;align-items:center}
+#appShell .dashboard-welcome h1{font-size:clamp(31px,2.6vw,43px);font-weight:740;letter-spacing:-1.75px;line-height:1.15;margin-bottom:9px}
+#appShell .dashboard-welcome p{font-size:14px;color:#8591a7;letter-spacing:-.05px}
+#appShell .welcome-badge{font-size:10px;letter-spacing:1.1px;color:var(--ext-ink);background:#e9eef8;padding:11px 16px}
+#appShell .contractor-panel{min-height:100px;border-radius:20px!important;padding:20px 22px;gap:16px;margin-bottom:16px;background:#fff}
+#appShell .contractor-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:15px;background:#edf1fa;color:var(--ext-ink);font-size:23px}
+#appShell .contractor-panel label{font-size:10px;letter-spacing:1.15px;margin-bottom:7px}
+#appShell .contractor-panel select{height:45px;background:#fbfcff;border:1px solid #e1e8f2;border-radius:12px;padding:0 14px;color:var(--ext-ink);font-weight:650}
+#appShell .contractor-panel select:focus,#appShell .filter-grid select:focus,#appShell .filter-search:focus{outline:none;border-color:#8d9fc6;box-shadow:0 0 0 3px #1f2f5914}
+#appShell .contractor-panel #exportKpiTop{white-space:nowrap;padding:14px 17px!important}
+#appShell .kpi-row{gap:14px;margin-bottom:17px}
+#appShell .kpi{min-height:121px;border-radius:19px!important;padding:22px 21px!important;background:#fff;transition:transform .18s ease,box-shadow .18s ease}
+#appShell .kpi:hover{transform:translateY(-2px);box-shadow:0 12px 28px #1f2f5912!important}
+#appShell .kpi .k-label{font-size:12px;color:#8290a6;font-weight:650}
+#appShell .kpi .k-value{font-size:37px;font-weight:760;letter-spacing:-1.5px;margin-top:10px;line-height:1}
+#appShell .kpi.red .k-value{color:#c43c56!important}
+#appShell .kpi.amber .k-value{color:#b98129!important}
+#appShell .ext-primary .drop{min-height:155px!important;border:1.5px dashed #bfcbe0!important;border-radius:21px!important;background:linear-gradient(120deg,#fbfcff,#f2f5fb)!important;padding:29px 27px!important;gap:18px;box-shadow:none!important;transition:background .2s,border-color .2s,transform .2s}
+#appShell .ext-primary .drop:hover,#appShell .ext-primary .drop.drag{border-color:#7187b4!important;background:#edf2fc!important}
+#appShell .ext-primary .drop svg{width:52px;height:52px;flex-shrink:0}
+#appShell .ext-primary .drop h2{font-size:17px;font-weight:750;letter-spacing:-.3px;color:var(--ext-ink);margin:0 0 5px}
+#appShell .ext-primary .drop p{font-size:12px;color:#8290a6}
+#appShell .ext-primary .drop #choose{border-radius:13px!important;padding:15px 23px!important;background:var(--ext-ink)!important;box-shadow:0 5px 14px #1f2f591b;font-size:12px}
+#appShell .ext-primary .toolbar{margin:30px 0 16px;gap:16px}
+#appShell .ext-primary .toolbar h3{font-size:22px;font-weight:750;letter-spacing:-.65px}
+#appShell .actions{gap:9px}
+#appShell button.outline{background:#fff!important;border:1px solid #dde5f0!important;color:var(--ext-ink)!important;border-radius:12px!important;box-shadow:0 2px 8px #1f2f5908!important;transition:background .18s,transform .18s}
+#appShell button.outline:hover{background:#f1f4fa!important;transform:translateY(-1px)}
+#appShell .actions button{padding:12px 16px!important;font-size:12px}
+#appShell .ext-primary .card{border-radius:19px!important;padding:16px!important}
+#appShell .ext-primary .summary{background:#f9fafd;border-radius:13px;border-color:#e7ecf3}
+#appShell .ext-primary .summary .heading{background:#f9fafd!important;color:#61718e!important}
+#appShell .ext-primary .details label{color:#637391}
+#appShell .empty{background:#fff;border:1px solid #e5eaf2;border-radius:17px;padding:34px 18px;color:#8996aa;font-size:14px}
+#appShell .ext-sidebar{border-radius:21px!important;padding:24px 19px;top:102px;box-shadow:0 5px 22px #1f2f5909!important}
+#appShell .ext-sidebar h3{font-size:21px;font-weight:750;letter-spacing:-.6px;margin-bottom:17px}
+#appShell .filter-search,#appShell .filter-grid select{border:1px solid #e0e7f0;border-radius:12px;background:#fbfcfe;color:var(--ext-ink);font-size:12px}
+#appShell .filter-search{height:45px;padding:0 14px;margin-bottom:16px}
+#appShell .filter-grid{gap:10px 12px}
+#appShell .filter-grid label{font-size:11px;color:#71809a;font-weight:650}
+#appShell .filter-grid select{height:42px;margin-top:6px;padding:0 9px}
+#appShell .ext-history-list{margin-top:14px;border-top:1px solid #e9edf4;max-height:460px}
+#appShell .history-item{padding:15px 3px;border-color:#edf0f5}
+#appShell .h-title{color:var(--ext-ink);font-size:11px}
+#appShell .h-sub{color:#8795aa;font-size:10px}
+#appShell .h-risk{border-radius:9px}
+#appShell .ext-side-actions{gap:9px;margin-top:15px}
+#appShell .ext-side-actions button{font-size:11px;padding:11px 6px!important}
+#appShell .admin-control{margin-top:18px;padding-top:17px;border-top:1px solid #e9edf4}
+#appShell .admin-control strong{color:var(--ext-ink);font-size:13px}
+#appShell .admin-control small{color:#8290a5;line-height:1.5}
+#appShell .admin-control button{background:var(--ext-ink)!important;border-radius:12px!important;padding:13px 10px!important}
+#appShell .small{color:#8a95a8;font-size:11px;line-height:1.7;margin-top:24px}
+@media(max-width:1120px){#appShell .ext-layout{grid-template-columns:1fr}#appShell .ext-sidebar{position:static}#appShell .ext-history-list{max-height:280px}}
+@media(max-width:700px){#appShell .app-header,#appShell .header-inner{min-height:72px!important;height:72px}#appShell main.ext-main{padding:23px 15px 35px}#appShell .dashboard-welcome{margin-bottom:20px}#appShell .dashboard-welcome h1{font-size:31px}#appShell .kpi-row{gap:10px}#appShell .kpi{min-height:103px;padding:17px!important}#appShell .kpi .k-value{font-size:30px}#appShell .contractor-panel{padding:15px;flex-wrap:wrap}#appShell .contractor-panel .grow{flex-basis:calc(100% - 72px)}#appShell .contractor-panel #exportKpiTop{margin-left:auto}#appShell .ext-primary .drop{min-height:160px!important;padding:20px!important}#appShell .ext-primary .toolbar{align-items:flex-start}#appShell .ext-primary .toolbar h3{font-size:21px}#appShell .ext-sidebar{padding:20px 15px}}
+@media print{#appShell .app-header{position:static!important}#appShell .kpi:hover{transform:none}}
+
 </style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.png" alt="EXT Exámenes"></div>
+<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.PNG" alt="EXT Exámenes"></div>
 <div class="login-split">
 <div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
 <div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
