@@ -327,11 +327,60 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:760px){#appShell{padding-left:0;padding-top:65px}#appShell .ext-nav{transform:translateX(-100%);transition:transform .2s;box-shadow:0 15px 40px #0002}#appShell.nav-open .ext-nav{transform:translateX(0)}#appShell .ext-topbar{left:0;height:65px;padding:0 15px;gap:12px}#appShell .ext-topbar-search input{width:100px}#appShell .ext-topbar-user{min-width:0}#appShell .ext-topbar-user span:last-child{display:none}#appShell .mobile-nav-toggle{display:block;background:#eef3fa;color:#1f2f59;padding:9px 12px}#appShell main.ext-main{padding:22px 14px 40px}#appShell .dashboard-welcome h1{font-size:30px}#appShell .drop{min-height:240px!important}#appShell .contractor-panel{flex-wrap:wrap}#appShell .toolbar{align-items:start}#appShell .kpi-row{grid-template-columns:repeat(2,1fr)}}
 @media print{#appShell{padding:0!important;background:#fff!important}#appShell .ext-nav,#appShell .ext-topbar{display:none!important}#appShell .ext-layout{display:block!important}}
 
+
+/* EXT 2.3 | Apple-inspired refinement: frosted sidebar, subtle controls, restrained hierarchy */
+#appShell{background:radial-gradient(ellipse 65% 52% at 55% 3%,#fff 0%,#f7f9fc 68%,#f0f4fa 100%)!important;--ext-hairline:#e5eaf2;--ext-shadow:0 5px 24px rgba(31,47,89,.045)}
+#appShell .ext-nav{background:linear-gradient(150deg,rgba(249,252,255,.94),rgba(235,243,252,.84))!important;backdrop-filter:blur(30px) saturate(155%);-webkit-backdrop-filter:blur(30px) saturate(155%);border-right:1px solid #e3eaf4!important;padding:22px 15px 24px!important}
+#appShell .ext-nav-logo{height:88px!important;padding:0 13px!important;align-items:flex-start!important}
+#appShell .ext-nav-logo img{max-width:178px!important;max-height:66px!important;width:auto!important;display:block;object-fit:contain}
+#appShell .ext-nav-links{gap:7px!important}
+#appShell button.nav-link,#appShell button.nav-logout{background:transparent!important;color:#314766!important;box-shadow:none!important;border:1px solid transparent!important;font-size:14px!important;font-weight:570!important;letter-spacing:-.2px;border-radius:13px!important;padding:14px 15px!important;gap:14px!important;transition:background .16s,color .16s,transform .16s}
+#appShell button.nav-link svg,#appShell button.nav-logout svg{width:21px;height:21px;flex:0 0 21px}
+#appShell button.nav-link:hover,#appShell button.nav-logout:hover{background:#e9f0fb!important;color:#1f2f59!important;transform:translateX(2px)}
+#appShell button.nav-link.active{background:linear-gradient(110deg,#e2edff,#d8e8fc)!important;color:#1f2f59!important;font-weight:720!important}
+#appShell button.nav-logout{margin-top:auto!important}
+#appShell .ext-topbar{background:rgba(255,255,255,.65)!important;backdrop-filter:blur(22px) saturate(165%)!important;-webkit-backdrop-filter:blur(22px) saturate(165%)!important;border-bottom:1px solid rgba(218,227,240,.8)!important}
+#appShell .ext-topbar-search{background:#eef3f9!important;color:#748aa7!important;padding:11px 16px!important}
+#appShell .ext-topbar-search input{font-family:inherit!important}
+#appShell .ext-topbar-user strong{font-weight:720!important;color:#182b48!important}
+#appShell main.ext-main{padding-top:27px!important}
+#appShell .dashboard-welcome{margin-bottom:20px!important}
+#appShell .dashboard-welcome h1{font-size:clamp(30px,2.6vw,40px)!important;letter-spacing:-1.55px!important;font-weight:740!important}
+#appShell .dashboard-welcome p{color:#8292a8!important}
+#appShell .kpi-row{gap:12px!important;margin-bottom:15px!important}
+#appShell .kpi{background:rgba(255,255,255,.86)!important;border:1px solid var(--ext-hairline)!important;box-shadow:var(--ext-shadow)!important;border-radius:17px!important;min-height:92px!important;transition:transform .18s ease,box-shadow .18s ease!important}
+#appShell .kpi:hover{transform:translateY(-2px);box-shadow:0 10px 28px #1f2f5912!important}
+#appShell .kpi .k-value{font-weight:750!important;font-size:31px!important;letter-spacing:-1px!important}
+#appShell .kpi .k-label{font-size:12px!important;color:#8290a5!important}
+#appShell .drop{background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(239,245,253,.75))!important;border:1.5px dashed #c7d5e9!important;border-radius:20px!important;min-height:265px!important;box-shadow:inset 0 0 0 9px #ffffff7a,0 4px 23px #1f2f5906!important}
+#appShell .drop:hover,#appShell .drop.drag{border-color:#8aa6d3!important;background:linear-gradient(135deg,#fff,#edf3fc)!important}
+#appShell .drop svg{width:64px!important;height:64px!important}
+#appShell .drop h2{font-weight:720!important;letter-spacing:-.35px!important}
+#appShell .drop #choose{border-radius:13px!important;background:linear-gradient(115deg,#1f2f59,#273e70)!important;box-shadow:0 7px 16px #1f2f591c!important;font-weight:680!important}
+#appShell .contractor-panel,#appShell .ext-sidebar,#appShell .card{background:rgba(255,255,255,.93)!important;border:1px solid var(--ext-hairline)!important;box-shadow:var(--ext-shadow)!important;border-radius:18px!important}
+#appShell .contractor-panel{padding:13px 17px!important}
+#appShell .contractor-icon{background:#edf3fb!important;color:#1f2f59!important}
+#appShell .contractor-panel select,#appShell .filter-grid select,#appShell .filter-search{background:#fbfcfe!important;border:1px solid #dce5f1!important;border-radius:11px!important}
+#appShell .toolbar h3{font-size:23px!important;font-weight:740!important;letter-spacing:-.65px!important}
+#appShell .actions button,#appShell .ext-side-actions button,#appShell #exportKpiTop{border-radius:12px!important;box-shadow:0 2px 7px #1f2f5908!important}
+#appShell .actions #image{background:linear-gradient(115deg,#1f2f59,#293f70)!important;box-shadow:0 6px 15px #1f2f5918!important}
+#appShell .ext-sidebar{padding:23px 19px!important}
+#appShell .ext-sidebar h3{font-weight:740!important;letter-spacing:-.5px!important}
+#appShell .history-item{border-top:1px solid #edf1f7!important;padding:14px 7px!important}
+#appShell .history-open{background:transparent!important;color:#1f2f59!important}
+#appShell .h-title{font-weight:720!important}
+#appShell .summary{border-color:#dfe7f1!important}
+#appShell .ext-primary .summary .heading{background:#1f2f59!important;color:#fff!important}
+#appShell .editable-text{border-color:#e2e9f2!important}
+#appShell button:focus-visible,#appShell input:focus-visible,#appShell select:focus-visible{outline:3px solid #b6c9ea!important;outline-offset:2px}
+@media(max-width:760px){#appShell .ext-nav{box-shadow:12px 0 45px #1f2f5920!important}}
+@media(prefers-reduced-motion:reduce){#appShell .kpi,#appShell .nav-link{transition:none!important}}
+
 </style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.PNG" alt="EXT Exámenes"></div>
+<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.png" alt="EXT Exámenes"></div>
 <div class="login-split">
 <div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
 <div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
@@ -343,7 +392,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="login-divider"><span>o</span></div><div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span><strong>Sistema de acceso interno</strong><small>Acceso exclusivo para usuarios autorizados.</small></span></div>
 </div></div></div><div class="login-footer"><span>♙ &nbsp; Acceso restringido<br><small>Uso interno · EXT Exámenes</small></span><span>EXT v2.0<br><small>Exámenes</small></span></div></section>
 <div id="appShell" hidden>
-<nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.PNG" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio">⌂ <span>Inicio</span></button><button type="button" class="nav-link" data-nav="historial">◷ <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi">▥ <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil">♙ <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout">↪ <span>Cerrar sesión</span></button></nav>
+<nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
 <div class="ext-topbar"><div class="ext-topbar-search">⌕ <input type="search" id="globalSearch" placeholder="Buscar en historial..." aria-label="Buscar en historial"></div><div class="ext-topbar-user"><span class="ext-top-avatar" id="topAvatar">AM</span><span><strong id="topName">Usuario</strong><small id="topRole">Suscriptor</small></span></div><button type="button" id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Abrir navegación">☰</button></div>
 <header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
 <main class="ext-main"><div class="ext-layout"><div class="ext-primary">
