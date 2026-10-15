@@ -517,6 +517,37 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell .ext-nav button.nav-logout{margin-top:auto!important;font-weight:520!important}
 #appShell .ext-nav button.nav-logout:focus-visible,#appShell .ext-nav button.nav-link:focus-visible{outline:2px solid #7185b5!important;outline-offset:2px!important}
 
+/* EXT 3.0 — navegación modular y declaraciones */
+#appShell .ext-submenu{display:grid;gap:2px;margin:0 0 5px 22px;padding-left:12px;border-left:1px solid #dce6f3}
+#appShell .ext-submenu[hidden]{display:none!important}
+#appShell .ext-nav button.ext-subitem{display:flex;align-items:center;gap:10px;min-height:39px;width:100%;padding:9px 10px!important;text-align:left;background:transparent!important;color:#526481!important;border:0!important;box-shadow:none!important;font-size:12px!important;font-weight:520!important;border-radius:10px!important}
+#appShell .ext-nav button.ext-subitem.active{background:#e3efff!important;color:#1f2f59!important;font-weight:740!important}
+#appShell .ext-nav button.ext-subitem:hover{background:#edf3fb!important}
+.sub-dot{width:6px;height:6px;background:#8ba0bf;border-radius:50%;flex-shrink:0}
+#appShell .ext-nav button.nav-link.parent-open:not(.active){color:#1f2f59!important}
+#appShell .ext-view[hidden]{display:none!important}
+#appShell .ext-view:not(#extMedicalView){max-width:1450px;margin:auto;padding:35px 34px 60px}
+.ext-view-head{margin:5px 0 27px}.ext-eyebrow{font-size:10px;letter-spacing:2px;color:#6b7e9c;font-weight:800}
+.ext-view-head h1{font-size:clamp(28px,3vw,39px);letter-spacing:-1.4px;margin:9px 0 7px;color:#1f2f59}.ext-view-head p{color:#8290a5;font-size:14px;margin:0}
+.ext-module-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;max-width:900px}
+#appShell button.ext-module-card{display:flex;align-items:flex-start;flex-direction:column;text-align:left;gap:13px;padding:27px!important;background:white!important;color:#1f2f59!important;border:1px solid #e4eaf3!important;border-radius:20px!important;box-shadow:0 6px 25px #1f2f5909!important}
+#appShell button.ext-module-card:hover{background:#f9fbff!important;border-color:#becde4!important}
+.ext-module-card strong{font-size:20px}.ext-module-card small{font-size:13px;color:#8290a5;line-height:1.5}.ext-module-arrow{font-size:12px;color:#415e94;font-weight:700;margin-top:8px}.ext-module-icon{display:grid;place-items:center;background:#eaf1fc;border-radius:13px;width:49px;height:49px;font-size:23px}
+.ds-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(310px,.8fr);gap:20px;align-items:start}.ds-main,.ds-side{display:grid;gap:18px;min-width:0}
+.ds-card{background:#fff;border:1px solid #e5ebf3;border-radius:20px;padding:24px;box-shadow:0 5px 22px #1f2f5909;min-width:0}.ds-card-title{display:flex;align-items:center;gap:13px;margin-bottom:20px}.ds-step{width:39px;height:39px;display:grid;place-items:center;flex-shrink:0;border-radius:12px;background:#eaf1fc;color:#1f2f59;font-size:12px;font-weight:800}.ds-card h2{font-size:17px;letter-spacing:-.3px;color:#1f2f59;margin:0 0 4px}.ds-card-title p{font-size:12px;color:#8a98ab;margin:0}
+.ds-paste{display:block;width:100%;min-height:185px;resize:vertical;background:#f9fbff;border:1px solid #dfe7f2;border-radius:13px;padding:17px;color:#1f2f59;font:13px/1.9 ui-monospace,SFMono-Regular,Consolas,monospace;outline:0}
+.ds-paste:focus,.ds-fields input:focus,.ds-fields select:focus{border-color:#8fa7cd;box-shadow:0 0 0 3px #1f2f5910;outline:0}
+.ds-input-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:17px}
+#appShell button.ds-primary{background:#1f2f59!important;color:white!important;border-radius:11px!important;padding:12px 18px!important}
+#appShell button.ds-quiet{background:#eef2f9!important;color:#1f2f59!important;border-radius:11px!important;padding:12px 18px!important}
+#dsMessage{font-size:12px;color:#567294}
+.ds-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.ds-fields label{font-size:11px;font-weight:700;color:#687b97;display:grid;gap:7px}.ds-fields .ds-full{grid-column:1/-1}.ds-fields input,.ds-fields select{min-width:0;width:100%;height:45px;padding:0 12px;border:1px solid #dfe7f2;border-radius:10px;background:#fcfdff;color:#1f2f59;font:13px inherit}.ds-fields input[readonly]{background:#f2f5fa}
+.ds-capture{border:1px solid #dce5f0;border-radius:12px;overflow:hidden;background:white;font-family:Arial,sans-serif}.ds-capture-head{background:#1f2f59;color:white;font-size:12px;font-weight:800;letter-spacing:1px;padding:16px;text-align:center}
+.ds-capture-row{display:grid;grid-template-columns:40% 60%;border-top:1px solid #e7edf4;font-size:12px;min-height:48px;align-items:stretch}.ds-capture-row>span{background:#f6f8fc;padding:14px 12px;color:#65748b;font-weight:700}.ds-capture-row>strong{padding:14px 12px;color:#1f2f59;overflow-wrap:anywhere;font-weight:650;display:flex;align-items:center}.ds-status{color:#718096!important}.ds-status.aprobado{background:#e5f5eb;color:#177547!important}.ds-status.negado{background:#fde8eb;color:#b42c41!important}.ds-status.revision{background:#fff3d7;color:#926209!important}
+.ds-help{font-size:11px;line-height:1.6;color:#8995a8;margin:14px 0 0}.ds-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:15px}.ds-stats>div{background:#f6f8fc;border-radius:10px;padding:11px 5px;text-align:center}.ds-stats strong{display:block;font-size:20px;color:#1f2f59}.ds-stats small{font-size:10px;color:#8190a6}.ds-history{max-height:380px;overflow:auto}.ds-history-entry{display:flex;align-items:center;gap:8px;padding:11px 0;border-top:1px solid #edf1f6}.ds-history-entry button{flex:1;text-align:left;background:transparent!important;color:#1f2f59!important;padding:4px!important;font-size:12px!important;min-width:0;overflow-wrap:anywhere}.ds-history-entry small{display:block;color:#8b99aa;font-size:10px;margin-top:4px}.ds-history-entry .ds-delete{flex:0 0 auto;color:#a83a4c!important}
+@media(max-width:1100px){.ds-layout{grid-template-columns:1fr}}
+@media(max-width:700px){#appShell .ext-view:not(#extMedicalView){padding:22px 15px 35px}.ext-module-grid{grid-template-columns:1fr}.ds-card{padding:17px}.ds-fields{grid-template-columns:1fr}.ds-fields .ds-full{grid-column:auto}}
+@media print{#extWelcome,#extDeclarationsView,#extProfileView,#extHistoryView,#extKpiView{display:none!important}}
 </style>
 </head>
 <body>
@@ -533,16 +564,39 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="login-divider"><span>o</span></div><div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span><strong>Sistema de acceso interno</strong><small>Acceso exclusivo para usuarios autorizados.</small></span></div>
 </div></div></div><div class="login-footer"><span>♙ &nbsp; Acceso restringido<br><small>Uso interno · EXT Exámenes</small></span><span>EXT v2.0<br><small>Exámenes</small></span></div></section>
 <div id="appShell" hidden>
-<nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
+<nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><div class="ext-submenu" id="extSubmenu">
+<button type="button" class="ext-subitem" data-nav="examenes"><span class="sub-dot"></span>Exámenes Médicos</button>
+<button type="button" class="ext-subitem" data-nav="declaraciones"><span class="sub-dot"></span>Declaraciones de Salud</button>
+</div><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
 <div class="ext-topbar"><div class="ext-topbar-search">⌕ <input type="search" id="globalSearch" placeholder="Buscar en historial..." aria-label="Buscar en historial"></div><div class="ext-topbar-user"><span class="ext-top-avatar" id="topAvatar">AM</span><span><strong id="topName">Usuario</strong><small id="topRole">Suscriptor</small></span></div><button type="button" id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Abrir navegación">☰</button></div>
 <header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
-<main class="ext-main"><div class="ext-layout"><div class="ext-primary">
+<section id="extWelcome" class="ext-view">
+<div class="ext-view-head"><span class="ext-eyebrow">ESPACIO DE TRABAJO</span><h1>Bienvenido a EXT, <span id="extWelcomeName">Usuario</span></h1><p>Selecciona el módulo con el que deseas trabajar.</p></div>
+<div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><span class="ext-module-icon">✚</span><strong>Exámenes Médicos</strong><small>Procesamiento de informes PDF y dictámenes médicos.</small><span class="ext-module-arrow">Abrir módulo →</span></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><span class="ext-module-icon">▤</span><strong>Declaraciones de Salud</strong><small>Respuestas a solicitudes comerciales y aprobaciones de riesgo.</small><span class="ext-module-arrow">Abrir módulo →</span></button></div></section>
+<section id="extMedicalView" class="ext-view" hidden><main class="ext-main"><div class="ext-layout"><div class="ext-primary">
 <div class="dashboard-welcome"><div><h1>Hola, <span id="welcomeName">bienvenido</span></h1><p>Sube tus exámenes médicos y genera los cuadros automáticamente.</p></div><span class="welcome-badge">EXT · EXÁMENES</span></div><div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
 <div class="kpi-row" id="kpiRow"><div class="kpi"><div class="k-label">Procesados</div><div class="k-value">0</div></div><div class="kpi red"><div class="k-label">Riesgo alto</div><div class="k-value">0</div></div><div class="kpi amber"><div class="k-label">Riesgo moderado</div><div class="k-value">0</div></div><div class="kpi"><div class="k-label">Por revisar</div><div class="k-value">0</div></div></div>
 <div id="drop" class="drop" role="button" tabindex="0"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="5" width="36" height="38" rx="9" fill="#e5f3f6"/><path d="M24 31V15m0 0-6 6m6-6 6 6M15 35h18" stroke="#0f6079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Arrastra tus informes PDF aquí</h2><p>También puedes seleccionar varios archivos a la vez</p><button type="button" id="choose">Seleccionar PDFs</button><input id="files" type="file" accept="application/pdf,.pdf" multiple></div>
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
 <div id="results"><div class="empty">Sube el primer PDF para mostrar sus datos.</div></div>
-</div><aside class="ext-sidebar"><h3>Historial</h3><input class="filter-search" id="sideSearch" placeholder="Buscar cliente o archivo…" aria-label="Buscar historial"><div class="filter-grid"><label>Dictamen<select id="filterRisk"><option value="">Todos</option><option value="ALTO">Riesgo alto</option><option value="MODERADO">Riesgo moderado</option><option value="NORMAL">Normal / bajo</option><option value="REVISAR">Por revisar</option></select></label><label>Contratante<select id="filterContractor"><option value="">Todos</option></select></label><label>Usuario<select id="filterUser"><option value="">Todos</option></select></label><label>Fecha<select id="filterDate"><option value="">Todas</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label></div><div id="sideHistoryList" class="ext-history-list"></div><div class="ext-side-actions"><button class="outline" id="exportKpiSide">Descargar KPI</button><button class="outline" id="clearFilters">Limpiar filtros</button></div><div id="adminControl" class="admin-control" hidden><strong>Panel de control</strong><small>Acceso reservado al administrador. Los datos y exportaciones actuales corresponden a este navegador.</small><button id="adminExport">Descargar reporte administrativo</button></div></aside></div><p class="small"><b>Importante:</b> La aplicación no emite decisiones médicas ni calcula riesgos. Copia el dictamen textual del informe. “Apelable” es una sugerencia basada en la existencia de requisitos explícitos de reconsideración y debe confirmarla el suscriptor. Para PDF escaneado sin capa de texto se necesitaría OCR. El texto de condiciones que no figure en el documento no se añadirá automáticamente.</p></main></div>
+</div><aside class="ext-sidebar"><h3>Historial</h3><input class="filter-search" id="sideSearch" placeholder="Buscar cliente o archivo…" aria-label="Buscar historial"><div class="filter-grid"><label>Dictamen<select id="filterRisk"><option value="">Todos</option><option value="ALTO">Riesgo alto</option><option value="MODERADO">Riesgo moderado</option><option value="NORMAL">Normal / bajo</option><option value="REVISAR">Por revisar</option></select></label><label>Contratante<select id="filterContractor"><option value="">Todos</option></select></label><label>Usuario<select id="filterUser"><option value="">Todos</option></select></label><label>Fecha<select id="filterDate"><option value="">Todas</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label></div><div id="sideHistoryList" class="ext-history-list"></div><div class="ext-side-actions"><button class="outline" id="exportKpiSide">Descargar KPI</button><button class="outline" id="clearFilters">Limpiar filtros</button></div><div id="adminControl" class="admin-control" hidden><strong>Panel de control</strong><small>Acceso reservado al administrador. Los datos y exportaciones actuales corresponden a este navegador.</small><button id="adminExport">Descargar reporte administrativo</button></div></aside></div><p class="small"><b>Importante:</b> La aplicación no emite decisiones médicas ni calcula riesgos. Copia el dictamen textual del informe. “Apelable” es una sugerencia basada en la existencia de requisitos explícitos de reconsideración y debe confirmarla el suscriptor. Para PDF escaneado sin capa de texto se necesitaría OCR. El texto de condiciones que no figure en el documento no se añadirá automáticamente.</p></main></section>
+<section id="extDeclarationsView" class="ext-view" hidden>
+<div class="ext-view-head"><span class="ext-eyebrow">MÓDULO · SUSCRIPCIÓN</span><h1>Declaraciones de Salud</h1><p>Transforma la solicitud comercial en una respuesta clara, editable y lista para copiar.</p></div>
+<div class="ds-layout"><div class="ds-main">
+<div class="ds-card ds-input-card"><div class="ds-card-title"><span class="ds-step">01</span><div><h2>Solicitud comercial</h2><p>Pega el texto recibido con los cuatro campos.</p></div></div>
+<textarea id="dsPaste" class="ds-paste" spellcheck="false" placeholder="Nombre del cliente: ...&#10;Producto: ...&#10;Monto: ...&#10;Plazo: ..."></textarea>
+<div class="ds-input-actions"><button type="button" id="dsExtract" class="ds-primary">Extraer información <span>→</span></button><button type="button" id="dsClear" class="ds-quiet">Limpiar</button><span id="dsMessage" role="status"></span></div></div>
+<div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Revisión y dictamen</h2><p>Confirma los datos y selecciona la decisión técnica.</p></div></div>
+<div class="ds-fields"><label class="ds-full">Nombre del cliente<input id="dsClient" placeholder="Nombre del cliente"></label><label>Producto<input id="dsProduct" placeholder="Producto"></label><label>Monto<input id="dsAmount" placeholder="$0"></label><label>Plazo<input id="dsTerm" placeholder="0 meses"></label><label>Persona que aprueba<input id="dsApprover" readonly></label><label class="ds-full">Aprobación de riesgo<select id="dsDecision"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></label></div>
+<div class="ds-input-actions"><button type="button" id="dsSave" class="ds-primary">Guardar declaración</button><button type="button" id="dsCopy" class="ds-quiet">Copiar como imagen</button></div></div></div>
+<aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">03</span><div><h2>Vista previa</h2><p>Así se verá la imagen de respuesta.</p></div></div>
+<div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><strong id="dsPreviewDecision" class="ds-status">Pendiente</strong></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
+<p class="ds-help">El dictamen lo selecciona el suscriptor. EXT no decide automáticamente si un riesgo se aprueba.</p></div>
+<div class="ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></aside></div></section>
+<section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
+<section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
+<section id="extHistoryView" class="ext-view" hidden><div class="ext-view-head"><h1>Historial</h1><p>Los registros se mantienen independientes por módulo.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta los informes procesados en el panel de Exámenes Médicos.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta y recupera tus declaraciones guardadas.</small></button></div></section>
+</div>
 <div class="logout-modal" id="logoutModal" hidden>
  <section class="logout-dialog" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutMessage">
   <div class="logout-symbol" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a3 3 0 013 3v12a3 3 0 01-3 3h-6"/></svg></div>
@@ -810,19 +864,109 @@ for(const u of USERS){const o=document.createElement('option');o.value=u.name;o.
 
 // EXT 2.2 navigation uses existing panels and data; no new server dependencies.
 const navButtons=document.querySelectorAll('#appShell [data-nav]');
-navButtons.forEach(btn=>btn.addEventListener('click',()=>{
- navButtons.forEach(b=>b.classList.toggle('active',b===btn));
+let extCurrentView='inicio';
+const extViews={inicio:'extWelcome',examenes:'extMedicalView',declaraciones:'extDeclarationsView',historial:'extHistoryView',kpi:'extKpiView',perfil:'extProfileView'};
+const extSubmenu=document.getElementById('extSubmenu');
+function extNavigate(view){
+ if(!extViews[view])return;
+ extCurrentView=view;
+ Object.entries(extViews).forEach(([key,id])=>document.getElementById(id).hidden=key!==view);
+ navButtons.forEach(b=>b.classList.toggle('active',b.dataset.nav===view));
+ const home=document.querySelector('[data-nav="inicio"]');
+ home.classList.toggle('parent-open',view==='examenes'||view==='declaraciones');
+ if(view==='examenes'||view==='declaraciones')extSubmenu.hidden=false;
+ document.getElementById('extWelcomeName').textContent=currentUser?.name?.split(' ')[0]||'Usuario';
+ document.getElementById('extProfileName').textContent=currentUser?.name||'Usuario';
+ document.getElementById('extProfileRole').textContent=currentUser?roleLabel(currentUser.role):'';
  document.querySelector('#appShell').classList.remove('nav-open');
- const action=btn.dataset.nav;
- if(action==='historial'){document.querySelector('.ext-sidebar')?.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('#sideSearch')?.focus({preventScroll:true});}
- else if(action==='kpi'){document.querySelector('#kpiRow')?.scrollIntoView({behavior:'smooth',block:'center'});}
- else if(action==='perfil'){document.querySelector('#sessionChip')?.scrollIntoView({behavior:'smooth'});alert('Perfil: '+(currentUser?.name||'Usuario')+' · '+roleLabel(currentUser?.role));}
- else window.scrollTo({top:0,behavior:'smooth'});
+ if(view==='declaraciones')dsRefresh();
+ window.scrollTo({top:0,behavior:'instant'});
+}
+navButtons.forEach(btn=>btn.addEventListener('click',()=>{
+ if(btn.dataset.nav==='inicio'){
+   extSubmenu.hidden=!extSubmenu.hidden;
+   extNavigate('inicio');
+ }else extNavigate(btn.dataset.nav);
 }));
+document.querySelectorAll('[data-open-module]').forEach(b=>b.addEventListener('click',()=>extNavigate(b.dataset.openModule)));
 document.querySelector('#navLogout')?.addEventListener('click',()=>document.querySelector('#logoutBtn')?.click());
 document.querySelector('#mobileNavToggle')?.addEventListener('click',()=>document.querySelector('#appShell')?.classList.toggle('nav-open'));
 document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=document.querySelector('#sideSearch');if(el){el.value=e.target.value;el.dispatchEvent(new Event('input',{bubbles:true}));}});
 const originalApplySession=applySession;
-applySession=function(){originalApplySession();if(currentUser){document.querySelector('#topAvatar').textContent=currentUser.initials;document.querySelector('#topName').textContent=currentUser.name;document.querySelector('#topRole').textContent=roleLabel(currentUser.role);}};
+applySession=function(){originalApplySession();if(currentUser){document.querySelector('#topAvatar').textContent=currentUser.initials;document.querySelector('#topName').textContent=currentUser.name;document.querySelector('#topRole').textContent=roleLabel(currentUser.role);extNavigate('inicio');}};
 
+
+// EXT 3.0: declaraciones guardadas en una clave independiente por usuario, sin PDF ni servicios externos.
+const dsIds=['Client','Product','Amount','Term','Decision','Approver'];
+const dsEl=id=>document.getElementById('ds'+id);
+function dsKey(){return 'ext_declaraciones_v1_'+(currentUser?.username||'sin_sesion')}
+function dsRecords(){try{return JSON.parse(localStorage.getItem(dsKey())||'[]')}catch{return []}}
+function dsStore(records){try{localStorage.setItem(dsKey(),JSON.stringify(records));return true}catch{return false}}
+function dsExtract(){
+ const raw=dsEl('Paste').value.replace(/\r/g,'');
+ const labels={'Client':'Nombre del cliente','Product':'Producto','Amount':'Monto','Term':'Plazo'};
+ const found={};
+ const lines=raw.split('\n');
+ for(const [field,label] of Object.entries(labels)){
+   const pattern=new RegExp('^\\s*'+label+'\\s*:\\s*(.*?)\\s*$','i');
+   const line=lines.find(l=>pattern.test(l));
+   found[field]=line?(line.match(pattern)?.[1]||'').replace(/\s+/g,' ').trim():'';
+ }
+ const missing=Object.keys(labels).filter(k=>!found[k]);
+ if(missing.length){dsEl('Message').textContent='Faltan campos: '+missing.map(k=>labels[k]).join(', ');return}
+ for(const key of Object.keys(labels))dsEl(key).value=found[key];
+ dsEl('Decision').value='';
+ dsEl('Message').textContent='Los cuatro campos se extrajeron correctamente.';
+ dsRefresh();
+}
+function dsRefresh(){
+ dsEl('Approver').value=currentUser?.name||'';
+ for(const key of ['Client','Product','Amount','Term','Approver'])
+  dsEl('Preview'+key).textContent=dsEl(key).value.trim()||'—';
+ const decision=dsEl('Decision').value;
+ const status=dsEl('PreviewDecision');
+ status.textContent=decision||'Pendiente';
+ status.className='ds-status '+(decision==='Aprobado'?'aprobado':decision==='Negado'?'negado':decision==='Revisión Médica'?'revision':'');
+ const records=dsRecords();
+ for(const [id,value] of [['Count',records.length],['Approved',records.filter(r=>r.decision==='Aprobado').length],['Denied',records.filter(r=>r.decision==='Negado').length],['Review',records.filter(r=>r.decision==='Revisión Médica').length]])
+  dsEl(id).textContent=value;
+ const history=dsEl('History');history.replaceChildren();
+ if(!records.length){const p=document.createElement('p');p.className='ds-help';p.textContent='Todavía no hay declaraciones guardadas.';history.append(p)}
+ records.forEach(r=>{
+  const line=document.createElement('div');line.className='ds-history-entry';
+  const open=document.createElement('button');open.type='button';open.textContent=r.client||'Sin nombre';
+  const sub=document.createElement('small');sub.textContent=new Date(r.date).toLocaleString('es-EC')+' · '+r.decision;open.append(sub);
+  open.onclick=()=>{for(const key of ['Client','Product','Amount','Term'])dsEl(key).value=r[key.toLowerCase()]||'';dsEl('Decision').value=r.decision;dsEl('Message').textContent='Declaración recuperada del historial.';dsRefresh()};
+  const del=document.createElement('button');del.type='button';del.className='ds-delete';del.textContent='✕';del.title='Eliminar registro';del.onclick=()=>{if(confirm('¿Eliminar esta declaración del historial?')){dsStore(dsRecords().filter(x=>x.id!==r.id));dsRefresh()}};
+  line.append(open,del);history.append(line);
+ });
+}
+function dsData(){return {client:dsEl('Client').value.trim(),product:dsEl('Product').value.trim(),amount:dsEl('Amount').value.trim(),term:dsEl('Term').value.trim(),decision:dsEl('Decision').value,approver:currentUser?.name||''}}
+dsEl('Extract').addEventListener('click',dsExtract);
+for(const key of dsIds)dsEl(key).addEventListener('input',dsRefresh);
+dsEl('Save').addEventListener('click',()=>{
+ const r=dsData();
+ if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa los cuatro campos y selecciona un dictamen.';return}
+ const records=dsRecords();records.unshift({...r,id:Date.now()+'-'+Math.random().toString(36).slice(2),date:new Date().toISOString()});
+ if(dsStore(records)){dsEl('Message').textContent='Declaración guardada en este navegador.';dsRefresh()}else dsEl('Message').textContent='No se pudo guardar: almacenamiento local no disponible.';
+});
+dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';for(const key of ['Client','Product','Amount','Term','Decision'])dsEl(key).value='';dsEl('Message').textContent='';dsRefresh()});
+dsEl('Copy').addEventListener('click',async()=>{
+ const r=dsData();if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa la solicitud y selecciona el dictamen antes de copiar.';return}
+ const target=dsEl('Capture');
+ try{
+  if(typeof html2canvas!=='function')throw Error('No se cargó el generador de imágenes.');
+  const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('No se pudo crear la imagen.');
+  if(navigator.clipboard?.write&&window.ClipboardItem){
+   await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+   dsEl('Message').textContent='Imagen copiada. Puedes pegarla en tu respuesta.';
+  }else throw Error('El navegador no permite copiar imágenes aquí.');
+ }catch(err){
+  dsEl('Message').textContent='No se pudo copiar automáticamente. Se descargará un PNG.';
+  try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click()}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
+ }
+});
+dsRefresh();
 </script></body></html>
