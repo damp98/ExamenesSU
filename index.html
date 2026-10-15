@@ -770,7 +770,29 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell .eh-delete{background:transparent!important;border:0!important;color:#b04b5d!important;font-size:22px!important;box-shadow:none!important;padding:4px 9px!important}
 #appShell .eh-empty{padding:40px 15px;text-align:center;color:#8392a8;font-size:13px}
 @media(max-width:850px){#appShell .eh-toolbar{grid-template-columns:1fr}#appShell .eh-panel{padding:14px}#appShell .eh-summary{flex-wrap:wrap}}
-#appShell .eh-ds-contractor{display:grid;gap:7px;font-size:11px;font-weight:700;color:#647794;margin-bottom:12px}#appShell .eh-ds-contractor select{height:40px;width:100%;background:#fafcff;border:1px solid #dce5f1;border-radius:10px;padding:0 12px;color:#1f2f59}</style>
+#appShell .eh-ds-contractor{display:grid;gap:7px;font-size:11px;font-weight:700;color:#647794;margin-bottom:12px}#appShell .eh-ds-contractor select{height:40px;width:100%;background:#fafcff;border:1px solid #dce5f1;border-radius:10px;padding:0 12px;color:#1f2f59}
+/* EXT 4.7: historial minimalista. Selectores específicos para evitar estilos globales de botones. */
+#appShell #extHistoryView .eh-panel{padding:25px 27px 27px!important;border-radius:19px!important;box-shadow:0 9px 35px rgba(31,47,89,.035)!important}
+#appShell #extHistoryView .eh-tabs{gap:27px!important;padding:0!important;margin:0 0 23px!important;border-bottom:1px solid #e7ecf3!important}
+#appShell #extHistoryView button.eh-tab{background:transparent!important;color:#8b98ac!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;box-shadow:none!important;padding:0 2px 15px!important;font-size:13px!important;font-weight:620!important;letter-spacing:0!important}
+#appShell #extHistoryView button.eh-tab.active{background:transparent!important;color:#1f2f59!important;border-bottom-color:#1f2f59!important}
+#appShell #extHistoryView button.eh-tab:hover{background:transparent!important;color:#1f2f59!important}
+#appShell #extHistoryView .eh-toolbar{grid-template-columns:1.15fr 1.4fr .95fr!important;gap:12px!important;margin-bottom:18px!important}
+#appShell #extHistoryView .eh-toolbar label{font-size:11px!important;gap:7px!important;color:#7888a1!important;font-weight:620!important}
+#appShell #extHistoryView .eh-toolbar input,#appShell #extHistoryView .eh-toolbar select{background:#fff!important;border:1px solid #e1e7f0!important;border-radius:10px!important;height:43px!important;font-size:12px!important;box-shadow:none!important}
+#appShell #extHistoryView .eh-summary{margin:8px 0 14px!important;font-size:11px!important;color:#8896ab!important}
+#appShell #extHistoryView .eh-list{gap:0!important;max-height:calc(100dvh - 395px);min-height:130px}
+#appShell #extHistoryView .eh-item{border:0!important;border-bottom:1px solid #edf0f5!important;border-radius:0!important;padding:16px 3px!important;gap:14px!important;background:#fff!important;min-height:74px}
+#appShell #extHistoryView .eh-item:last-child{border-bottom:0!important}
+#appShell #extHistoryView button.eh-item-main{display:block!important;background:transparent!important;color:#1f2f59!important;border:0!important;box-shadow:none!important;border-radius:0!important;padding:3px 0!important;margin:0!important;text-align:left!important;flex:1!important;min-width:0!important;font-size:13px!important;font-weight:500!important;line-height:1.4!important}
+#appShell #extHistoryView button.eh-item-main:hover{background:transparent!important;color:#1f2f59!important}
+#appShell #extHistoryView button.eh-item-main strong{display:block!important;background:transparent!important;color:#1f2f59!important;border:0!important;padding:0!important;font-size:13px!important;font-weight:720!important;letter-spacing:0!important;line-height:1.5!important;white-space:normal!important}
+#appShell #extHistoryView button.eh-item-main small{display:block!important;background:transparent!important;color:#8a98ac!important;font-size:11px!important;font-weight:400!important;margin-top:4px!important;line-height:1.5!important}
+#appShell #extHistoryView .eh-status{background:#f1f4f9!important;color:#6c7c95!important;font-size:10px!important;font-weight:700!important;white-space:nowrap!important;border-radius:7px!important;padding:7px 10px!important}
+#appShell #extHistoryView button.eh-delete{flex:0 0 29px!important;width:29px!important;height:29px!important;display:grid!important;place-items:center!important;background:transparent!important;color:#a4afbf!important;border:1px solid transparent!important;border-radius:8px!important;box-shadow:none!important;padding:0!important;font-size:19px!important;line-height:1!important}
+#appShell #extHistoryView button.eh-delete:hover{background:#fff0f1!important;color:#b83e4e!important;border-color:#f5d8dc!important}
+@media(max-width:850px){#appShell #extHistoryView .eh-toolbar{grid-template-columns:1fr!important}#appShell #extHistoryView .eh-panel{padding:17px!important}#appShell #extHistoryView .eh-status{white-space:normal!important;text-align:center!important}}
+</style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
