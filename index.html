@@ -695,6 +695,15 @@ body.authenticated{background:var(--ext-canvas)!important}
  #appShell #extDeclarationsView .ds-history{flex:1!important;min-height:0!important;max-height:none!important;overflow-y:auto!important}
 }
 /* Pantallas pequeñas: se conserva el scroll para no cortar información ni controles */
+
+/* EXT 3.6: compact preview centered vertically; one action for image + history */
+@media(min-width:1001px) and (min-height:650px){
+ #appShell #extDeclarationsView .ds-side>.ds-card{display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+ #appShell #extDeclarationsView .ds-side .ds-capture{margin-top:auto!important}
+ #appShell #extDeclarationsView .ds-side .ds-help{margin-bottom:auto!important}
+}
+#appShell #extDeclarationsView #dsCopy{min-width:160px!important}
+#appShell #extDeclarationsView #dsCopy:disabled{opacity:.6!important;cursor:wait!important}
 </style>
 </head>
 <body>
@@ -736,7 +745,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 </div>
 <aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Respuesta editable</h2><p>Los datos aparecen al escribir o pegar. Puedes corregirlos aquí mismo.</p></div></div>
 <div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient" contenteditable="true" role="textbox" aria-label="Editar Client" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct" contenteditable="true" role="textbox" aria-label="Editar Product" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount" contenteditable="true" role="textbox" aria-label="Editar Amount" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm" contenteditable="true" role="textbox" aria-label="Editar Term" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><select id="dsDecision" class="ds-decision" aria-label="Aprobación de riesgo"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
-<div class="ds-input-actions"><button type="button" id="dsSave" class="ds-primary">Guardar declaración</button><button type="button" id="dsCopy" class="ds-quiet">Copiar como imagen</button></div><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div>
+<div class="ds-input-actions"><button type="button" id="dsCopy" class="ds-primary">Copiar imagen y guardar</button></div><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div>
 </aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
 <section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
 <section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
@@ -1092,15 +1101,18 @@ for(const key of ['Client','Product','Amount','Term']){
  });
  dsEl('Preview'+key).addEventListener('blur',dsRefresh);
 }
-dsEl('Save').addEventListener('click',()=>{
- const r=dsData();
- if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa los cuatro campos y selecciona un dictamen.';return}
- const records=dsRecords();records.unshift({...r,id:Date.now()+'-'+Math.random().toString(36).slice(2),date:new Date().toISOString()});
- if(dsStore(records)){dsEl('Message').textContent='Declaración guardada en este navegador.';dsRefresh()}else dsEl('Message').textContent='No se pudo guardar: almacenamiento local no disponible.';
-});
+function dsSaveRecord(r){
+ const records=dsRecords();
+ records.unshift({...r,id:Date.now()+'-'+Math.random().toString(36).slice(2),date:new Date().toISOString()});
+ const saved=dsStore(records);
+ if(saved)dsRefresh();
+ return saved;
+}
 dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';for(const key of Object.keys(dsValues))dsValues[key]='';dsEl('Decision').value='';dsEl('Message').textContent='';dsRefresh()});
 dsEl('Copy').addEventListener('click',async()=>{
  const r=dsData();if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa la solicitud y selecciona el dictamen antes de copiar.';return}
+ dsEl('Copy').disabled=true;
+ let delivered=false;
  const target=dsEl('Capture').cloneNode(true);
  const selected=target.querySelector('#dsDecision');
  const replacement=document.createElement('strong');
@@ -1118,12 +1130,22 @@ dsEl('Copy').addEventListener('click',async()=>{
   if(!blob)throw Error('No se pudo crear la imagen.');
   if(navigator.clipboard?.write&&window.ClipboardItem){
    await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+   delivered=true;
    dsEl('Message').textContent='Imagen copiada. Puedes pegarla en tu respuesta.';
   }else throw Error('El navegador no permite copiar imágenes aquí.');
  }catch(err){
   dsEl('Message').textContent='No se pudo copiar automáticamente. Se descargará un PNG.';
-  try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click()}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
- }finally{target.remove()}
+  try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click();delivered=true}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
+ }finally{
+  target.remove();
+  dsEl('Copy').disabled=false;
+  if(delivered){
+   const saved=dsSaveRecord(r);
+   dsEl('Message').textContent=saved
+    ? 'Imagen lista y declaración guardada en el historial.'
+    : 'Imagen lista, pero no se pudo guardar en el historial local.';
+  }
+ }
 });
 dsRefresh();
 </script></body></html>
