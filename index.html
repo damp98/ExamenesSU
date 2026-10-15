@@ -586,6 +586,31 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell .ds-decision.revision{background:#fff3d7;color:#926209}
 #appShell .ds-capture-row>.ds-status{min-height:62px}
 @media(max-width:1100px){#appShell .ds-layout{grid-template-columns:1fr!important}}
+
+/* EXT 3.3: tres zonas bien delimitadas, historial en fila completa */
+#appShell #extDeclarationsView .ds-layout{
+ display:grid!important;
+ grid-template-columns:minmax(0, 42fr) minmax(0, 58fr)!important;
+ gap:20px!important;
+ align-items:start!important;
+}
+#appShell #extDeclarationsView .ds-main,
+#appShell #extDeclarationsView .ds-side{display:block!important;min-width:0!important;width:100%!important}
+#appShell #extDeclarationsView .ds-main .ds-card,
+#appShell #extDeclarationsView .ds-side .ds-card{width:100%!important;min-width:0!important}
+#appShell #extDeclarationsView .ds-paste{
+ display:block!important;width:100%!important;max-width:100%!important;
+ min-height:260px!important;resize:vertical!important;
+ font-size:13px!important;line-height:1.8!important;
+}
+#appShell #extDeclarationsView .ds-history-full{
+ grid-column:1/-1!important;width:100%!important;min-width:0!important;
+}
+#appShell #extDeclarationsView .ds-capture{width:100%!important}
+@media(max-width:1000px){
+ #appShell #extDeclarationsView .ds-layout{grid-template-columns:minmax(0,1fr)!important}
+ #appShell #extDeclarationsView .ds-history-full{grid-column:1!important}
+}
 </style>
 </head>
 <body>
@@ -628,7 +653,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 <aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Respuesta editable</h2><p>Los datos aparecen al escribir o pegar. Puedes corregirlos aquí mismo.</p></div></div>
 <div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient" contenteditable="true" role="textbox" aria-label="Editar Client" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct" contenteditable="true" role="textbox" aria-label="Editar Product" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount" contenteditable="true" role="textbox" aria-label="Editar Amount" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm" contenteditable="true" role="textbox" aria-label="Editar Term" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><select id="dsDecision" class="ds-decision" aria-label="Aprobación de riesgo"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
 <div class="ds-input-actions"><button type="button" id="dsSave" class="ds-primary">Guardar declaración</button><button type="button" id="dsCopy" class="ds-quiet">Copiar como imagen</button></div><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div>
-<div class="ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></aside></div></section>
+</aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
 <section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
 <section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
 <section id="extHistoryView" class="ext-view" hidden><div class="ext-view-head"><h1>Historial</h1><p>Los registros se mantienen independientes por módulo.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta los informes procesados en el panel de Exámenes Médicos.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta y recupera tus declaraciones guardadas.</small></button></div></section>
