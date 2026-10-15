@@ -73,6 +73,17 @@ main.ext-main{max-width:1600px;margin:22px auto;padding:0 26px}.ext-layout{displ
 .capture-area .summary{grid-template-columns:3.1fr .9fr 1.35fr 1.8fr .9fr!important}.capture-area .val{justify-content:center!important;text-align:center!important;font-weight:700!important;padding:11px 8px!important}.capture-area .capture-risk,.capture-area .capture-appeal{display:inline-flex;align-items:center;justify-content:center;min-width:170px;border-radius:999px;padding:10px 16px;font-weight:800;margin:0 auto}.capture-area .capture-risk.alto{background:#f7cbd0;color:#9a1425}.capture-area .capture-risk.moderado{background:#d8edf3;color:#0c4b64}.capture-area .capture-risk.normal{background:#e4f2e6;color:#126234}.capture-area .capture-risk.otro{background:#f2e9d7;color:#79500b}.capture-area .capture-appeal.yes{background:#e7f7e9;color:#15804b}.capture-area .capture-appeal.no{background:#f0f4f8;color:#5d7287}
 .capture-area .capture-comment,.capture-area .capture-appeal-block{padding:14px 12px}.capture-area .capture-appeal-block{background:#fae5d9;border:1px solid #d9c7bb}.capture-area .capture-label{font:700 13px Arial;color:#4c6881;text-transform:uppercase;letter-spacing:.2px;padding:0 12px 6px}
 
+
+/* Confirmación de cierre de sesión integrada */
+.logout-modal[hidden]{display:none!important}
+.logout-modal{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;padding:20px;background:rgba(9,34,50,.48);backdrop-filter:blur(5px)}
+.logout-dialog{width:min(100%,420px);padding:30px;background:#fff;border:1px solid #dce8f0;border-radius:22px;box-shadow:0 25px 75px rgba(9,34,50,.25);text-align:center;color:#17364b}
+.logout-symbol{width:62px;height:62px;margin:0 auto 16px;border-radius:18px;display:grid;place-items:center;background:#eaf4fa;color:#0b536b}
+.logout-dialog h2{font-size:23px;letter-spacing:-.5px;margin:0 0 10px}
+.logout-dialog p{color:#657d8c;font-size:14px;line-height:1.55;margin:0 0 24px}
+.logout-actions{display:flex;gap:10px}.logout-actions button{flex:1;padding:13px 12px;border-radius:12px;font-weight:700}
+.logout-cancel{background:#f2f6f9!important;border:1px solid #dce6ed!important;color:#21465a!important}.logout-cancel:hover{background:#e7f0f5!important}
+.logout-confirm{background:#0a465b!important;color:#fff!important}.logout-confirm:hover{background:#0b5972!important}
 </style>
 </head>
 <body>
@@ -105,6 +116,14 @@ main.ext-main{max-width:1600px;margin:22px auto;padding:0 26px}.ext-layout{displ
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
 <div id="results"><div class="empty">Sube el primer PDF para mostrar sus datos.</div></div>
 </div><aside class="ext-sidebar"><h3>Historial</h3><input class="filter-search" id="sideSearch" placeholder="Buscar cliente o archivo…" aria-label="Buscar historial"><div class="filter-grid"><label>Dictamen<select id="filterRisk"><option value="">Todos</option><option value="ALTO">Riesgo alto</option><option value="MODERADO">Riesgo moderado</option><option value="NORMAL">Normal / bajo</option><option value="REVISAR">Por revisar</option></select></label><label>Contratante<select id="filterContractor"><option value="">Todos</option></select></label><label>Usuario<select id="filterUser"><option value="">Todos</option></select></label><label>Fecha<select id="filterDate"><option value="">Todas</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label></div><div id="sideHistoryList" class="ext-history-list"></div><div class="ext-side-actions"><button class="outline" id="exportKpiSide">Descargar KPI</button><button class="outline" id="clearFilters">Limpiar filtros</button></div><div id="adminControl" class="admin-control" hidden><strong>Panel de control</strong><small>Acceso reservado al administrador. Los datos y exportaciones actuales corresponden a este navegador.</small><button id="adminExport">Descargar reporte administrativo</button></div></aside></div><p class="small"><b>Importante:</b> La aplicación no emite decisiones médicas ni calcula riesgos. Copia el dictamen textual del informe. “Apelable” es una sugerencia basada en la existencia de requisitos explícitos de reconsideración y debe confirmarla el suscriptor. Para PDF escaneado sin capa de texto se necesitaría OCR. El texto de condiciones que no figure en el documento no se añadirá automáticamente.</p></main></div>
+<div class="logout-modal" id="logoutModal" hidden>
+ <section class="logout-dialog" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutMessage">
+  <div class="logout-symbol" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M12 3h6a3 3 0 013 3v12a3 3 0 01-3 3h-6"/></svg></div>
+  <h2 id="logoutTitle">¿Cerrar sesión?</h2>
+  <p id="logoutMessage">¿Quieres salir de EXT | Exámenes?<br>Podrás volver a ingresar con tu usuario y contraseña.</p>
+  <div class="logout-actions"><button type="button" class="logout-cancel" id="logoutCancel">Cancelar</button><button type="button" class="logout-confirm" id="logoutConfirm">Cerrar sesión</button></div>
+ </section>
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
@@ -169,8 +188,8 @@ function renderHistory(){const list=$('#historyList');if(!list)return;const quer
 function closeHistory(){ $('#historyPanel').hidden=true;$('#historyToggle').setAttribute('aria-expanded','false') }
 $('#historyToggle').addEventListener('click',()=>{const panel=$('#historyPanel');panel.hidden=!panel.hidden;$('#historyToggle').setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)renderHistory()});
 document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))closeHistory()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory()});$('#historySearch').addEventListener('input',renderHistory);
-$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){if(!confirm('¿Eliminar esta ficha del historial local?'))return;historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);persistHistory();renderHistory();return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
-$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;if(confirm('¿Eliminar definitivamente todas las fichas guardadas en este navegador?')){historyEntries=[];persistHistory();renderHistory()}});
+$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){openConfirmModal({title:'¿Eliminar ficha?',message:'¿Quieres eliminar esta ficha del historial local?<br>Esta acción solo afecta a este navegador.',confirmText:'Eliminar',onConfirm:()=>{historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);persistHistory();renderHistory();}});return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
+$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;openConfirmModal({title:'¿Borrar historial?',message:'¿Eliminar definitivamente todas las fichas guardadas en este navegador?<br>Esta acción no se puede deshacer.',confirmText:'Borrar historial',onConfirm:()=>{historyEntries=[];persistHistory();renderHistory();updateDashboard();}})});
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function match(text,regex){return (text.match(regex)||[])[1]?.trim()||''}
 function segment(t,start,end){let i=t.search(start);if(i<0)return '';let s=t.slice(i).replace(start,'');let j=s.search(end);return (j>=0?s.slice(0,j):s).trim()}
@@ -351,6 +370,13 @@ $('#print').addEventListener('click',()=>{if(!state.length)return;const node=cap
 $('#clear').addEventListener('click',()=>{state.length=0;render()});
 $('#togglePass').addEventListener('click',()=>{const input=$('#loginPass');const show=input.type==='password';input.type=show?'text':'password';$('#togglePass').textContent=show?'🙈':'👁️';input.focus()});
 $('#loginForm').addEventListener('submit',e=>{e.preventDefault();const user=findUser($('#loginUser').value,$('#loginPass').value);if(!user){$('#loginError').hidden=false;$('#loginError').textContent='Usuario o contraseña incorrectos.';$('#loginPass').focus();return}setSession(user)});
-$('#logoutBtn').addEventListener('click',()=>{if(confirm('¿Cerrar sesión ahora?')){closeHistory();clearSession()}});
+let logoutReturnFocus=null,confirmModalAction=null;
+function hideLogoutModal(){ $('#logoutModal').hidden=true;$('#logoutConfirm').textContent='Aceptar';confirmModalAction=null;logoutReturnFocus?.focus() }
+function openConfirmModal({title,message,confirmText='Aceptar',onConfirm}){logoutReturnFocus=document.activeElement;closeHistory();$('#logoutTitle').textContent=title;$('#logoutMessage').innerHTML=message;$('#logoutConfirm').textContent=confirmText;confirmModalAction=typeof onConfirm==='function'?onConfirm:null;$('#logoutModal').hidden=false;$('#logoutCancel').focus()}
+$('#logoutBtn').addEventListener('click',()=>{openConfirmModal({title:'¿Cerrar sesión?',message:'¿Quieres salir de EXT | Exámenes?<br>Podrás volver a ingresar con tu usuario y contraseña.',confirmText:'Cerrar sesión',onConfirm:()=>{closeHistory();clearSession()}})});
+$('#logoutCancel').addEventListener('click',hideLogoutModal);
+$('#logoutConfirm').addEventListener('click',()=>{const action=confirmModalAction;hideLogoutModal();if(action)action()});
+$('#logoutModal').addEventListener('click',e=>{if(e.target===$('#logoutModal'))hideLogoutModal()});
+document.addEventListener('keydown',e=>{if($('#logoutModal').hidden)return;if(e.key==='Escape'){e.preventDefault();hideLogoutModal()}else if(e.key==='Tab'){const controls=[$('#logoutCancel'),$('#logoutConfirm')];const index=controls.indexOf(document.activeElement);if(e.shiftKey&&index===0){e.preventDefault();controls[1].focus()}else if(!e.shiftKey&&index===1){e.preventDefault();controls[0].focus()}}});
 for(const u of USERS){const o=document.createElement('option');o.value=u.name;o.textContent=u.name;$('#filterUser').appendChild(o)}restoreSession();renderHistory();render();applySession();
 </script></body></html>
