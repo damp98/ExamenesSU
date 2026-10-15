@@ -917,7 +917,8 @@ body.authenticated{background:var(--ext-canvas)!important}
       <article class="pf-card"><div class="pf-card-kicker">RESUMEN PERSONAL</div><h2 class="pf-section-title">Mi actividad</h2><p class="pf-section-subtitle">Registros guardados en este navegador para tu cuenta.</p>
         <div class="pf-stats"><div class="pf-stat"><span>Exámenes médicos</span><strong id="pfMedicalCount">0</strong></div><div class="pf-stat"><span>Declaraciones de salud</span><strong id="pfDeclarationCount">0</strong></div><div class="pf-stat"><span>KPI registrados</span><strong id="pfKpiCount">0</strong></div></div>
       </article>
-      <article class="pf-card pf-note"><div class="pf-note-icon">ⓘ</div><div><h3>Sobre tu cuenta</h3><p>Tu historial y tus indicadores se guardan por usuario en este navegador. La autenticación real y la consulta centralizada de otros suscriptores se incorporarán en una actualización posterior.</p></div></article>
+      <article class="ext-pass-profile"><h3>Seguridad de la cuenta</h3><p>Puedes actualizar tu contraseña personal cuando quieras.</p><button id="extProfileChangePassword" type="button">Cambiar contraseña</button></article>
+      <article class="pf-card pf-note"><div class="pf-note-icon">ⓘ</div><div><h3>Sobre tu cuenta</h3><p>La autenticación utiliza Supabase. Los registros se sincronizan con los permisos de cada usuario; no compartas información sensible sin autorización.</p></div></article>
     </div>
   </div>
 </section>
@@ -973,6 +974,28 @@ body.authenticated{background:var(--ext-canvas)!important}
     <div class="ext-loading-foot">EXT · Acceso seguro</div>
   </div>
 </div>
+<style>
+#extPasswordGate[hidden]{display:none!important}
+#extPasswordGate{position:fixed;inset:0;z-index:90000;background:linear-gradient(130deg,#e9eff9,#fff 60%,#e5ebf5);display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto;font-family:inherit;color:#1f2f59}
+.ext-pass-card{width:min(100%,460px);background:white;border:1px solid #dce5f3;border-radius:24px;padding:34px;box-shadow:0 22px 80px #1f2f591a}
+.ext-pass-mark{font-weight:900;font-size:28px;letter-spacing:-1px}.ext-pass-card h2{font-size:25px;margin:20px 0 8px}.ext-pass-card p{font-size:14px;line-height:1.65;color:#53647f;margin:0 0 20px}
+.ext-pass-card label{display:block;font-size:12px;font-weight:750;margin:13px 0 6px}.ext-pass-card input{display:block;width:100%;box-sizing:border-box;padding:14px;border:1px solid #cbd7e8;border-radius:11px;font-size:15px;background:#fff;color:#1f2f59}
+.ext-pass-card button.ext-pass-submit{width:100%;margin-top:21px;border:0;border-radius:12px;padding:15px;background:#1f2f59;color:white;font-weight:700;cursor:pointer}.ext-pass-card button:disabled{opacity:.6;cursor:wait}
+.ext-pass-card .ext-pass-error{color:#ae2e35;font-size:13px;margin-top:12px}.ext-pass-card .ext-pass-secondary{border:0;background:transparent;color:#41577c;margin-top:15px;width:100%;cursor:pointer}
+.ext-pass-profile{border:1px solid #dbe4f1;background:#f6f9fd;border-radius:12px;padding:15px;margin-top:20px}.ext-pass-profile h3{margin:0 0 7px;font-size:15px}.ext-pass-profile p{margin:0 0 12px;font-size:13px}.ext-pass-profile button{border:1px solid #1f2f59;border-radius:9px;background:white;color:#1f2f59;padding:10px 14px;cursor:pointer;font-weight:700}
+</style>
+<section id="extPasswordGate" hidden aria-label="Cambio obligatorio de contraseña">
+ <div class="ext-pass-card"><div class="ext-pass-mark">EXT<span style="font-weight:400;font-size:13px;margin-left:10px;letter-spacing:2px">EXÁMENES TÉCNICO</span></div>
+ <h2>Protege tu cuenta</h2><p>Por seguridad, debes cambiar la contraseña temporal antes de utilizar EXT. La nueva contraseña será privada y no se mostrará al administrador.</p>
+ <form id="extPasswordForm" autocomplete="off">
+ <label for="extCurrentPassword">Contraseña actual</label><input id="extCurrentPassword" type="password" autocomplete="current-password" required>
+ <label for="extNewPassword">Nueva contraseña</label><input id="extNewPassword" type="password" autocomplete="new-password" minlength="12" required>
+ <label for="extConfirmPassword">Confirmar nueva contraseña</label><input id="extConfirmPassword" type="password" autocomplete="new-password" minlength="12" required>
+ <p style="font-size:12px;margin:10px 0 0">Usa al menos 12 caracteres. Evita reutilizar contraseñas.</p>
+ <div id="extPasswordError" class="ext-pass-error" role="alert" hidden></div>
+ <button class="ext-pass-submit" id="extPasswordSubmit" type="submit">Guardar contraseña y continuar</button>
+ </form><button id="extPasswordSignout" class="ext-pass-secondary" type="button">Cerrar sesión</button></div>
+</section>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
@@ -984,11 +1007,19 @@ const USERS=[]; // Usuarios cargados desde perfiles autenticados; sin contraseñ
 const SUPABASE_URL='https://bzgvjyllrvbefjreveaz.supabase.co';
 const SUPABASE_KEY='sb_publishable_d3SZRrrk69C3TlaIrmMrbA_HkXpt3Bf';
 const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+let extVoluntaryPasswordChange=false;
+function extPasswordMessage(message){const el=document.getElementById('extPasswordError');el.textContent=message;el.hidden=!message}
+function extOpenPasswordChange(voluntary=false){extVoluntaryPasswordChange=voluntary;document.getElementById('extPasswordGate').hidden=false;document.getElementById('extPasswordForm').reset();extPasswordMessage('');document.querySelector('#extPasswordGate h2').textContent=voluntary?'Cambiar contraseña':'Protege tu cuenta';document.querySelector('#extPasswordGate p').textContent=voluntary?'Introduce tu contraseña actual y elige una nueva. Al guardarla tendrás que iniciar sesión nuevamente.':'Por seguridad, debes cambiar la contraseña temporal antes de utilizar EXT. La nueva contraseña será privada y no se mostrará al administrador.';document.getElementById('extPasswordSignout').textContent=voluntary?'Cancelar':'Cerrar sesión';}
+async function extSavePassword(currentPassword,newPassword){
+ const {data:{session},error:sessionError}=await supabase.auth.getSession();if(sessionError||!session?.access_token)throw Error('La sesión expiró. Vuelve a iniciar sesión.');
+ const res=await fetch(SUPABASE_URL+'/functions/v1/ext-change-password',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+session.access_token},body:JSON.stringify({currentPassword,newPassword})});
+ const result=await res.json().catch(()=>({}));if(!res.ok)throw Error(result.error||'No fue posible cambiar la contraseña');
+}
 let remoteReady=false;
-function uiUser(p){const name=p.nombre||p.usuario;return {username:p.usuario,name,role:p.rol==='admin'?'admin':'operator',initials:name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase(),id:p.id,cargo:p.cargo}}
-async function fetchProfile(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw Error('Sesión no válida');const {data:p,error:pe}=await supabase.from('perfiles').select('id,usuario,nombre,cargo,rol').eq('id',user.id).single();if(pe||!p)throw Error('No existe un perfil autorizado para esta cuenta');return uiUser(p)}
+function uiUser(p){const name=p.nombre||p.usuario;return {username:p.usuario,name,role:p.rol==='admin'?'admin':'operator',initials:name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase(),id:p.id,cargo:p.cargo,mustChangePassword:p.debe_cambiar_clave===true}}
+async function fetchProfile(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw Error('Sesión no válida');const {data:p,error:pe}=await supabase.from('perfiles').select('id,usuario,nombre,cargo,rol,debe_cambiar_clave').eq('id',user.id).single();if(pe||!p)throw Error('No existe un perfil autorizado para esta cuenta');return uiUser(p)}
 async function loginRemote(usuario,password){const res=await fetch(SUPABASE_URL+'/functions/v1/ext-login',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({usuario,password})});const body=await res.json().catch(()=>({}));if(!res.ok)throw Error(body.error||'No fue posible iniciar sesión');const {error}=await supabase.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;return await fetchProfile()}
-async function remoteLoad(){if(!currentUser?.id)return;remoteReady=false;try{
+async function remoteLoad(){if(!currentUser?.id||currentUser.mustChangePassword)return;remoteReady=false;try{
  const [hist,kpi,dec,profiles]=await Promise.all([
   supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','examenes').order('creado_en',{ascending:false}).limit(1000),
   supabase.from('kpi_ext').select('id,usuario_id,historial_id,datos,creado_en').order('creado_en',{ascending:false}).limit(1000),
@@ -1021,9 +1052,9 @@ function historyKey(){return `${HISTORY_KEY_BASE}_${currentUser?.username||'anon
 function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(historyKey())||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){historyEntries=[]}}
 function persistHistory(){if(!remoteReady)return;try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn(e)}}
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
-async function setSession(u){contractorSelect.value='';currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();await remoteLoad()}
+async function setSession(u){contractorSelect.value='';currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();if(!u.mustChangePassword)await remoteLoad()}
 async function clearSession(){if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
-function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
+function applySession(){const pending=!!currentUser?.mustChangePassword;const logged=!!currentUser&&!pending;$('#loginScreen').hidden=!!currentUser;$('#appShell').hidden=!logged;$('#extPasswordGate').hidden=!pending;if(pending)extOpenPasswordChange(false);document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin');document.getElementById('extAdminPanel').hidden=currentUser.role!=='admin'||pending}else{$('#loginUser').focus()}}
 async function restoreSession(){try{const {data:{session}}=await supabase.auth.getSession();if(session){const u=await fetchProfile();await setSession(u);const previous=sessionStorage.getItem('ext_active_view_'+u.id);if(previous&&extViews[previous])extNavigate(previous)}}catch(e){console.warn('No se restauró la sesión',e);await supabase.auth.signOut();currentUser=null;applySession()}}
 const CONTRACTORS=['COOPERATIVA DE AHORRO Y CRÉDITO FERNANDO DAQUILEMA','COOPERATIVA DE AHORRO Y CRÉDITO MUSHUC RUNA','COOPERATIVA DE AHORRO Y CRÉDITO KULLKI WASI','BANCO DEL AUSTRO','MUTUALISTA AZUAY'];
 const contractorSelect=$('#contractorSelect');
@@ -1317,7 +1348,7 @@ document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=d
 const originalApplySession=applySession;
 applySession=function(){
  originalApplySession();
- if(currentUser){
+ if(currentUser&&!currentUser.mustChangePassword){
   document.querySelector('#topAvatar').textContent=currentUser.initials;
   document.querySelector('#topName').textContent=currentUser.name;
   document.querySelector('#topRole').textContent=roleLabel(currentUser.role);
@@ -1585,4 +1616,16 @@ function pfRender(){
  put('pfKpiCount',pfStoredCount('ext_kpi_medicos_v1_'+u.username));
 }
 
+document.getElementById('extPasswordForm').addEventListener('submit',async e=>{
+ e.preventDefault();const current=document.getElementById('extCurrentPassword').value, next=document.getElementById('extNewPassword').value, confirm=document.getElementById('extConfirmPassword').value;
+ if(next.length<12){extPasswordMessage('La nueva contraseña debe tener al menos 12 caracteres.');return}
+ if(next!==confirm){extPasswordMessage('Las contraseñas nuevas no coinciden.');return}
+ if(next===current){extPasswordMessage('La nueva contraseña debe ser diferente a la anterior.');return}
+ const button=document.getElementById('extPasswordSubmit');button.disabled=true;button.textContent='Actualizando contraseña...';extPasswordMessage('');
+ try{await extSavePassword(current,next);document.getElementById('extPasswordGate').hidden=true;await clearSession();alert('Contraseña actualizada correctamente. Ingresa con tu nueva contraseña.');}
+ catch(err){extPasswordMessage(err.message||'No fue posible cambiar la contraseña.');}
+ finally{button.disabled=false;button.textContent='Guardar contraseña y continuar';}
+});
+document.getElementById('extPasswordSignout').addEventListener('click',async()=>{if(extVoluntaryPasswordChange){document.getElementById('extPasswordGate').hidden=true;return}document.getElementById('extPasswordGate').hidden=true;await clearSession()});
+document.getElementById('extProfileChangePassword').addEventListener('click',()=>extOpenPasswordChange(true));
 </script></body></html>
