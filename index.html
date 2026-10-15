@@ -611,6 +611,29 @@ body.authenticated{background:var(--ext-canvas)!important}
  #appShell #extDeclarationsView .ds-layout{grid-template-columns:minmax(0,1fr)!important}
  #appShell #extDeclarationsView .ds-history-full{grid-column:1!important}
 }
+
+/* EXT 3.4: altura compacta e igual para ambos paneles superiores */
+@media (min-width:1001px){
+ #appShell #extDeclarationsView .ds-main>.ds-card,
+ #appShell #extDeclarationsView .ds-side>.ds-card{
+   height:440px!important; min-height:0!important;
+   box-sizing:border-box!important; overflow:visible!important;
+   padding:18px 22px!important;
+ }
+ #appShell #extDeclarationsView .ds-input-card{display:flex!important;flex-direction:column!important}
+ #appShell #extDeclarationsView .ds-paste{flex:1!important;min-height:0!important;height:auto!important;resize:none!important}
+ #appShell #extDeclarationsView .ds-card-title{margin-bottom:13px!important}
+ #appShell #extDeclarationsView .ds-capture-head{padding:10px 12px!important;font-size:12px!important}
+ #appShell #extDeclarationsView .ds-capture-row{min-height:0!important;font-size:12px!important}
+ #appShell #extDeclarationsView .ds-capture-row>span,
+ #appShell #extDeclarationsView .ds-capture-row>strong{padding:9px 12px!important;min-height:37px!important;box-sizing:border-box!important}
+ #appShell #extDeclarationsView .ds-decision{min-height:37px!important;height:100%!important;padding:8px 12px!important;font-size:12px!important}
+ #appShell #extDeclarationsView .ds-capture-row>.ds-status{min-height:37px!important}
+ #appShell #extDeclarationsView .ds-side .ds-input-actions{margin-top:10px!important;gap:8px!important}
+ #appShell #extDeclarationsView .ds-side button.ds-primary,
+ #appShell #extDeclarationsView .ds-side button.ds-quiet{padding:9px 12px!important;font-size:11px!important}
+ #appShell #extDeclarationsView .ds-side .ds-help{margin-top:8px!important;font-size:10px!important;line-height:1.3!important}
+}
 </style>
 </head>
 <body>
