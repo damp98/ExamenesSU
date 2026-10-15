@@ -1128,12 +1128,13 @@ dsEl('Copy').addEventListener('click',async()=>{
  replacement.textContent=r.decision;
  selected.replaceWith(replacement);
  target.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
- target.style.width=dsEl('Capture').offsetWidth+'px';
+ // Tamaño fijo de exportación para pegar en Outlook sin ocupar todo el ancho.
+ target.style.width='680px';target.style.maxWidth='680px';
  target.style.position='fixed';target.style.left='-10000px';target.style.top='0';target.style.zIndex='-1';
  document.body.appendChild(target);
  try{
   if(typeof html2canvas!=='function')throw Error('No se cargó el generador de imágenes.');
-  const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});
+  const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:1});
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw Error('No se pudo crear la imagen.');
   if(navigator.clipboard?.write&&window.ClipboardItem){
@@ -1143,7 +1144,7 @@ dsEl('Copy').addEventListener('click',async()=>{
   }else throw Error('El navegador no permite copiar imágenes aquí.');
  }catch(err){
   dsEl('Message').textContent='No se pudo copiar automáticamente. Se descargará un PNG.';
-  try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click();delivered=true}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
+  try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:1});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click();delivered=true}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
  }finally{
   target.remove();
   dsEl('Copy').disabled=false;
