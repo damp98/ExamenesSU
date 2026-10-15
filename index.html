@@ -43,6 +43,8 @@ main{max-width:1440px;margin:32px auto;padding:0 35px}.drop{padding:27px 20px!im
 .capture-area .val.risk.otro{background:#f2e9d7!important;color:#79500b!important;font-weight:800!important}
 
 
+/* Ocultar por completo las vistas inactivas, aun cuando tengan display:flex. */
+#loginScreen[hidden], #appShell[hidden], [hidden]{display:none!important}
 /* EXT 1.8 — Login y sesión */
 .login-screen{min-height:100svh;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,#f8fbfe 0%,#eef5fb 100%);position:relative;overflow:hidden}
 .login-screen:before{content:"";position:absolute;inset:auto auto -18% -12%;width:42vw;height:42vw;min-width:360px;min-height:360px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#e8f1fa 0%,#edf5fb 52%,transparent 53%);opacity:.95}
