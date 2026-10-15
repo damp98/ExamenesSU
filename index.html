@@ -751,7 +751,26 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell #extMedicalView .dashboard-welcome .ext-view-head h1{font-size:28px!important;line-height:1.15!important;letter-spacing:-.8px!important;margin:6px 0 4px!important}
 #appShell #extMedicalView .dashboard-welcome .ext-view-head p{font-size:12px!important;line-height:1.45!important;margin:0!important}
 #appShell #extMedicalView .dashboard-welcome .ext-eyebrow{font-size:10px!important;letter-spacing:1.7px!important}
-</style>
+
+/* EXT 4.6 · historial unificado con registros separados */
+#appShell .eh-panel{background:#fff;border:1px solid #e3eaf3;border-radius:20px;padding:22px;box-shadow:0 5px 22px #1f2f5909}
+#appShell .eh-tabs{display:flex;gap:8px;border-bottom:1px solid #e7edf5;padding-bottom:14px;margin-bottom:19px}
+#appShell .eh-tab{background:transparent!important;color:#697b95!important;border:1px solid transparent!important;border-radius:11px!important;padding:12px 17px!important;font-weight:650!important}
+#appShell .eh-tab.active{background:#e9f1ff!important;color:#1f2f59!important;border-color:#d5e3f6!important}
+#appShell .eh-toolbar{display:grid;grid-template-columns:1.1fr 1.4fr 1fr;gap:14px;margin-bottom:18px}
+#appShell .eh-toolbar label{font-size:11px;color:#647794;font-weight:700;display:grid;gap:7px}
+#appShell .eh-toolbar input,#appShell .eh-toolbar select{width:100%;min-width:0;height:43px;padding:0 12px;background:#fafcff;border:1px solid #dce5f1;border-radius:11px;color:#1f2f59;font-size:13px}
+#appShell .eh-summary{display:flex;justify-content:space-between;gap:10px;color:#8190a4;font-size:12px;margin:15px 0}
+#appShell .eh-list{display:grid;gap:9px;max-height:calc(100dvh - 395px);min-height:160px;overflow:auto}
+#appShell .eh-item{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1px solid #e7edf5;border-radius:13px;background:#fff}
+#appShell .eh-item-main{flex:1;min-width:0;background:transparent!important;color:#1f2f59!important;text-align:left!important;padding:0!important;border:0!important;box-shadow:none!important}
+#appShell .eh-item-main strong{display:block;font-size:13px;overflow-wrap:anywhere}
+#appShell .eh-item-main small{display:block;color:#8796aa;font-size:11px;margin-top:5px;overflow-wrap:anywhere}
+#appShell .eh-status{font-size:11px;font-weight:700;color:#647794;background:#f1f4fa;padding:7px 9px;border-radius:9px}
+#appShell .eh-delete{background:transparent!important;border:0!important;color:#b04b5d!important;font-size:22px!important;box-shadow:none!important;padding:4px 9px!important}
+#appShell .eh-empty{padding:40px 15px;text-align:center;color:#8392a8;font-size:13px}
+@media(max-width:850px){#appShell .eh-toolbar{grid-template-columns:1fr}#appShell .eh-panel{padding:14px}#appShell .eh-summary{flex-wrap:wrap}}
+#appShell .eh-ds-contractor{display:grid;gap:7px;font-size:11px;font-weight:700;color:#647794;margin-bottom:12px}#appShell .eh-ds-contractor select{height:40px;width:100%;background:#fafcff;border:1px solid #dce5f1;border-radius:10px;padding:0 12px;color:#1f2f59}</style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
@@ -791,7 +810,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="ext-view-head"><span class="ext-eyebrow">MÓDULO · SUSCRIPCIÓN</span><h1>Declaraciones de Salud</h1><p>Transforma la solicitud comercial en una respuesta clara, editable y lista para copiar.</p></div>
 <div class="ds-layout"><div class="ds-main">
 <div class="ds-card ds-input-card"><div class="ds-card-title"><span class="ds-step">01</span><div><h2>Solicitud comercial</h2><p>Pega el texto recibido con los cuatro campos.</p></div></div>
-<textarea id="dsPaste" class="ds-paste" spellcheck="false" placeholder="Nombre del cliente: ...&#10;Producto: ...&#10;Monto: ...&#10;Plazo: ..."></textarea>
+<label class="eh-ds-contractor">Contratante <select id="dsContractor"><option value="">Sin contratante asignado</option></select></label><textarea id="dsPaste" class="ds-paste" spellcheck="false" placeholder="Nombre del cliente: ...&#10;Producto: ...&#10;Monto: ...&#10;Plazo: ..."></textarea>
 <div class="ds-input-actions"><button type="button" id="dsClear" class="ds-quiet">Limpiar</button><span id="dsMessage" role="status"></span></div></div>
 </div>
 <aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Respuesta editable</h2><p>Los datos aparecen al escribir o pegar. Puedes corregirlos aquí mismo.</p></div></div>
@@ -800,7 +819,10 @@ body.authenticated{background:var(--ext-canvas)!important}
 </aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
 <section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
 <section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
-<section id="extHistoryView" class="ext-view" hidden><div class="ext-view-head"><span class="ext-eyebrow">REGISTROS</span><h1>Historial</h1><p>Consulta los registros de cada módulo de forma independiente.</p></div><div class="ext-history-grid"><div class="ext-history-medical"><aside class="ext-sidebar"><h3>Historial</h3><input class="filter-search" id="sideSearch" placeholder="Buscar cliente o archivo…" aria-label="Buscar historial"><div class="filter-grid"><label>Dictamen<select id="filterRisk"><option value="">Todos</option><option value="ALTO">Riesgo alto</option><option value="MODERADO">Riesgo moderado</option><option value="NORMAL">Normal / bajo</option><option value="REVISAR">Por revisar</option></select></label><label>Contratante<select id="filterContractor"><option value="">Todos</option></select></label><label>Usuario<select id="filterUser"><option value="">Todos</option></select></label><label>Fecha<select id="filterDate"><option value="">Todas</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label></div><div id="sideHistoryList" class="ext-history-list"></div><div class="ext-side-actions"><button class="outline" id="exportKpiSide">Descargar KPI</button><button class="outline" id="clearFilters">Limpiar filtros</button></div><div id="adminControl" class="admin-control" hidden><strong>Panel de control</strong><small>Acceso reservado al administrador. Los datos y exportaciones actuales corresponden a este navegador.</small><button id="adminExport">Descargar reporte administrativo</button></div></aside></div><div class="ext-history-declarations"><div class="ds-card"><h2>Declaraciones de Salud</h2><p class="ds-help">El historial de declaraciones se mantiene separado del historial de informes PDF.</p><button type="button" class="ds-primary" data-open-module="declaraciones">Abrir historial de declaraciones →</button></div></div></div></section>
+<section id="extHistoryView" class="ext-view" hidden><div class="ext-view-head"><span class="ext-eyebrow">REGISTROS · PERSONALES</span><h1>Historial</h1><p>Consulta, recupera y elimina tus registros de forma independiente por módulo.</p></div>
+<div class="eh-panel"><div class="eh-tabs"><button type="button" class="eh-tab active" data-eh-module="medicos">Exámenes Médicos</button><button type="button" class="eh-tab" data-eh-module="declaraciones">Declaraciones de Salud</button></div>
+<div class="eh-toolbar"><label>Contratante<select id="ehContractor"><option value="">Todos los contratantes · Vista general</option></select></label><label>Buscar<input id="ehSearch" placeholder="Cliente, archivo o producto…"></label><label>Dictamen<select id="ehStatus"><option value="">Todos los dictámenes</option></select></label></div>
+<div class="eh-summary"><span id="ehCount">0 registros</span><span>Solo los registros de tu usuario y navegador</span></div><div id="ehList" class="eh-list"></div></div></section>
 </div>
 <div class="logout-modal" id="logoutModal" hidden>
  <section class="logout-dialog" role="dialog" aria-modal="true" aria-labelledby="logoutTitle" aria-describedby="logoutMessage">
@@ -1138,12 +1160,12 @@ function dsRefresh(){
   const line=document.createElement('div');line.className='ds-history-entry';
   const open=document.createElement('button');open.type='button';open.textContent=r.client||'Sin nombre';
   const sub=document.createElement('small');sub.textContent=new Date(r.date).toLocaleString('es-EC')+' · '+r.decision;open.append(sub);
-  open.onclick=()=>{for(const key of ['Client','Product','Amount','Term'])dsValues[key]=r[key.toLowerCase()]||'';dsEl('Paste').value='';dsEl('Decision').value=r.decision;dsEl('Message').textContent='Declaración recuperada del historial.';dsRefresh()};
+  open.onclick=()=>{for(const key of ['Client','Product','Amount','Term'])dsValues[key]=r[key.toLowerCase()]||'';dsEl('Paste').value='';dsEl('Decision').value=r.decision;document.getElementById('dsContractor').value=r.contractor||'';dsEl('Message').textContent='Declaración recuperada del historial.';dsRefresh()};
   const del=document.createElement('button');del.type='button';del.className='ds-delete';del.textContent='✕';del.title='Eliminar registro';del.onclick=()=>{if(confirm('¿Eliminar esta declaración del historial?')){dsStore(dsRecords().filter(x=>x.id!==r.id));dsRefresh()}};
   line.append(open,del);history.append(line);
  });
 }
-function dsData(){return {client:dsValues.Client.trim(),product:dsValues.Product.trim(),amount:dsValues.Amount.trim(),term:dsValues.Term.trim(),decision:dsEl('Decision').value,approver:currentUser?.name||''}}
+function dsData(){return {client:dsValues.Client.trim(),product:dsValues.Product.trim(),amount:dsValues.Amount.trim(),term:dsValues.Term.trim(),decision:dsEl('Decision').value,approver:currentUser?.name||'',contractor:document.getElementById('dsContractor')?.value||''}}
 dsEl('Paste').addEventListener('input',dsExtract);
 dsEl('Decision').addEventListener('change',dsRefresh);
 for(const key of ['Client','Product','Amount','Term']){
@@ -1159,7 +1181,7 @@ function dsSaveRecord(r){
  if(saved)dsRefresh();
  return saved;
 }
-dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';for(const key of Object.keys(dsValues))dsValues[key]='';dsEl('Decision').value='';dsEl('Message').textContent='';dsRefresh()});
+dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';document.getElementById('dsContractor').value='';for(const key of Object.keys(dsValues))dsValues[key]='';dsEl('Decision').value='';dsEl('Message').textContent='';dsRefresh()});
 dsEl('Copy').addEventListener('click',async()=>{
  const r=dsData();if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa la solicitud y selecciona el dictamen antes de copiar.';return}
  dsEl('Copy').disabled=true;
@@ -1200,4 +1222,64 @@ dsEl('Copy').addEventListener('click',async()=>{
  }
 });
 dsRefresh();
+
+for(const c of CONTRACTORS)document.getElementById('dsContractor').add(new Option(c,c));
+// Historial 4.6: utiliza las claves locales independientes que ya emplea cada módulo.
+let ehModule='medicos';
+const ehContractor=document.getElementById('ehContractor');
+const ehSearch=document.getElementById('ehSearch');
+const ehStatus=document.getElementById('ehStatus');
+const ehList=document.getElementById('ehList');
+function ehRows(){return ehModule==='medicos'?historyEntries.map(h=>({...h,ehId:h.id,ehName:h.cliente||h.file,ehContractor:h.contratante||'',ehDecision:h.dictamen||'REVISAR',ehDate:h.createdAt,ehDetail:h.file||''})):dsRecords().map(h=>({...h,ehId:h.id,ehName:h.client||'Sin nombre',ehContractor:h.contractor||'',ehDecision:h.decision||'',ehDate:h.date,ehDetail:h.product||''}))}
+function ehRender(){
+ const rows=ehRows();const previous=ehContractor.value;
+ const contractors=[...new Set(rows.map(r=>r.ehContractor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+ ehContractor.replaceChildren(new Option('Todos los contratantes · Vista general',''));
+ for(const c of contractors)ehContractor.add(new Option(c,c));
+ ehContractor.value=contractors.includes(previous)?previous:'';
+ const priorStatus=ehStatus.value;
+ const statuses=[...new Set(rows.map(r=>r.ehDecision).filter(Boolean))].sort();
+ ehStatus.replaceChildren(new Option('Todos los dictámenes',''));
+ for(const d of statuses)ehStatus.add(new Option(d,d));
+ ehStatus.value=statuses.includes(priorStatus)?priorStatus:'';
+ const q=ehSearch.value.trim().toLocaleLowerCase('es');
+ const filtered=rows.filter(r=>(!ehContractor.value||r.ehContractor===ehContractor.value)&&(!ehStatus.value||r.ehDecision===ehStatus.value)&&(!q||[r.ehName,r.ehDetail,r.ehContractor,r.ehDecision].join(' ').toLocaleLowerCase('es').includes(q)));
+ document.getElementById('ehCount').textContent=filtered.length+' '+(filtered.length===1?'registro':'registros');
+ ehList.replaceChildren();
+ if(!filtered.length){const empty=document.createElement('div');empty.className='eh-empty';empty.textContent='No hay registros para los filtros seleccionados.';ehList.append(empty);return}
+ for(const r of filtered){
+  const item=document.createElement('div');item.className='eh-item';
+  const main=document.createElement('button');main.type='button';main.className='eh-item-main';main.title='Abrir registro';
+  const title=document.createElement('strong');title.textContent=r.ehName;
+  const sub=document.createElement('small');const date=r.ehDate?new Date(r.ehDate).toLocaleString('es-EC'):'';sub.textContent=[r.ehContractor||r.ehDetail,date].filter(Boolean).join(' · ');
+  main.append(title,sub);
+  main.addEventListener('click',()=>{
+   if(ehModule==='medicos'){
+    const h=historyEntries.find(x=>x.id===r.ehId);if(!h)return;
+    const record={...h,_historyId:h.id};delete record.id;state.push(record);render();extNavigate('examenes');
+    document.getElementById('results')?.lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'});
+   }else{
+    const h=dsRecords().find(x=>x.id===r.ehId);if(!h)return;
+    for(const key of ['Client','Product','Amount','Term'])dsValues[key]=h[key.toLowerCase()]||'';
+    dsEl('Paste').value='';dsEl('Decision').value=h.decision||'';document.getElementById('dsContractor').value=h.contractor||'';dsRefresh();extNavigate('declaraciones');
+   }
+  });
+  const badge=document.createElement('span');badge.className='eh-status';badge.textContent=r.ehDecision;
+  const del=document.createElement('button');del.type='button';del.className='eh-delete';del.textContent='×';del.title='Eliminar definitivamente';del.setAttribute('aria-label','Eliminar registro');
+  del.addEventListener('click',()=>openConfirmModal({title:'¿Eliminar este registro?',message:'Esta acción es permanente y no se puede deshacer.',confirmText:'Eliminar definitivamente',onConfirm:()=>{
+   if(ehModule==='medicos'){historyEntries=historyEntries.filter(x=>x.id!==r.ehId);persistHistory();renderHistory();updateDashboard()}
+   else{dsStore(dsRecords().filter(x=>x.id!==r.ehId));dsRefresh()}
+   ehRender();
+  }}));
+  item.append(main,badge,del);ehList.append(item);
+ }
+}
+document.querySelectorAll('[data-eh-module]').forEach(btn=>btn.addEventListener('click',()=>{
+ ehModule=btn.dataset.ehModule;
+ document.querySelectorAll('[data-eh-module]').forEach(b=>b.classList.toggle('active',b===btn));
+ ehSearch.value='';ehContractor.value='';ehStatus.value='';ehRender();
+}));
+for(const control of [ehSearch,ehContractor,ehStatus])control.addEventListener(control===ehSearch?'input':'change',ehRender);
+const ehOldNavigate=extNavigate;
+extNavigate=function(view){ehOldNavigate(view);if(view==='historial')ehRender()};
 </script></body></html>
