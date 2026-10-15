@@ -706,6 +706,12 @@ body.authenticated{background:var(--ext-canvas)!important}
 
 #appShell #extDeclarationsView #dsCopy{min-width:160px!important}
 #appShell #extDeclarationsView #dsCopy:disabled{opacity:.6!important;cursor:wait!important}
+
+/* EXT 3.8: centrar únicamente la tabla dentro de la tarjeta derecha. */
+#appShell #extDeclarationsView .ds-side>.ds-card{display:flex!important;flex-direction:column!important;justify-content:flex-start!important}
+#appShell #extDeclarationsView .ds-side .ds-card-title{flex:none!important}
+#appShell #extDeclarationsView .ds-side .ds-capture{flex:none!important;margin-top:auto!important;margin-bottom:auto!important}
+#appShell #extDeclarationsView .ds-side .ds-response-footer{margin-top:0!important;flex:none!important}
 </style>
 </head>
 <body>
