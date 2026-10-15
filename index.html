@@ -1036,7 +1036,7 @@ $('#choose').addEventListener('click',e=>{e.stopPropagation();$('#files').click(
 function captureNode(){
  const area=document.createElement('div');area.className='capture-area';
  area.innerHTML=state.map((r,i)=>`<section class="card">${i===0||(r.contratante||'')!==(state[i-1].contratante||'')?`<div style="font:700 15px Arial;padding:12px;border-bottom:1px solid #d3dadd">CONTRATANTE: ${escapeHtml(r.contratante||'NO ASIGNADO')}</div>`:''}<div class="summary"><div class="heading">♙ CLIENTE</div><div class="heading">▦ EDAD</div><div class="heading">▤ CRÉDITO</div><div class="heading">◧ DICTAMEN</div><div class="heading">⚖ APELABLE</div><div class="val">${escapeHtml(r.cliente)}</div><div class="val">${escapeHtml(r.edad)}</div><div class="val">${r.amount?`USD. ${escapeHtml(r.amount)}`:"SIN EXTRAER"}</div><div class="val"><span class="capture-risk ${riskClass(r.dictamen)}">${escapeHtml(r.dictamen)}</span></div><div class="val"><span class="capture-appeal ${r.apelable==='SI'?'yes':'no'}">${escapeHtml(r.apelable)}</span></div></div>${r.comentario||r.apelacion?`<div class="capture-details">${r.comentario?`<div class="capture-label">COMENTARIO PARA EL CLIENTE</div><div class="capture-comment">${escapeHtml(r.comentario)}</div>`:''}${r.apelacion?`<div class="capture-label">REQUISITOS PARA RECONSIDERACIÓN</div><div class="capture-appeal-block">${escapeHtml(r.apelacion)}</div>`:''}</div>`:''}</section>`).join('');
- area.style.cssText='position:fixed;top:0;left:-20000px;width:680px;background:white;padding:8px;z-index:-1';
+ area.style.cssText='position:fixed;top:0;left:-20000px;width:1360px;background:white;padding:8px;z-index:-1';
  document.body.appendChild(area);return area;
 }
 $('#image').addEventListener('click',async()=>{
@@ -1045,7 +1045,7 @@ $('#image').addEventListener('click',async()=>{
  let node;
  try{
    if(!window.html2canvas)throw Error('No se cargó la biblioteca de imagen. Comprueba tu conexión.');
-   node=captureNode();const canvas=await window.html2canvas(node,{backgroundColor:'#ffffff',scale:1,logging:false,windowWidth:900});
+   node=captureNode();const canvas=await window.html2canvas(node,{backgroundColor:'#ffffff',scale:1,logging:false,windowWidth:1440});
    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
    if(!blob)throw Error('No se pudo generar la imagen PNG.');
    try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.textContent='Imagen copiada ✓'}
