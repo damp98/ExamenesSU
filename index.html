@@ -474,6 +474,26 @@ body.authenticated{background:var(--ext-canvas)!important}
 }
 @media(max-width:1100px){#appShell .ext-sidebar{max-height:none!important}}
 
+
+/* EXT 2.6: navegación lateral fiel a la referencia, sin botones oscuros */
+@media (min-width:761px){
+ #appShell .ext-nav{width:224px!important;padding:18px 15px 20px!important;background:linear-gradient(155deg,#f8fbff 0%,#f0f5fb 75%,#f8fbff 100%)!important;border-right:1px solid #e5ebf4!important;box-shadow:none!important}
+ #appShell .ext-nav-logo{height:76px!important;margin-bottom:12px!important;padding:0 10px!important}
+ #appShell .ext-nav-logo img{max-width:175px!important;max-height:65px!important}
+ #appShell .ext-nav-links{display:flex!important;flex-direction:column!important;gap:5px!important}
+ #appShell .ext-nav button.nav-link,#appShell .ext-nav button.nav-logout{width:100%!important;min-height:46px!important;padding:11px 15px!important;display:flex!important;align-items:center!important;gap:14px!important;border:0!important;border-radius:12px!important;background:transparent!important;background-image:none!important;box-shadow:none!important;color:#334f70!important;font-size:13px!important;font-weight:540!important;letter-spacing:0!important;text-align:left!important;transform:none!important;transition:background-color .15s ease!important}
+ #appShell .ext-nav button.nav-link svg,#appShell .ext-nav button.nav-logout svg{width:20px!important;height:20px!important;flex:0 0 20px!important;stroke-width:1.8!important}
+ #appShell .ext-nav button.nav-link.active{background:#e3efff!important;background-image:none!important;color:#1f2f59!important;font-weight:700!important}
+ #appShell .ext-nav button.nav-link:not(.active):hover,#appShell .ext-nav button.nav-logout:hover{background:#edf3fa!important;color:#1f2f59!important}
+ #appShell .ext-nav button.nav-logout{margin-top:auto!important;font-weight:540!important}
+ #appShell{padding-left:224px!important}
+ #appShell .ext-topbar{left:224px!important}
+}
+@media (max-width:760px){
+ #appShell .ext-nav{background:linear-gradient(155deg,#f8fbff,#f0f5fb)!important}
+ #appShell .ext-nav button.nav-link,#appShell .ext-nav button.nav-logout{background:transparent!important;background-image:none!important;box-shadow:none!important;color:#334f70!important;border:0!important;font-weight:540!important}
+ #appShell .ext-nav button.nav-link.active{background:#e3efff!important;color:#1f2f59!important;font-weight:700!important}
+}
 </style>
 </head>
 <body>
