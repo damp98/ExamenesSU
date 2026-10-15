@@ -573,6 +573,19 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extDeclarationsView .ds-card{min-width:0}
 @media(max-width:1050px){#extDeclarationsView .ds-main{grid-template-columns:1fr}}
 @media(max-width:700px){#extWelcome .ext-module-grid{grid-template-columns:1fr}#appShell #extWelcome button.ext-module-card{min-height:220px!important;padding:23px!important}#extDeclarationsView .ds-capture-row{grid-template-columns:35% 65%;font-size:12px}#extDeclarationsView .ds-capture-row>span,#extDeclarationsView .ds-capture-row>strong{padding:11px}}
+
+#appShell .ds-layout{grid-template-columns:minmax(0,.9fr) minmax(480px,1.25fr)!important;align-items:start}
+#appShell .ds-side{min-width:0}
+#appShell .ds-capture-row{grid-template-columns:28% 72%;font-size:clamp(12px,1.05vw,15px);min-height:62px}
+#appShell .ds-capture-row>span,#appShell .ds-capture-row>strong{padding:17px 15px}
+#appShell .ds-capture-row>strong[contenteditable]{cursor:text;outline:none;white-space:pre-wrap;min-width:0}
+#appShell .ds-capture-row>strong[contenteditable]:focus{background:#f3f7ff;box-shadow:inset 0 0 0 2px #a9bbda}
+#appShell .ds-decision{display:block;width:100%;min-width:0;min-height:62px;border:0;border-radius:0;background:#f7f9fc;color:#1f2f59;padding:15px;font:700 14px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;cursor:pointer;outline-offset:-3px}
+#appShell .ds-decision.aprobado{background:#e5f5eb;color:#177547}
+#appShell .ds-decision.negado{background:#fde8eb;color:#b42c41}
+#appShell .ds-decision.revision{background:#fff3d7;color:#926209}
+#appShell .ds-capture-row>.ds-status{min-height:62px}
+@media(max-width:1100px){#appShell .ds-layout{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body>
@@ -610,13 +623,11 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="ds-layout"><div class="ds-main">
 <div class="ds-card ds-input-card"><div class="ds-card-title"><span class="ds-step">01</span><div><h2>Solicitud comercial</h2><p>Pega el texto recibido con los cuatro campos.</p></div></div>
 <textarea id="dsPaste" class="ds-paste" spellcheck="false" placeholder="Nombre del cliente: ...&#10;Producto: ...&#10;Monto: ...&#10;Plazo: ..."></textarea>
-<div class="ds-input-actions"><button type="button" id="dsExtract" class="ds-primary">Extraer información <span>→</span></button><button type="button" id="dsClear" class="ds-quiet">Limpiar</button><span id="dsMessage" role="status"></span></div></div>
-<div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Revisión y dictamen</h2><p>Confirma los datos y selecciona la decisión técnica.</p></div></div>
-<div class="ds-fields"><label class="ds-full">Nombre del cliente<input id="dsClient" placeholder="Nombre del cliente"></label><label>Producto<input id="dsProduct" placeholder="Producto"></label><label>Monto<input id="dsAmount" placeholder="$0"></label><label>Plazo<input id="dsTerm" placeholder="0 meses"></label><label>Persona que aprueba<input id="dsApprover" readonly></label><label class="ds-full">Aprobación de riesgo<select id="dsDecision"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></label></div>
-<div class="ds-input-actions"><button type="button" id="dsSave" class="ds-primary">Guardar declaración</button><button type="button" id="dsCopy" class="ds-quiet">Copiar como imagen</button></div></div></div>
-<aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">03</span><div><h2>Vista previa</h2><p>Así se verá la imagen de respuesta.</p></div></div>
-<div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><strong id="dsPreviewDecision" class="ds-status">Pendiente</strong></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
-<p class="ds-help">El dictamen lo selecciona el suscriptor. EXT no decide automáticamente si un riesgo se aprueba.</p></div>
+<div class="ds-input-actions"><button type="button" id="dsClear" class="ds-quiet">Limpiar</button><span id="dsMessage" role="status"></span></div></div>
+</div>
+<aside class="ds-side"><div class="ds-card"><div class="ds-card-title"><span class="ds-step">02</span><div><h2>Respuesta editable</h2><p>Los datos aparecen al escribir o pegar. Puedes corregirlos aquí mismo.</p></div></div>
+<div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient" contenteditable="true" role="textbox" aria-label="Editar Client" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct" contenteditable="true" role="textbox" aria-label="Editar Product" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount" contenteditable="true" role="textbox" aria-label="Editar Amount" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm" contenteditable="true" role="textbox" aria-label="Editar Term" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><select id="dsDecision" class="ds-decision" aria-label="Aprobación de riesgo"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
+<div class="ds-input-actions"><button type="button" id="dsSave" class="ds-primary">Guardar declaración</button><button type="button" id="dsCopy" class="ds-quiet">Copiar como imagen</button></div><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div>
 <div class="ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></aside></div></section>
 <section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
 <section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
@@ -927,31 +938,28 @@ const dsEl=id=>document.getElementById('ds'+id);
 function dsKey(){return 'ext_declaraciones_v1_'+(currentUser?.username||'sin_sesion')}
 function dsRecords(){try{return JSON.parse(localStorage.getItem(dsKey())||'[]')}catch{return []}}
 function dsStore(records){try{localStorage.setItem(dsKey(),JSON.stringify(records));return true}catch{return false}}
+const dsValues={Client:'',Product:'',Amount:'',Term:''};
 function dsExtract(){
  const raw=dsEl('Paste').value.replace(/\r/g,'');
- const labels={'Client':'Nombre del cliente','Product':'Producto','Amount':'Monto','Term':'Plazo'};
- const found={};
+ const labels={Client:'Nombre del cliente',Product:'Producto',Amount:'Monto',Term:'Plazo'};
  const lines=raw.split('\n');
- for(const [field,label] of Object.entries(labels)){
-   const pattern=new RegExp('^\\s*'+label+'\\s*:\\s*(.*?)\\s*$','i');
-   const line=lines.find(l=>pattern.test(l));
-   found[field]=line?(line.match(pattern)?.[1]||'').replace(/\s+/g,' ').trim():'';
+ for(const [key,label] of Object.entries(labels)){
+  const rx=new RegExp('^\\s*'+label+'\\s*:\\s*(.*?)\\s*$','i');
+  const line=lines.find(l=>rx.test(l));
+  dsValues[key]=line?(line.match(rx)?.[1]||'').replace(/\s+/g,' ').trim():'';
  }
- const missing=Object.keys(labels).filter(k=>!found[k]);
- if(missing.length){dsEl('Message').textContent='Faltan campos: '+missing.map(k=>labels[k]).join(', ');return}
- for(const key of Object.keys(labels))dsEl(key).value=found[key];
- dsEl('Decision').value='';
- dsEl('Message').textContent='Los cuatro campos se extrajeron correctamente.';
+ dsEl('Message').textContent=Object.values(dsValues).every(Boolean)?'Datos actualizados automáticamente.':'Pega los cuatro campos para completar la respuesta.';
  dsRefresh();
 }
 function dsRefresh(){
- dsEl('Approver').value=currentUser?.name||'';
- for(const key of ['Client','Product','Amount','Term','Approver'])
-  dsEl('Preview'+key).textContent=dsEl(key).value.trim()||'—';
+ for(const key of ['Client','Product','Amount','Term']){
+  const el=dsEl('Preview'+key);
+  if(document.activeElement!==el)el.textContent=dsValues[key]||'—';
+ }
+ dsEl('PreviewApprover').textContent=currentUser?.name||'—';
  const decision=dsEl('Decision').value;
- const status=dsEl('PreviewDecision');
- status.textContent=decision||'Pendiente';
- status.className='ds-status '+(decision==='Aprobado'?'aprobado':decision==='Negado'?'negado':decision==='Revisión Médica'?'revision':'');
+ const status=dsEl('Decision');
+ status.className='ds-decision '+(decision==='Aprobado'?'aprobado':decision==='Negado'?'negado':decision==='Revisión Médica'?'revision':'');
  const records=dsRecords();
  for(const [id,value] of [['Count',records.length],['Approved',records.filter(r=>r.decision==='Aprobado').length],['Denied',records.filter(r=>r.decision==='Negado').length],['Review',records.filter(r=>r.decision==='Revisión Médica').length]])
   dsEl(id).textContent=value;
@@ -961,24 +969,39 @@ function dsRefresh(){
   const line=document.createElement('div');line.className='ds-history-entry';
   const open=document.createElement('button');open.type='button';open.textContent=r.client||'Sin nombre';
   const sub=document.createElement('small');sub.textContent=new Date(r.date).toLocaleString('es-EC')+' · '+r.decision;open.append(sub);
-  open.onclick=()=>{for(const key of ['Client','Product','Amount','Term'])dsEl(key).value=r[key.toLowerCase()]||'';dsEl('Decision').value=r.decision;dsEl('Message').textContent='Declaración recuperada del historial.';dsRefresh()};
+  open.onclick=()=>{for(const key of ['Client','Product','Amount','Term'])dsValues[key]=r[key.toLowerCase()]||'';dsEl('Paste').value='';dsEl('Decision').value=r.decision;dsEl('Message').textContent='Declaración recuperada del historial.';dsRefresh()};
   const del=document.createElement('button');del.type='button';del.className='ds-delete';del.textContent='✕';del.title='Eliminar registro';del.onclick=()=>{if(confirm('¿Eliminar esta declaración del historial?')){dsStore(dsRecords().filter(x=>x.id!==r.id));dsRefresh()}};
   line.append(open,del);history.append(line);
  });
 }
-function dsData(){return {client:dsEl('Client').value.trim(),product:dsEl('Product').value.trim(),amount:dsEl('Amount').value.trim(),term:dsEl('Term').value.trim(),decision:dsEl('Decision').value,approver:currentUser?.name||''}}
-dsEl('Extract').addEventListener('click',dsExtract);
-for(const key of dsIds)dsEl(key).addEventListener('input',dsRefresh);
+function dsData(){return {client:dsValues.Client.trim(),product:dsValues.Product.trim(),amount:dsValues.Amount.trim(),term:dsValues.Term.trim(),decision:dsEl('Decision').value,approver:currentUser?.name||''}}
+dsEl('Paste').addEventListener('input',dsExtract);
+dsEl('Decision').addEventListener('change',dsRefresh);
+for(const key of ['Client','Product','Amount','Term']){
+ dsEl('Preview'+key).addEventListener('input',()=>{
+  dsValues[key]=dsEl('Preview'+key).textContent.replace(/\s+/g,' ').trim();
+ });
+ dsEl('Preview'+key).addEventListener('blur',dsRefresh);
+}
 dsEl('Save').addEventListener('click',()=>{
  const r=dsData();
  if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa los cuatro campos y selecciona un dictamen.';return}
  const records=dsRecords();records.unshift({...r,id:Date.now()+'-'+Math.random().toString(36).slice(2),date:new Date().toISOString()});
  if(dsStore(records)){dsEl('Message').textContent='Declaración guardada en este navegador.';dsRefresh()}else dsEl('Message').textContent='No se pudo guardar: almacenamiento local no disponible.';
 });
-dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';for(const key of ['Client','Product','Amount','Term','Decision'])dsEl(key).value='';dsEl('Message').textContent='';dsRefresh()});
+dsEl('Clear').addEventListener('click',()=>{dsEl('Paste').value='';for(const key of Object.keys(dsValues))dsValues[key]='';dsEl('Decision').value='';dsEl('Message').textContent='';dsRefresh()});
 dsEl('Copy').addEventListener('click',async()=>{
  const r=dsData();if(!r.client||!r.product||!r.amount||!r.term||!r.decision){dsEl('Message').textContent='Completa la solicitud y selecciona el dictamen antes de copiar.';return}
- const target=dsEl('Capture');
+ const target=dsEl('Capture').cloneNode(true);
+ const selected=target.querySelector('#dsDecision');
+ const replacement=document.createElement('strong');
+ replacement.className='ds-status '+(r.decision==='Aprobado'?'aprobado':r.decision==='Negado'?'negado':'revision');
+ replacement.textContent=r.decision;
+ selected.replaceWith(replacement);
+ target.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+ target.style.width=dsEl('Capture').offsetWidth+'px';
+ target.style.position='fixed';target.style.left='-10000px';target.style.top='0';target.style.zIndex='-1';
+ document.body.appendChild(target);
  try{
   if(typeof html2canvas!=='function')throw Error('No se cargó el generador de imágenes.');
   const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});
@@ -991,7 +1014,7 @@ dsEl('Copy').addEventListener('click',async()=>{
  }catch(err){
   dsEl('Message').textContent='No se pudo copiar automáticamente. Se descargará un PNG.';
   try{const canvas=await html2canvas(target,{backgroundColor:'#ffffff',scale:2});const a=document.createElement('a');a.download='declaracion-salud.png';a.href=canvas.toDataURL('image/png');a.click()}catch(e){dsEl('Message').textContent='Error al generar imagen. Verifica la conexión y permisos del navegador.'}
- }
+ }finally{target.remove()}
 });
 dsRefresh();
 </script></body></html>
