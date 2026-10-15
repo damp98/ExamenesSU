@@ -200,9 +200,9 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 .login-screen .login-field:focus-within{border-color:var(--ext-brand-blue)!important;box-shadow:0 0 0 3px #1f2f591a!important}
 .login-screen .login-field input:-webkit-autofill{-webkit-text-fill-color:var(--ext-brand-blue)!important}
 /* Botones principales y enlaces de navegación del panel */
-#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open),
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout),
 #appShell .drop button,#appShell #choose{background:var(--ext-brand-blue)!important;color:#fff!important}
-#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):hover{background:#2a3e72!important}
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout):hover{background:#2a3e72!important}
 #appShell .dashboard-welcome h1,#appShell .toolbar h3,#appShell .ext-sidebar h3,
 #appShell .session-meta strong,#appShell .contractor-panel label,
 #appShell .kpi .k-value:not(.red .k-value):not(.amber .k-value){color:var(--ext-brand-blue)}
@@ -494,6 +494,29 @@ body.authenticated{background:var(--ext-canvas)!important}
  #appShell .ext-nav button.nav-link,#appShell .ext-nav button.nav-logout{background:transparent!important;background-image:none!important;box-shadow:none!important;color:#334f70!important;border:0!important;font-weight:540!important}
  #appShell .ext-nav button.nav-link.active{background:#e3efff!important;color:#1f2f59!important;font-weight:700!important}
 }
+
+/* EXT 2.7 | Sidebar Apple: single authoritative navigation treatment.
+   Navigation buttons are explicitly excluded from the global primary-button rule above. */
+@media (min-width:761px){
+ #appShell .ext-nav{width:224px!important;padding:18px 12px 20px!important;background:linear-gradient(160deg,#fafcff 0%,#f3f7fc 60%,#edf3fa 100%)!important;border-right:1px solid #e6ecf4!important;box-shadow:none!important}
+ #appShell .ext-nav-logo{height:76px!important;margin-bottom:10px!important;padding:0 12px!important}
+ #appShell .ext-nav-logo img{max-width:175px!important;max-height:65px!important}
+ #appShell .ext-nav-links{display:flex!important;flex-direction:column!important;gap:3px!important}
+}
+#appShell .ext-nav button.nav-link,#appShell .ext-nav button.nav-logout{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ width:100%!important;min-height:43px!important;padding:10px 13px!important;
+ background:transparent!important;background-image:none!important;
+ color:#344d70!important;border:0!important;border-radius:11px!important;
+ box-shadow:none!important;font-size:13px!important;font-weight:520!important;
+ text-align:left!important;gap:13px!important;transition:background .16s ease,color .16s ease!important;
+}
+#appShell .ext-nav button.nav-link svg,#appShell .ext-nav button.nav-logout svg{width:19px!important;height:19px!important;flex:0 0 19px!important;stroke-width:1.8!important}
+#appShell .ext-nav button.nav-link.active{background:#e3efff!important;background-image:none!important;color:#1f2f59!important;font-weight:710!important;box-shadow:none!important}
+#appShell .ext-nav button.nav-link:not(.active):hover,#appShell .ext-nav button.nav-logout:hover{background:#edf3fb!important;color:#1f2f59!important;transform:none!important}
+#appShell .ext-nav button.nav-logout{margin-top:auto!important;font-weight:520!important}
+#appShell .ext-nav button.nav-logout:focus-visible,#appShell .ext-nav button.nav-link:focus-visible{outline:2px solid #7185b5!important;outline-offset:2px!important}
+
 </style>
 </head>
 <body>
