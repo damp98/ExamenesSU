@@ -1280,6 +1280,15 @@ const extViews={inicio:'extWelcome',examenes:'extMedicalView',declaraciones:'ext
 const extSubmenu=document.getElementById('extSubmenu');
 function extNavigate(view){
  if(!extViews[view])return;
+ // Los resultados médicos son un espacio temporal de trabajo.
+ // Al abandonar el módulo, limpiar solo la vista y no el Historial/KPI guardado.
+ if(extCurrentView==='examenes' && view!=='examenes'){
+   state.length=0;
+   render();
+   const files=document.getElementById('files');
+   if(files)files.value='';
+   contractorSelect.value='';
+ }
  extCurrentView=view;
  if(currentUser?.id)sessionStorage.setItem('ext_active_view_'+currentUser.id,view);
  Object.entries(extViews).forEach(([key,id])=>document.getElementById(id).hidden=key!==view);
@@ -1306,7 +1315,17 @@ document.querySelector('#navLogout')?.addEventListener('click',()=>document.quer
 document.querySelector('#mobileNavToggle')?.addEventListener('click',()=>document.querySelector('#appShell')?.classList.toggle('nav-open'));
 document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=document.querySelector('#sideSearch');if(el){el.value=e.target.value;el.dispatchEvent(new Event('input',{bubbles:true}));}});
 const originalApplySession=applySession;
-applySession=function(){originalApplySession();if(currentUser){document.querySelector('#topAvatar').textContent=currentUser.initials;document.querySelector('#topName').textContent=currentUser.name;document.querySelector('#topRole').textContent=roleLabel(currentUser.role);extNavigate('inicio');}};
+applySession=function(){
+ originalApplySession();
+ if(currentUser){
+  document.querySelector('#topAvatar').textContent=currentUser.initials;
+  document.querySelector('#topName').textContent=currentUser.name;
+  document.querySelector('#topRole').textContent=roleLabel(currentUser.role);
+  // No sobrescribir con 'inicio' la vista guardada antes de restaurar la sesión.
+  const previous=sessionStorage.getItem('ext_active_view_'+currentUser.id);
+  extNavigate(previous && extViews[previous] ? previous : 'inicio');
+ }
+};
 
 
 renderHistory();render();applySession();
