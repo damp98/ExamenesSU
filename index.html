@@ -792,6 +792,35 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell #extHistoryView button.eh-delete{flex:0 0 29px!important;width:29px!important;height:29px!important;display:grid!important;place-items:center!important;background:transparent!important;color:#a4afbf!important;border:1px solid transparent!important;border-radius:8px!important;box-shadow:none!important;padding:0!important;font-size:19px!important;line-height:1!important}
 #appShell #extHistoryView button.eh-delete:hover{background:#fff0f1!important;color:#b83e4e!important;border-color:#f5d8dc!important}
 @media(max-width:850px){#appShell #extHistoryView .eh-toolbar{grid-template-columns:1fr!important}#appShell #extHistoryView .eh-panel{padding:17px!important}#appShell #extHistoryView .eh-status{white-space:normal!important;text-align:center!important}}
+
+/* EXT 4.8 · KPI de gestión técnica */
+#extKpiView .kt-panel{background:#fff;border:1px solid #e1e8f1;border-radius:22px;padding:26px;box-shadow:0 6px 28px #1f2f5908}
+#extKpiView .kt-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:23px}
+#extKpiView .kt-heading h2{font-size:22px;color:#1f2f59;margin:0 0 5px;font-weight:750}
+#extKpiView .kt-heading p{color:#8794a8;margin:0;font-size:13px}
+#extKpiView .kt-export{background:#1f2f59!important;color:#fff!important;border:0!important;border-radius:12px!important;padding:13px 19px!important;font-weight:700!important;white-space:nowrap}
+#extKpiView .kt-filters{display:grid;grid-template-columns:1fr 1fr 1.65fr auto;align-items:end;gap:12px;margin-bottom:24px}
+#extKpiView .kt-filters label{font-size:10px;letter-spacing:.5px;color:#7b8ba5;font-weight:750;display:flex;flex-direction:column;gap:8px}
+#extKpiView .kt-filters input,#extKpiView .kt-filters select{height:43px;border:1px solid #dce5f1;border-radius:10px;background:#fff;color:#1f2f59;padding:0 12px;font-size:13px;width:100%;min-width:0}
+#extKpiView .kt-reset{height:43px;border:1px solid #dce5f1!important;background:#f7f9fc!important;color:#1f2f59!important;border-radius:10px!important;padding:0 15px!important;font-size:12px!important}
+#extKpiView .kt-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:28px}
+#extKpiView .kt-metrics>div{border:1px solid #e8edf5;border-radius:15px;background:#fbfcfe;padding:18px 19px;display:flex;flex-direction:column;gap:10px;min-height:99px}
+#extKpiView .kt-metrics small{font-size:10px;letter-spacing:.6px;color:#7b8ca6;font-weight:700}
+#extKpiView .kt-metrics strong{font-size:27px;color:#1f2f59;line-height:1;font-weight:760}
+#extKpiView .kt-metrics #ktLast{font-size:17px;padding-top:5px}
+#extKpiView .kt-table-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+#extKpiView .kt-table-head h3{margin:0;font-size:17px;color:#1f2f59}
+#extKpiView .kt-table-head span{font-size:12px;color:#8795ab}
+#extKpiView .kt-table-scroll{overflow:auto;border:1px solid #e7edf5;border-radius:13px}
+#extKpiView .kt-table{border-collapse:collapse;width:100%;min-width:800px}
+#extKpiView .kt-table th{background:#f5f8fc;color:#7385a1;font-size:10px;letter-spacing:.4px;text-align:left;padding:14px 13px;white-space:nowrap}
+#extKpiView .kt-table td{border-top:1px solid #edf1f7;padding:14px 13px;font-size:12px;color:#263b61;background:#fff}
+#extKpiView .kt-table td:nth-child(2){font-weight:700}
+#extKpiView .kt-empty{text-align:center!important;padding:36px!important;color:#8795aa!important;font-weight:400!important}
+#extKpiView .kt-status{background:#eaf5ef;color:#317b55;padding:6px 9px;border-radius:7px;font-size:10px;font-weight:750}
+#extKpiView .kt-footnote{font-size:11px;line-height:1.6;color:#8291a6;margin:16px 0 0}
+@media(max-width:950px){#extKpiView .kt-filters{grid-template-columns:repeat(2,minmax(0,1fr))}#extKpiView .kt-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){#extKpiView .kt-panel{padding:16px}#extKpiView .kt-heading{align-items:flex-start;flex-direction:column}#extKpiView .kt-export{width:100%}#extKpiView .kt-filters{grid-template-columns:1fr 1fr}#extKpiView .kt-filters label:nth-child(3){grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -840,7 +869,12 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="ds-response-footer"><button type="button" id="dsCopy" class="ds-primary">Copiar imagen y guardar</button><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div></div>
 </aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
 <section id="extProfileView" class="ext-view" hidden><div class="ext-view-head"><h1>Mi perfil</h1><p>Información del usuario de la sesión actual.</p></div><div class="ds-card"><h2 id="extProfileName">Usuario</h2><p id="extProfileRole">Suscriptor</p></div></section>
-<section id="extKpiView" class="ext-view" hidden><div class="ext-view-head"><h1>KPI</h1><p>Indicadores de cada módulo, separados.</p></div><div class="ext-module-grid"><button type="button" class="ext-module-card" data-open-module="examenes"><strong>Exámenes Médicos</strong><small>Consulta sus indicadores en el módulo de PDF.</small></button><button type="button" class="ext-module-card" data-open-module="declaraciones"><strong>Declaraciones de Salud</strong><small>Consulta los indicadores en su panel de historial.</small></button></div></section>
+<section id="extKpiView" class="ext-view" hidden>
+<div class="ext-view-head"><span class="ext-eyebrow">GESTIÓN · PERSONAL</span><h1>KPI</h1><p>Seguimiento de los exámenes médicos entregados. Los indicadores y la exportación corresponden exclusivamente a tu usuario y este navegador.</p></div>
+<div class="kt-panel"><div class="kt-heading"><div><h2>Gestión técnica</h2><p>Filtra los registros por fecha de procesamiento y contratante.</p></div><button type="button" id="ktExport" class="kt-export">↓ Descargar Excel (.xlsx)</button></div>
+<div class="kt-filters"><label>DESDE<input type="date" id="ktFrom"></label><label>HASTA<input type="date" id="ktTo"></label><label>CONTRATANTE<select id="ktContractor"><option value="">Todos los contratantes</option></select></label><button type="button" id="ktReset" class="kt-reset">Limpiar filtros</button></div>
+<div class="kt-metrics"><div><small>CLIENTES PROCESADOS</small><strong id="ktTotal">0</strong></div><div><small>CONTRATANTES</small><strong id="ktContractors">0</strong></div><div><small>ESTE MES</small><strong id="ktMonth">0</strong></div><div><small>ÚLTIMO REGISTRO</small><strong id="ktLast">—</strong></div></div>
+<div class="kt-table-head"><h3>Registros de gestión</h3><span id="ktCount">0 registros</span></div><div class="kt-table-scroll"><table class="kt-table"><thead><tr><th>FECHA</th><th>ASEGURADO</th><th>CONTRATANTE</th><th>BROKER</th><th>COMERCIAL</th><th>SUSCRIPTOR</th><th>ESTADO</th></tr></thead><tbody id="ktBody"></tbody></table></div><p class="kt-footnote">Los KPI se generan únicamente al copiar correctamente la imagen de Exámenes Médicos. Copiar nuevamente un mismo registro no lo duplica. La eliminación desde Historial elimina también su KPI asociado.</p></div></section>
 <section id="extHistoryView" class="ext-view" hidden><div class="ext-view-head"><span class="ext-eyebrow">REGISTROS · PERSONALES</span><h1>Historial</h1><p>Consulta, recupera y elimina tus registros de forma independiente por módulo.</p></div>
 <div id="ehLegacyCompatibility" hidden aria-hidden="true"><aside class="ext-sidebar"><h3>Historial</h3><input class="filter-search" id="sideSearch" placeholder="Buscar cliente o archivo…" aria-label="Buscar historial"><div class="filter-grid"><label>Dictamen<select id="filterRisk"><option value="">Todos</option><option value="ALTO">Riesgo alto</option><option value="MODERADO">Riesgo moderado</option><option value="NORMAL">Normal / bajo</option><option value="REVISAR">Por revisar</option></select></label><label>Contratante<select id="filterContractor"><option value="">Todos</option></select></label><label>Usuario<select id="filterUser"><option value="">Todos</option></select></label><label>Fecha<select id="filterDate"><option value="">Todas</option><option value="7">Últimos 7 días</option><option value="30">Últimos 30 días</option><option value="90">Últimos 90 días</option></select></label></div><div id="sideHistoryList" class="ext-history-list"></div><div class="ext-side-actions"><button class="outline" id="exportKpiSide">Descargar KPI</button><button class="outline" id="clearFilters">Limpiar filtros</button></div><div id="adminControl" class="admin-control" hidden><strong>Panel de control</strong><small>Acceso reservado al administrador. Los datos y exportaciones actuales corresponden a este navegador.</small><button id="adminExport">Descargar reporte administrativo</button></div></aside></div>
 <div class="eh-panel"><div class="eh-tabs"><button type="button" class="eh-tab active" data-eh-module="medicos">Exámenes Médicos</button><button type="button" class="eh-tab" data-eh-module="declaraciones">Declaraciones de Salud</button></div>
@@ -856,6 +890,7 @@ body.authenticated{background:var(--ext-canvas)!important}
  </section>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script type="module">
 import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
@@ -919,8 +954,8 @@ function renderHistory(){const list=$('#historyList');if(!list)return;const quer
 function closeHistory(){ $('#historyPanel').hidden=true;$('#historyToggle').setAttribute('aria-expanded','false') }
 $('#historyToggle').addEventListener('click',()=>{const panel=$('#historyPanel');panel.hidden=!panel.hidden;$('#historyToggle').setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)renderHistory()});
 document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))closeHistory()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory()});$('#historySearch').addEventListener('input',renderHistory);
-$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){openConfirmModal({title:'¿Eliminar ficha?',message:'¿Quieres eliminar esta ficha del historial local?<br>Esta acción solo afecta a este navegador.',confirmText:'Eliminar',onConfirm:()=>{historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);persistHistory();renderHistory();}});return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
-$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;openConfirmModal({title:'¿Borrar historial?',message:'¿Eliminar definitivamente todas las fichas guardadas en este navegador?<br>Esta acción no se puede deshacer.',confirmText:'Borrar historial',onConfirm:()=>{historyEntries=[];persistHistory();renderHistory();updateDashboard();}})});
+$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){openConfirmModal({title:'¿Eliminar ficha?',message:'¿Quieres eliminar esta ficha del historial local?<br>Esta acción solo afecta a este navegador.',confirmText:'Eliminar',onConfirm:()=>{historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);ktRemoveByHistoryId(del.dataset.historyRemove);persistHistory();renderHistory();}});return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
+$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;openConfirmModal({title:'¿Borrar historial?',message:'¿Eliminar definitivamente todas las fichas guardadas en este navegador?<br>Esta acción no se puede deshacer.',confirmText:'Borrar historial',onConfirm:()=>{historyEntries=[];ktClearAll();persistHistory();renderHistory();updateDashboard();}})});
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function match(text,regex){return (text.match(regex)||[])[1]?.trim()||''}
 function segment(t,start,end){let i=t.search(start);if(i<0)return '';let s=t.slice(i).replace(start,'');let j=s.search(end);return (j>=0?s.slice(0,j):s).trim()}
@@ -1093,7 +1128,7 @@ $('#image').addEventListener('click',async()=>{
    node=captureNode();const canvas=await window.html2canvas(node,{backgroundColor:'#ffffff',scale:1,logging:false,windowWidth:1440});
    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
    if(!blob)throw Error('No se pudo generar la imagen PNG.');
-   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.textContent='Imagen copiada ✓'}
+   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);ktRegisterCopied(state);btn.textContent='Imagen copiada ✓'}
    catch(e){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='dicta-resultados.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),3000);btn.textContent='PNG descargado ✓'}
  }catch(e){alert('No se pudo copiar la imagen: '+e.message)}finally{node?.remove();btn.disabled=false;setTimeout(()=>btn.textContent=orig,2200)}
 });
@@ -1290,7 +1325,7 @@ function ehRender(){
   const badge=document.createElement('span');badge.className='eh-status';badge.textContent=r.ehDecision;
   const del=document.createElement('button');del.type='button';del.className='eh-delete';del.textContent='×';del.title='Eliminar definitivamente';del.setAttribute('aria-label','Eliminar registro');
   del.addEventListener('click',()=>openConfirmModal({title:'¿Eliminar este registro?',message:'Esta acción es permanente y no se puede deshacer.',confirmText:'Eliminar definitivamente',onConfirm:()=>{
-   if(ehModule==='medicos'){historyEntries=historyEntries.filter(x=>x.id!==r.ehId);persistHistory();renderHistory();updateDashboard()}
+   if(ehModule==='medicos'){historyEntries=historyEntries.filter(x=>x.id!==r.ehId);ktRemoveByHistoryId(r.ehId);persistHistory();renderHistory();updateDashboard()}
    else{dsStore(dsRecords().filter(x=>x.id!==r.ehId));dsRefresh()}
    ehRender();
   }}));
@@ -1305,4 +1340,71 @@ document.querySelectorAll('[data-eh-module]').forEach(btn=>btn.addEventListener(
 for(const control of [ehSearch,ehContractor,ehStatus])control.addEventListener(control===ehSearch?'input':'change',ehRender);
 const ehOldNavigate=extNavigate;
 extNavigate=function(view){ehOldNavigate(view);if(view==='historial')ehRender()};
+
+// EXT 4.8: KPI únicamente por usuario; la matriz se genera tras copiar el PNG.
+const KT_FIELDS=['AÑO DE EJERCICIO','FECHA DE REGISTRO','MES DE EJERCICIO','CANAL DE NEGOCIO','BROKER SOLICITANTE','COMERCIAL','RAMO PRINCIPAL','ASEGURADO','RUC / CI','Fecha de recepción de información','Suscriptor','Fecha de Entrega de Oferta / Respuesta','TIPO REQUERIMIENTO','Estado','REVISION','OBSERVACIONES','Tipo de requerimiento nuevo'];
+const KT_CONTRACTOR_MAP=[
+ ['MUSHUC RUNA','PONCE CANO','Venessa Veloz'],
+ ['FERNANDO DAQUILEMA','JABES','Isaac Lagos'],
+ ['KULLKI WASI','MIRAFLORES','Alex Benitez'],
+ ['BANCO DEL AUSTRO','GESTIÓN SEGURA','Elizabeth Barrera'],
+ ['MUTUALISTA AZUAY','TECNISEGUROS','David Yepez']
+];
+const KT_USER_MAP={amendoza:'A Mendoza',jamaguana:'J Amaguaña',jsampedro:'J Sampedro',lbravo:'L Bravo'};
+const KT_MONTHS=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
+function ktKey(){return 'ext_kpi_medicos_v1_'+(currentUser?.username||'sin_sesion')}
+function ktRecords(){try{const arr=JSON.parse(localStorage.getItem(ktKey())||'[]');return Array.isArray(arr)?arr:[]}catch{return []}}
+function ktSave(records){try{localStorage.setItem(ktKey(),JSON.stringify(records));return true}catch(e){console.warn('No se pudo guardar el KPI',e);return false}}
+function ktDate(d){const dt=new Date(d);return [String(dt.getDate()).padStart(2,'0'),String(dt.getMonth()+1).padStart(2,'0'),dt.getFullYear()].join('/')}
+function ktLocalISO(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function ktBroker(contractor){const c=String(contractor||'').toLocaleUpperCase('es');return KT_CONTRACTOR_MAP.find(([name])=>c.includes(name))||['','','']}
+function ktRegisterCopied(records){
+ if(!currentUser)return;
+ const now=new Date(),stored=ktRecords(),ids=new Set(stored.map(r=>r.historyId));
+ let count=0;
+ for(const r of records){
+  if(!r.cliente?.trim())continue;
+  // Un KPI por ficha guardada, aunque el PNG se copie varias veces.
+  if(!r._historyId)storeRecord(r);
+  const id=r._historyId;if(!id||ids.has(id))continue;
+  const [match,broker,commercial]=ktBroker(r.contratante);
+  const row={id:'kt_'+id,historyId:id,createdAt:now.toISOString(),dateISO:ktLocalISO(now),contractor:r.contratante||'',broker,commercial,
+   values:[now.getFullYear(),ktDate(now),KT_MONTHS[now.getMonth()],'MASIVO',broker,commercial,'VIDA DEUDORES',String(r.cliente).toLocaleUpperCase('es'),'0999999999',ktDate(now),KT_USER_MAP[currentUser.username]||currentUser.name,ktDate(now),'REQUISITOS DE ASEGURABILIDAD','REALIZADO','MOVIMIENTOS','EXÁMENES MÉDICOS','EXÁMENES']};
+  stored.push(row);ids.add(id);count++;
+ }
+ if(count&&!ktSave(stored))alert('La imagen se copió, pero no se pudo guardar el KPI. Revisa el almacenamiento del navegador.');
+ ktRender();
+}
+function ktRemoveByHistoryId(id){ktSave(ktRecords().filter(r=>r.historyId!==id));ktRender()}
+function ktClearAll(){ktSave([]);ktRender()}
+function ktFiltered(){const from=document.getElementById('ktFrom').value,to=document.getElementById('ktTo').value,contractor=document.getElementById('ktContractor').value;return ktRecords().filter(r=>(!from||r.dateISO>=from)&&(!to||r.dateISO<=to)&&(!contractor||r.contractor===contractor)).sort((a,b)=>b.createdAt.localeCompare(a.createdAt))}
+function ktRender(){
+ const select=document.getElementById('ktContractor');if(!select)return;
+ const previous=select.value,all=ktRecords(),contractors=[...new Set(all.map(r=>r.contractor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
+ select.replaceChildren(new Option('Todos los contratantes',''));contractors.forEach(c=>select.add(new Option(c,c)));select.value=contractors.includes(previous)?previous:'';
+ const filtered=ktFiltered(),body=document.getElementById('ktBody');body.replaceChildren();
+ document.getElementById('ktTotal').textContent=filtered.length;
+ document.getElementById('ktContractors').textContent=new Set(filtered.map(r=>r.contractor).filter(Boolean)).size;
+ const now=new Date(),month=ktLocalISO(now).slice(0,7);
+ document.getElementById('ktMonth').textContent=filtered.filter(r=>r.dateISO.startsWith(month)).length;
+ document.getElementById('ktLast').textContent=filtered.length?filtered[0].values[1]:'—';
+ document.getElementById('ktCount').textContent=filtered.length+' '+(filtered.length===1?'registro':'registros');
+ if(!filtered.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=7;td.className='kt-empty';td.textContent='No hay KPI registrados en este período. Copia una imagen de Exámenes Médicos para generar el primero.';tr.append(td);body.append(tr);return}
+ for(const r of filtered){const tr=document.createElement('tr');const vals=[r.values[1],r.values[7],r.contractor,r.broker,r.commercial,r.values[10],r.values[13]];vals.forEach((v,i)=>{const td=document.createElement('td');if(i===6){const b=document.createElement('span');b.className='kt-status';b.textContent=v;td.append(b)}else td.textContent=v??'';tr.append(td)});body.append(tr)}
+}
+function ktExportExcel(){
+ const records=ktFiltered();if(!records.length){alert('No hay registros KPI en el período seleccionado.');return}
+ if(typeof XLSX==='undefined'){alert('No se pudo cargar el generador de Excel. Comprueba tu conexión a internet y vuelve a intentar.');return}
+ const sheet=XLSX.utils.aoa_to_sheet([KT_FIELDS,...records.map(r=>r.values)]);
+ sheet['!cols']=[{wch:19},{wch:20},{wch:20},{wch:20},{wch:24},{wch:24},{wch:23},{wch:40},{wch:20},{wch:30},{wch:20},{wch:36},{wch:34},{wch:19},{wch:20},{wch:24},{wch:32}];
+ sheet['!autofilter']={ref:'A1:Q'+(records.length+1)};
+ // Excel nativo con filtros, encabezados horizontales y datos por fila.
+ const book=XLSX.utils.book_new();XLSX.utils.book_append_sheet(book,sheet,'KPI EXÁMENES');
+ XLSX.writeFile(book,'EXT_KPI_'+(currentUser?.username||'usuario')+'_'+(document.getElementById('ktFrom').value||'INICIO')+'_'+(document.getElementById('ktTo').value||'FIN')+'.xlsx');
+}
+for(const id of ['ktFrom','ktTo','ktContractor'])document.getElementById(id).addEventListener('change',ktRender);
+document.getElementById('ktReset').addEventListener('click',()=>{document.getElementById('ktFrom').value='';document.getElementById('ktTo').value='';document.getElementById('ktContractor').value='';ktRender()});
+document.getElementById('ktExport').addEventListener('click',ktExportExcel);
+const ktPreviousNavigate=extNavigate;extNavigate=function(view){ktPreviousNavigate(view);if(view==='kpi')ktRender()};
+
 </script></body></html>
