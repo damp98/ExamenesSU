@@ -200,9 +200,9 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 .login-screen .login-field:focus-within{border-color:var(--ext-brand-blue)!important;box-shadow:0 0 0 3px #1f2f591a!important}
 .login-screen .login-field input:-webkit-autofill{-webkit-text-fill-color:var(--ext-brand-blue)!important}
 /* Botones principales y enlaces de navegación del panel */
-#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout),
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout):not(.ext-subitem):not(.ext-module-card),
 #appShell .drop button,#appShell #choose{background:var(--ext-brand-blue)!important;color:#fff!important}
-#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout):hover{background:#2a3e72!important}
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):not(.nav-link):not(.nav-logout):not(.ext-subitem):not(.ext-module-card):hover{background:#2a3e72!important}
 #appShell .dashboard-welcome h1,#appShell .toolbar h3,#appShell .ext-sidebar h3,
 #appShell .session-meta strong,#appShell .contractor-panel label,
 #appShell .kpi .k-value:not(.red .k-value):not(.amber .k-value){color:var(--ext-brand-blue)}
@@ -548,6 +548,31 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:1100px){.ds-layout{grid-template-columns:1fr}}
 @media(max-width:700px){#appShell .ext-view:not(#extMedicalView){padding:22px 15px 35px}.ext-module-grid{grid-template-columns:1fr}.ds-card{padding:17px}.ds-fields{grid-template-columns:1fr}.ds-fields .ds-full{grid-column:auto}}
 @media print{#extWelcome,#extDeclarationsView,#extProfileView,#extHistoryView,#extKpiView{display:none!important}}
+
+/* EXT 3.1: selected navigation only; wide Excel-style response; generous home cards */
+#appShell .ext-nav button.ext-subitem,
+#appShell .ext-nav button.ext-subitem:not(.active),
+#appShell .ext-nav button.ext-subitem:not(.active):hover{background:transparent!important;background-image:none!important;color:#526481!important;box-shadow:none!important;border:0!important}
+#appShell .ext-nav button.ext-subitem.active{background:#e3efff!important;background-image:none!important;color:#1f2f59!important;box-shadow:none!important}
+#appShell .ext-nav button.ext-subitem:not(.active):hover{background:#edf3fb!important}
+#extWelcome .ext-module-grid{max-width:none;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:23px}
+#appShell #extWelcome button.ext-module-card{min-height:315px!important;padding:36px!important;justify-content:space-between;gap:20px;background:#fff!important;color:#1f2f59!important;box-shadow:0 8px 25px #1f2f5910!important}
+#appShell #extWelcome button.ext-module-card:hover{background:#f7faff!important}
+#extWelcome .ext-module-card strong{font-size:clamp(22px,2.2vw,30px);letter-spacing:-.6px}
+#extWelcome .ext-module-card small{font-size:15px;max-width:420px;line-height:1.65}
+#extWelcome .ext-module-icon{width:66px;height:66px;font-size:29px}
+#extWelcome .ext-module-arrow{font-size:13px}
+#extDeclarationsView .ds-layout{grid-template-columns:1fr;gap:20px}
+#extDeclarationsView .ds-main{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;gap:20px}
+#extDeclarationsView .ds-side{display:grid;grid-template-columns:1fr;gap:20px}
+#extDeclarationsView .ds-capture{width:100%;max-width:none;border-radius:12px}
+#extDeclarationsView .ds-capture-head{padding:17px;font-size:17px;letter-spacing:1.5px}
+#extDeclarationsView .ds-capture-row{grid-template-columns:24% 76%;min-height:48px;font-size:15px}
+#extDeclarationsView .ds-capture-row>span{padding:13px 16px}
+#extDeclarationsView .ds-capture-row>strong{padding:13px 16px}
+#extDeclarationsView .ds-card{min-width:0}
+@media(max-width:1050px){#extDeclarationsView .ds-main{grid-template-columns:1fr}}
+@media(max-width:700px){#extWelcome .ext-module-grid{grid-template-columns:1fr}#appShell #extWelcome button.ext-module-card{min-height:220px!important;padding:23px!important}#extDeclarationsView .ds-capture-row{grid-template-columns:35% 65%;font-size:12px}#extDeclarationsView .ds-capture-row>span,#extDeclarationsView .ds-capture-row>strong{padding:11px}}
 </style>
 </head>
 <body>
