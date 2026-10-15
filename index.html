@@ -179,11 +179,41 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
  .login-footer{font-size:11px}.login-card{max-height:calc(100dvh - 65px);padding:20px 30px!important}
  .login-benefits{gap:12px}.login-story h2{font-size:40px}.login-card h1{font-size:30px!important}
 }
+
+/* EXT 2.0: identidad corporativa azul #1f2f59 */
+:root{--ext-brand-blue:#1f2f59}
+.login-brand{gap:0!important}
+.login-brand-image{display:block;width:clamp(190px,15vw,250px);max-height:82px;object-fit:contain;object-position:left center}
+.login-screen .login-story h2,.login-screen .login-story h2 em,
+.login-screen .login-eyebrow,.login-screen .login-benefits strong,
+.login-screen .login-benefits small,.login-screen .login-story>p,
+.login-screen .login-card h1,.login-screen .login-card>p,
+.login-screen .login-field svg,.login-screen .login-field input,
+.login-screen .login-field input::placeholder,.login-screen .forgot-label,
+.login-screen .remember-wrap,.login-screen .login-note,
+.login-screen .login-note strong,.login-screen .login-note small,
+.login-screen .login-footer,.login-screen .login-footer small{color:var(--ext-brand-blue)!important}
+.login-screen .login-submit{background:var(--ext-brand-blue)!important;color:#fff!important;box-shadow:0 6px 16px #1f2f5925!important}
+.login-screen .login-submit:hover{background:#2a3e72!important}
+.login-screen .remember-wrap input{accent-color:var(--ext-brand-blue)!important}
+.login-screen .benefit-icon{color:var(--ext-brand-blue)!important}
+.login-screen .login-field:focus-within{border-color:var(--ext-brand-blue)!important;box-shadow:0 0 0 3px #1f2f591a!important}
+.login-screen .login-field input:-webkit-autofill{-webkit-text-fill-color:var(--ext-brand-blue)!important}
+/* Botones principales y enlaces de navegación del panel */
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open),
+#appShell .drop button,#appShell #choose{background:var(--ext-brand-blue)!important;color:#fff!important}
+#appShell button:not(.outline):not(.delete):not(.h-remove):not(.history-purge):not(.menu-trigger):not(.history-open):hover{background:#2a3e72!important}
+#appShell .dashboard-welcome h1,#appShell .toolbar h3,#appShell .ext-sidebar h3,
+#appShell .session-meta strong,#appShell .contractor-panel label,
+#appShell .kpi .k-value:not(.red .k-value):not(.amber .k-value){color:var(--ext-brand-blue)}
+#appShell .summary .heading{color:var(--ext-brand-blue)!important}
+#appShell .session-avatar{background:var(--ext-brand-blue)!important}
+@media(max-width:750px){.login-brand-image{width:190px;max-height:66px}}
 </style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-<div class="login-brand"><div class="ext-mark">EXT</div><div class="ext-wordmark"><strong>EXT</strong><span>EXÁMENES</span></div></div>
+<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.PNG" alt="EXT Exámenes"></div>
 <div class="login-split">
 <div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
 <div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
