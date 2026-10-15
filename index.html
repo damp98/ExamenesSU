@@ -962,7 +962,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 @keyframes ext-progress{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
 @media(prefers-reduced-motion:reduce){.ext-loading-spinner,.ext-loading-track:before{animation:none}#extLoading{transition:none}}
 </style>
-<div id="extLoading" hidden role="status" aria-live="polite" aria-label="Iniciando sesión, cargando información">
+<div id="extLoading" role="status" aria-live="polite" aria-label="Iniciando sesión, cargando información">
   <div class="ext-loading-content">
     <div class="ext-loading-brand">EXT</div>
     <div class="ext-loading-subbrand">EXÁMENES TÉCNICO</div>
@@ -1021,15 +1021,16 @@ function historyKey(){return `${HISTORY_KEY_BASE}_${currentUser?.username||'anon
 function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(historyKey())||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){historyEntries=[]}}
 function persistHistory(){if(!remoteReady)return;try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn(e)}}
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
-async function setSession(u){currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();await remoteLoad()}
-async function clearSession(){remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
+async function setSession(u){contractorSelect.value='';currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();await remoteLoad()}
+async function clearSession(){if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
 function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
-async function restoreSession(){try{const {data:{session}}=await supabase.auth.getSession();if(session){const u=await fetchProfile();setSession(u)}}catch(e){console.warn('No se restauró la sesión',e);await supabase.auth.signOut()}}
+async function restoreSession(){try{const {data:{session}}=await supabase.auth.getSession();if(session){const u=await fetchProfile();await setSession(u);const previous=sessionStorage.getItem('ext_active_view_'+u.id);if(previous&&extViews[previous])extNavigate(previous)}}catch(e){console.warn('No se restauró la sesión',e);await supabase.auth.signOut();currentUser=null;applySession()}}
 const CONTRACTORS=['COOPERATIVA DE AHORRO Y CRÉDITO FERNANDO DAQUILEMA','COOPERATIVA DE AHORRO Y CRÉDITO MUSHUC RUNA','COOPERATIVA DE AHORRO Y CRÉDITO KULLKI WASI','BANCO DEL AUSTRO','MUTUALISTA AZUAY'];
 const contractorSelect=$('#contractorSelect');
 for(const name of CONTRACTORS){const o=document.createElement('option');o.value=name;o.textContent=name;contractorSelect.appendChild(o);const f=o.cloneNode(true);$('#filterContractor').appendChild(f)}
-contractorSelect.value=localStorage.getItem('ext_contractor_selection')||'';
-contractorSelect.addEventListener('change',()=>localStorage.setItem('ext_contractor_selection',contractorSelect.value));
+// El contratante es una selección temporal, nunca persistente.
+contractorSelect.value='';
+localStorage.removeItem('ext_contractor_selection');
 function currentRecords(){return historyEntries.filter(h=>h.contratante)}
 function updateDashboard(){
  const c=contractorSelect.value;
@@ -1270,7 +1271,7 @@ $('#logoutCancel').addEventListener('click',hideLogoutModal);
 $('#logoutConfirm').addEventListener('click',()=>{const action=confirmModalAction;hideLogoutModal();if(action)action()});
 $('#logoutModal').addEventListener('click',e=>{if(e.target===$('#logoutModal'))hideLogoutModal()});
 document.addEventListener('keydown',e=>{if($('#logoutModal').hidden)return;if(e.key==='Escape'){e.preventDefault();hideLogoutModal()}else if(e.key==='Tab'){const controls=[$('#logoutCancel'),$('#logoutConfirm')];const index=controls.indexOf(document.activeElement);if(e.shiftKey&&index===0){e.preventDefault();controls[1].focus()}else if(!e.shiftKey&&index===1){e.preventDefault();controls[0].focus()}}});
-restoreSession();renderHistory();render();applySession();
+// La restauración de sesión se inicia al final, después de configurar la navegación.
 
 // EXT 2.2 navigation uses existing panels and data; no new server dependencies.
 const navButtons=document.querySelectorAll('#appShell [data-nav]');
@@ -1280,6 +1281,7 @@ const extSubmenu=document.getElementById('extSubmenu');
 function extNavigate(view){
  if(!extViews[view])return;
  extCurrentView=view;
+ if(currentUser?.id)sessionStorage.setItem('ext_active_view_'+currentUser.id,view);
  Object.entries(extViews).forEach(([key,id])=>document.getElementById(id).hidden=key!==view);
  navButtons.forEach(b=>b.classList.toggle('active',b.dataset.nav===view));
  const home=document.querySelector('[data-nav="inicio"]');
@@ -1306,6 +1308,19 @@ document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=d
 const originalApplySession=applySession;
 applySession=function(){originalApplySession();if(currentUser){document.querySelector('#topAvatar').textContent=currentUser.initials;document.querySelector('#topName').textContent=currentUser.name;document.querySelector('#topRole').textContent=roleLabel(currentUser.role);extNavigate('inicio');}};
 
+
+renderHistory();render();applySession();
+// Al recargar, ocultar el login mientras Supabase restaura la sesión.
+(async function bootstrapExt(){
+ const loading=document.getElementById('extLoading');
+ loading.classList.remove('ext-fade');
+ loading.hidden=false;
+ try{await restoreSession()}finally{
+  if(!currentUser)applySession();
+  loading.classList.add('ext-fade');
+  setTimeout(()=>{loading.hidden=true;loading.classList.remove('ext-fade')},300);
+ }
+})();
 
 // EXT 3.0: declaraciones guardadas en una clave independiente por usuario, sin PDF ni servicios externos.
 const dsIds=['Client','Product','Amount','Term','Decision','Approver'];
