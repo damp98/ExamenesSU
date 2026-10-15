@@ -282,6 +282,51 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:700px){#appShell .app-header,#appShell .header-inner{min-height:72px!important;height:72px}#appShell main.ext-main{padding:23px 15px 35px}#appShell .dashboard-welcome{margin-bottom:20px}#appShell .dashboard-welcome h1{font-size:31px}#appShell .kpi-row{gap:10px}#appShell .kpi{min-height:103px;padding:17px!important}#appShell .kpi .k-value{font-size:30px}#appShell .contractor-panel{padding:15px;flex-wrap:wrap}#appShell .contractor-panel .grow{flex-basis:calc(100% - 72px)}#appShell .contractor-panel #exportKpiTop{margin-left:auto}#appShell .ext-primary .drop{min-height:160px!important;padding:20px!important}#appShell .ext-primary .toolbar{align-items:flex-start}#appShell .ext-primary .toolbar h3{font-size:21px}#appShell .ext-sidebar{padding:20px 15px}}
 @media print{#appShell .app-header{position:static!important}#appShell .kpi:hover{transform:none}}
 
+
+/* EXT 2.2: real Apple-inspired dashboard layout; functional extractor preserved */
+#appShell{--ext-blue:#1f2f59;--ext-bg:#f5f8fd;color:#101d36;background:radial-gradient(ellipse at 50% 0%,#fff 0%,#f4f8fd 68%);min-height:100vh;padding-left:232px;padding-top:72px}
+#appShell .app-header{display:none!important}
+#appShell .ext-nav{position:fixed;inset:0 auto 0 0;width:232px;z-index:80;background:linear-gradient(150deg,#f9fcff,#eaf2fb);border-right:1px solid #e0e8f2;display:flex;flex-direction:column;padding:25px 16px 22px}
+#appShell .ext-nav-logo{height:76px;display:flex;align-items:flex-start;padding:0 10px}
+#appShell .ext-nav-logo img{max-width:164px;max-height:62px;object-fit:contain;object-position:left top}
+#appShell .ext-nav-links{display:grid;gap:8px}
+#appShell .nav-link,#appShell .nav-logout{width:100%;display:flex;align-items:center;gap:16px;text-align:left;border:0;background:transparent;color:#1f2f59;font-size:14px;font-weight:650;border-radius:13px;padding:15px 18px;box-shadow:none}
+#appShell .nav-link:first-letter,#appShell .nav-logout:first-letter{font-size:23px}
+#appShell .nav-link:hover,#appShell .nav-link.active{background:#e1ecfc;color:#164d9b}
+#appShell .nav-logout{margin-top:auto}
+#appShell .ext-topbar{position:fixed;top:0;left:232px;right:0;height:72px;z-index:65;background:#ffffffd9;backdrop-filter:blur(18px);border-bottom:1px solid #e5ebf3;display:flex;justify-content:flex-end;align-items:center;gap:24px;padding:0 34px}
+#appShell .ext-topbar-search{background:#edf3f9;border-radius:999px;padding:10px 15px;display:flex;align-items:center;gap:9px;color:#6c86a6;font-size:21px}
+#appShell .ext-topbar-search input{background:none;border:0;outline:0;width:165px;font-size:12px;color:#1f2f59}
+#appShell .ext-topbar-user{display:flex;align-items:center;gap:10px;min-width:170px}
+#appShell .ext-top-avatar{width:38px;height:38px;background:#1f2f59;color:white;border-radius:50%;display:grid;place-items:center;font-size:13px}
+#appShell .ext-topbar-user strong,#appShell .ext-topbar-user small{display:block;font-size:12px}#appShell .ext-topbar-user small{color:#7186a1;margin-top:3px}
+#appShell .mobile-nav-toggle{display:none}
+#appShell main.ext-main{max-width:1700px;margin:0 auto;padding:30px 28px 65px}
+#appShell .ext-layout{grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+#appShell .ext-primary{display:flex;flex-direction:column;min-width:0}
+#appShell .dashboard-welcome{order:0;margin:0 0 24px}#appShell .dashboard-welcome h1{font-size:37px;color:#0c1831}
+#appShell .welcome-badge{display:none}
+#appShell .kpi-row{order:1;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:15px}
+#appShell .kpi{min-height:90px;border-radius:16px!important;padding:17px 18px!important;background:#ffffffed!important;display:flex;flex-direction:column-reverse;justify-content:center;gap:6px;box-shadow:0 4px 20px #21385a09!important}
+#appShell .kpi .k-value{font-size:29px;margin:0;color:#1f2f59}#appShell .kpi .k-label{font-size:12px}
+#appShell .drop{order:2;min-height:250px!important;padding:27px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:11px!important;text-align:center!important;border:1px dashed #c5d4e9!important;background:linear-gradient(125deg,#fbfdff,#f3f7fd)!important;margin-bottom:13px!important;border-radius:17px!important}
+#appShell .drop svg{display:block!important;width:60px;height:60px;margin:0 0 3px!important}#appShell .drop h2{font-size:18px!important;color:#1f2f59;margin:0}#appShell .drop p{font-size:13px;margin:0 0 5px!important}#appShell .drop #choose{background:#1f2f59!important;border-radius:12px!important;padding:13px 28px!important}
+#appShell .contractor-panel{order:3;margin:0 0 18px!important;padding:12px 16px!important;min-height:77px}
+#appShell .toolbar{order:4;margin:2px 0 14px!important}#appShell .toolbar h3{font-size:23px!important;color:#0b1b35}#appShell .actions #image{background:#1f2f59!important;color:white!important;border-color:#1f2f59!important}
+#appShell #results{order:5}#appShell .card{border-radius:14px!important}#appShell .ext-sidebar{position:sticky;top:91px;border-radius:18px!important;padding:22px 18px!important;background:#fff!important;box-shadow:0 6px 24px #1934560b!important}
+#appShell .ext-sidebar h3{font-size:20px!important;color:#0b1b35}
+#appShell .ext-sidebar .filter-search,#appShell .filter-grid select{border-radius:10px;background:#fcfdff}
+#appShell .ext-primary .summary .heading{background:#1f2f59!important;color:#fff!important;padding:10px 7px!important;border-right:1px solid #ffffff33}
+#appShell .ext-primary .summary .heading:before{display:none!important}
+#appShell .ext-primary .summary{border-radius:9px!important;overflow:hidden}
+#appShell .ext-primary .val{justify-content:center!important;text-align:center!important}#appShell .ext-primary .val input,#appShell .ext-primary .val select{text-align:center!important}
+#appShell .ext-primary .card{padding:10px!important}#appShell .ext-primary .details{padding:12px 6px 0}
+#appShell .ext-primary .editable-text{background:#f3f7fb!important;border-radius:9px!important}
+#appShell .ext-primary .editable-text.appeal{background:#fce9df!important}
+@media(max-width:1180px){#appShell .ext-layout{grid-template-columns:1fr}#appShell .ext-sidebar{position:static}#appShell .kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){#appShell{padding-left:0;padding-top:65px}#appShell .ext-nav{transform:translateX(-100%);transition:transform .2s;box-shadow:0 15px 40px #0002}#appShell.nav-open .ext-nav{transform:translateX(0)}#appShell .ext-topbar{left:0;height:65px;padding:0 15px;gap:12px}#appShell .ext-topbar-search input{width:100px}#appShell .ext-topbar-user{min-width:0}#appShell .ext-topbar-user span:last-child{display:none}#appShell .mobile-nav-toggle{display:block;background:#eef3fa;color:#1f2f59;padding:9px 12px}#appShell main.ext-main{padding:22px 14px 40px}#appShell .dashboard-welcome h1{font-size:30px}#appShell .drop{min-height:240px!important}#appShell .contractor-panel{flex-wrap:wrap}#appShell .toolbar{align-items:start}#appShell .kpi-row{grid-template-columns:repeat(2,1fr)}}
+@media print{#appShell{padding:0!important;background:#fff!important}#appShell .ext-nav,#appShell .ext-topbar{display:none!important}#appShell .ext-layout{display:block!important}}
+
 </style>
 </head>
 <body>
@@ -298,6 +343,8 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div class="login-divider"><span>o</span></div><div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span><strong>Sistema de acceso interno</strong><small>Acceso exclusivo para usuarios autorizados.</small></span></div>
 </div></div></div><div class="login-footer"><span>♙ &nbsp; Acceso restringido<br><small>Uso interno · EXT Exámenes</small></span><span>EXT v2.0<br><small>Exámenes</small></span></div></section>
 <div id="appShell" hidden>
+<nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.PNG" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio">⌂ <span>Inicio</span></button><button type="button" class="nav-link" data-nav="historial">◷ <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi">▥ <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil">♙ <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout">↪ <span>Cerrar sesión</span></button></nav>
+<div class="ext-topbar"><div class="ext-topbar-search">⌕ <input type="search" id="globalSearch" placeholder="Buscar en historial..." aria-label="Buscar en historial"></div><div class="ext-topbar-user"><span class="ext-top-avatar" id="topAvatar">AM</span><span><strong id="topName">Usuario</strong><small id="topRole">Suscriptor</small></span></div><button type="button" id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Abrir navegación">☰</button></div>
 <header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
 <main class="ext-main"><div class="ext-layout"><div class="ext-primary">
 <div class="dashboard-welcome"><div><h1>Hola, <span id="welcomeName">bienvenido</span></h1><p>Sube tus exámenes médicos y genera los cuadros automáticamente.</p></div><span class="welcome-badge">EXT · EXÁMENES</span></div><div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
@@ -570,4 +617,22 @@ $('#logoutConfirm').addEventListener('click',()=>{const action=confirmModalActio
 $('#logoutModal').addEventListener('click',e=>{if(e.target===$('#logoutModal'))hideLogoutModal()});
 document.addEventListener('keydown',e=>{if($('#logoutModal').hidden)return;if(e.key==='Escape'){e.preventDefault();hideLogoutModal()}else if(e.key==='Tab'){const controls=[$('#logoutCancel'),$('#logoutConfirm')];const index=controls.indexOf(document.activeElement);if(e.shiftKey&&index===0){e.preventDefault();controls[1].focus()}else if(!e.shiftKey&&index===1){e.preventDefault();controls[0].focus()}}});
 for(const u of USERS){const o=document.createElement('option');o.value=u.name;o.textContent=u.name;$('#filterUser').appendChild(o)}restoreSession();renderHistory();render();applySession();
+
+// EXT 2.2 navigation uses existing panels and data; no new server dependencies.
+const navButtons=document.querySelectorAll('#appShell [data-nav]');
+navButtons.forEach(btn=>btn.addEventListener('click',()=>{
+ navButtons.forEach(b=>b.classList.toggle('active',b===btn));
+ document.querySelector('#appShell').classList.remove('nav-open');
+ const action=btn.dataset.nav;
+ if(action==='historial'){document.querySelector('.ext-sidebar')?.scrollIntoView({behavior:'smooth',block:'start'});document.querySelector('#sideSearch')?.focus({preventScroll:true});}
+ else if(action==='kpi'){document.querySelector('#kpiRow')?.scrollIntoView({behavior:'smooth',block:'center'});}
+ else if(action==='perfil'){document.querySelector('#sessionChip')?.scrollIntoView({behavior:'smooth'});alert('Perfil: '+(currentUser?.name||'Usuario')+' · '+roleLabel(currentUser?.role));}
+ else window.scrollTo({top:0,behavior:'smooth'});
+}));
+document.querySelector('#navLogout')?.addEventListener('click',()=>document.querySelector('#logoutBtn')?.click());
+document.querySelector('#mobileNavToggle')?.addEventListener('click',()=>document.querySelector('#appShell')?.classList.toggle('nav-open'));
+document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=document.querySelector('#sideSearch');if(el){el.value=e.target.value;el.dispatchEvent(new Event('input',{bubbles:true}));}});
+const originalApplySession=applySession;
+applySession=function(){originalApplySession();if(currentUser){document.querySelector('#topAvatar').textContent=currentUser.initials;document.querySelector('#topName').textContent=currentUser.name;document.querySelector('#topRole').textContent=roleLabel(currentUser.role);}};
+
 </script></body></html>
