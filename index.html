@@ -84,33 +84,55 @@ main.ext-main{max-width:1600px;margin:22px auto;padding:0 26px}.ext-layout{displ
 .logout-actions{display:flex;gap:10px}.logout-actions button{flex:1;padding:13px 12px;border-radius:12px;font-weight:700}
 .logout-cancel{background:#f2f6f9!important;border:1px solid #dce6ed!important;color:#21465a!important}.logout-cancel:hover{background:#e7f0f5!important}
 .logout-confirm{background:#0a465b!important;color:#fff!important}.logout-confirm:hover{background:#0b5972!important}
+
+/* EXT 2.0 Apple-inspired visual redesign, extractor preserved */
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f7f9fc;color:#101e31}body{background:#f7f9fc}
+.login-screen{min-height:100svh;background:#f4f7fb url("./FONDO.png") center/cover no-repeat;display:flex;flex-direction:column;justify-content:space-between}
+.login-screen::before,.login-screen::after{display:none!important}
+.login-brand{position:relative;z-index:2;padding:28px clamp(24px,4.7vw,76px) 0}.login-logo{width:176px;max-height:72px;object-fit:contain;filter:none}
+.login-split{width:100%;flex:1;display:grid;grid-template-columns:1.12fr 1fr;align-items:center;gap:clamp(30px,5vw,85px);padding:28px clamp(24px,4.7vw,76px)}
+.login-story{max-width:630px;position:relative;z-index:1}.login-eyebrow{font-size:12px;letter-spacing:3.4px;font-weight:750;color:#55718b}
+.login-story h2{font-size:clamp(34px,3.8vw,64px);line-height:1.09;letter-spacing:-2.7px;margin:23px 0 16px;color:#091a2d;font-weight:780}
+.login-story h2 em{font-style:normal;color:#5d7791}.login-story>p{max-width:530px;font-size:clamp(15px,1.25vw,19px);line-height:1.65;color:#5c728b;margin:0}
+.login-benefits{display:grid;gap:26px;margin-top:44px}.login-benefits>div{display:flex;align-items:center;gap:18px}
+.benefit-icon{width:54px;height:54px;border-radius:17px;background:#e7f0fb;color:#0a527c;display:grid;place-items:center;font-size:27px;flex-shrink:0}
+.login-benefits>div:nth-child(2) .benefit-icon{background:#e6f4ef;color:#1b7770}.login-benefits>div:nth-child(3) .benefit-icon{background:#f0eefe;color:#4c4e9e}
+.login-benefits strong{display:block;font-size:16px;color:#142337;margin-bottom:5px}.login-benefits small{font-size:13px;color:#61768f}
+.login-main{padding:0;justify-content:center}.login-card{width:min(100%,555px);padding:clamp(28px,4vw,58px);background:rgba(255,255,255,.91);border:1px solid #d7e2ed;border-radius:19px;box-shadow:0 18px 60px #213e601c;backdrop-filter:blur(22px)}
+.login-card h1{text-align:left;font-size:clamp(30px,2.5vw,41px);letter-spacing:-1.7px;color:#101b2e;margin:0 0 8px}.login-card>p{text-align:left;font-size:17px;color:#71839a}
+.login-form{margin-top:34px}.login-label{font-size:13px;color:#536980;margin-bottom:8px}.login-field{height:59px;border-radius:13px;border-color:#dce5ee;background:#fff;margin-bottom:21px}
+.login-field input{font-size:15px}.login-field input::placeholder{color:#a0b0c5}.login-submit{margin-top:7px;height:62px;border-radius:13px!important;background:linear-gradient(110deg,#073d60,#075073)!important}
+.login-note{justify-content:flex-start;margin-top:32px;padding:23px 15px;background:#f2f6fb;border:0;border-radius:14px;font-size:13px}
+.login-footer{display:flex;justify-content:space-between;padding:12px clamp(24px,4.7vw,76px) 28px;color:#536b85;font-size:12px}
+.app-header{background:#ffffffed!important;box-shadow:none!important;border-bottom:1px solid #e7edf3}.header-inner{max-width:1600px}
+main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
+.dashboard-welcome{display:flex;align-items:center;justify-content:space-between;margin:6px 0 24px;gap:16px}.dashboard-welcome h1{font-size:clamp(27px,3vw,37px);letter-spacing:-1.2px;margin:0 0 6px;font-weight:750}.dashboard-welcome p{color:#8291a6;font-size:14px;margin:0}
+.welcome-badge{background:#edf3fa;color:#53718c;border-radius:100px;padding:9px 14px;font-size:11px;font-weight:750;letter-spacing:1px;white-space:nowrap}
+.ext-panel,.ext-sidebar,.card,.kpi{border-radius:17px!important;border-color:#e4ebf2!important;box-shadow:0 3px 18px #12304c0b!important}
+.drop{border-radius:17px!important;background:#fbfdff!important;box-shadow:none!important}.drop h2{font-size:18px}.drop p{color:#8291a6}
+.toolbar h3{font-size:21px;letter-spacing:-.5px}.ext-sidebar{background:#fff}.card{overflow:hidden}.summary .heading{background:#0c3854!important}
+@media(max-width:980px){.login-split{grid-template-columns:1fr;gap:20px;padding-top:25px;padding-bottom:30px}.login-story{max-width:none}.login-story h2{font-size:38px;margin:14px 0}.login-benefits{display:none}.login-main{width:100%}.login-card{max-width:620px}.login-screen{background-position:35% center}}
+@media(max-width:600px){.login-brand{padding:22px 22px 0}.login-logo{width:145px}.login-split{padding:18px 18px 22px}.login-story h2{font-size:31px;letter-spacing:-1.2px}.login-story>p{font-size:14px}.login-eyebrow{font-size:10px;letter-spacing:2px}.login-card{padding:27px 23px}.login-card h1{font-size:30px}.login-card>p{font-size:14px}.login-footer{padding:0 22px 20px;gap:8px;font-size:10px}.dashboard-welcome{align-items:flex-start}.welcome-badge{display:none}main.ext-main{padding:0 16px}}
+@media print{.login-screen,.dashboard-welcome{display:none!important}}
 </style>
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-  <div class="login-top"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="login-logo"></div>
-  <div class="login-main">
-    <div class="login-card">
-      <div class="login-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 13.4v3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-      <h1>Iniciar sesión</h1>
-      <p>Acceso interno autorizado</p>
-      <form id="loginForm" class="login-form" novalidate>
-        <label class="login-label" for="loginUser">Usuario</label>
-        <div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="loginUser" autocomplete="username" placeholder="Ingrese su usuario"></div>
-        <label class="login-label" for="loginPass">Contraseña</label>
-        <div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><input id="loginPass" type="password" autocomplete="current-password" placeholder="Ingrese su contraseña"><button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar u ocultar contraseña">👁️</button></div>
-        <button type="submit" class="login-submit" id="loginSubmit">Ingresar <span>→</span></button>
-        <div id="loginError" class="login-error" hidden>Usuario o contraseña incorrectos.</div>
-      </form>
-      <div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span>Uso interno · Información confidencial</span></div>
-    </div>
-  </div>
-  <div class="login-footer"><b>EXT | Exámenes</b> · Acceso corporativo</div>
-</section>
+<div class="login-brand"><img src="./LOGO.png" alt="EXT Exámenes" class="login-logo"></div>
+<div class="login-split">
+<div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
+<div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
+<div class="login-main"><div class="login-card"><h1>Hola de nuevo</h1><p>Ingresa a tu cuenta para continuar.</p>
+<form id="loginForm" class="login-form" novalidate><label class="login-label" for="loginUser">Usuario</label>
+<div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="loginUser" autocomplete="username" placeholder="Usuario"></div>
+<label class="login-label" for="loginPass">Contraseña</label><div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><input id="loginPass" type="password" autocomplete="current-password" placeholder="Contraseña"><button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar u ocultar contraseña">👁️</button></div>
+<button type="submit" class="login-submit" id="loginSubmit">Iniciar sesión <span>→</span></button><div id="loginError" class="login-error" hidden>Usuario o contraseña incorrectos.</div></form>
+<div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span>Acceso interno · Usuarios autorizados</span></div>
+</div></div></div><div class="login-footer"><span>Acceso restringido · Uso interno</span><span>EXT 2.0 · Exámenes</span></div></section>
 <div id="appShell" hidden>
 <header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
 <main class="ext-main"><div class="ext-layout"><div class="ext-primary">
-<div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
+<div class="dashboard-welcome"><div><h1>Hola, <span id="welcomeName">bienvenido</span></h1><p>Sube tus exámenes médicos y genera los cuadros automáticamente.</p></div><span class="welcome-badge">EXT · EXÁMENES</span></div><div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
 <div class="kpi-row" id="kpiRow"><div class="kpi"><div class="k-label">Procesados</div><div class="k-value">0</div></div><div class="kpi red"><div class="k-label">Riesgo alto</div><div class="k-value">0</div></div><div class="kpi amber"><div class="k-label">Riesgo moderado</div><div class="k-value">0</div></div><div class="kpi"><div class="k-label">Por revisar</div><div class="k-value">0</div></div></div>
 <div id="drop" class="drop" role="button" tabindex="0"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="5" width="36" height="38" rx="9" fill="#e5f3f6"/><path d="M24 31V15m0 0-6 6m6-6 6 6M15 35h18" stroke="#0f6079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Arrastra tus informes PDF aquí</h2><p>También puedes seleccionar varios archivos a la vez</p><button type="button" id="choose">Seleccionar PDFs</button><input id="files" type="file" accept="application/pdf,.pdf" multiple></div>
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
@@ -149,7 +171,7 @@ function persistHistory(){try{localStorage.setItem(historyKey(),JSON.stringify(h
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
 function setSession(u){currentUser=serializeUser(u);localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser));loadHistory();renderHistory();render();applySession();scrollAppTop()}
 function clearSession(){localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
-function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
+function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
 function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');if(saved?.username){const user=USERS.find(u=>u.username===saved.username);if(user){currentUser=serializeUser(user);loadHistory()}}}catch(e){currentUser=null}}
 function findUser(login,password){const loginSlug=slug(login);const pass=String(password||'');return USERS.find(u=>pass===u.password && u.aliases.some(a=>slug(a)===loginSlug))||null}
 const CONTRACTORS=['COOPERATIVA DE AHORRO Y CRÉDITO FERNANDO DAQUILEMA','COOPERATIVA DE AHORRO Y CRÉDITO MUSHUC RUNA','COOPERATIVA DE AHORRO Y CRÉDITO KULLKI WASI','BANCO DEL AUSTRO','MUTUALISTA AZUAY'];
