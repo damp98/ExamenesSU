@@ -41,23 +41,77 @@ main{max-width:1440px;margin:32px auto;padding:0 35px}.drop{padding:27px 20px!im
 .capture-area .val.risk.moderado{background:#d8edf3!important;color:#0c4b64!important;font-weight:800!important}
 .capture-area .val.risk.normal{background:#e4f2e6!important;color:#126234!important;font-weight:800!important}
 .capture-area .val.risk.otro{background:#f2e9d7!important;color:#79500b!important;font-weight:800!important}
+
+
+/* EXT 1.8 — Login y sesión */
+.login-screen{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(180deg,#f8fbfe 0%,#eef5fb 100%);position:relative;overflow:hidden}
+.login-screen:before{content:"";position:absolute;inset:auto auto -18% -12%;width:42vw;height:42vw;min-width:360px;min-height:360px;border-radius:50%;background:radial-gradient(circle at 50% 50%,#e8f1fa 0%,#edf5fb 52%,transparent 53%);opacity:.95}
+.login-screen:after{content:"";position:absolute;right:0;bottom:0;width:38vw;min-width:300px;height:58vh;background:linear-gradient(180deg,#edf4fa,#e7f0f7);clip-path:polygon(35% 12%,100% 0,100% 100%,12% 100%);opacity:.65}
+.login-top{position:relative;z-index:1;padding:28px 20px 18px;border-bottom:1px solid #dbe8f1;background:#fff;display:flex;justify-content:center}
+.login-logo{width:min(240px,55vw);max-height:72px;object-fit:contain;filter:brightness(0) saturate(100%) invert(16%) sepia(47%) saturate(710%) hue-rotate(153deg) brightness(87%) contrast(94%)}
+.login-main{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;padding:36px 20px 28px}
+.login-card{width:min(100%,650px);background:rgba(255,255,255,.96);border:1px solid #d9e6f0;border-radius:24px;box-shadow:0 24px 60px #153b571a;padding:42px 46px 32px;backdrop-filter:blur(6px)}
+.login-lock{width:100px;height:100px;border-radius:50%;background:#eef5fd;color:#113b61;display:grid;place-items:center;margin:0 auto 18px}
+.login-lock svg{width:54px;height:54px}
+.login-card h1{margin:0 0 6px;text-align:center;font-size:32px;letter-spacing:-1px;color:#102c57}
+.login-card p{margin:0;text-align:center;color:#577196;font-size:18px}
+.login-form{margin-top:28px}.login-label{display:block;font-size:15px;font-weight:700;color:#334f75;margin:0 0 8px}.login-field{display:flex;align-items:center;gap:10px;border:1px solid #cbdaea;border-radius:14px;background:#fff;padding:0 14px;height:58px;margin-bottom:20px;box-shadow:inset 0 1px 0 #f5f9fc}.login-field:focus-within{border-color:#5f99b2;box-shadow:0 0 0 4px #dfeef7}.login-field svg{width:22px;height:22px;color:#436996;flex:0 0 auto}.login-field input{border:0;outline:0;background:transparent;font:inherit;color:#142b43;width:100%;height:100%}.toggle-pass{border:0!important;background:transparent!important;color:#53739a!important;padding:4px!important;box-shadow:none!important}.toggle-pass:hover{background:#edf5fb!important}.login-submit{width:100%;height:60px;border-radius:16px;background:linear-gradient(115deg,#083649,#075a72)!important;font-size:18px!important;display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 16px 28px #0d627623}.login-submit span{font-size:28px;line-height:1}.login-error{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:#fff0f1;color:#a11d32;border:1px solid #f0c7cd;font-size:14px}.login-note{margin-top:22px;padding-top:18px;border-top:1px solid #e2ebf2;display:flex;align-items:center;justify-content:center;gap:8px;color:#5f7998;font-size:15px}.login-note svg{width:18px;height:18px}.login-footer{position:relative;z-index:1;text-align:center;padding:18px 15px 28px;color:#4f6990;font-size:14px}.login-footer b{color:#24456d}.header-tools{display:flex;align-items:center;gap:10px}.session-chip{display:flex;align-items:center;gap:10px;background:#f3f8fc;border:1px solid #dbe6ef;border-radius:999px;padding:7px 10px 7px 7px;color:#173a50}.session-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#103952;color:#fff;font-weight:800;font-size:13px}.session-meta{display:flex;flex-direction:column;gap:1px;line-height:1}.session-meta strong{font-size:13px;font-weight:800}.session-meta span{font-size:11px;color:#668198}.logout-btn{padding:10px 13px!important;border-radius:12px!important}@media(max-width:920px){.session-meta{display:none}.login-card{padding:36px 22px 26px}.login-lock{width:84px;height:84px}.login-card h1{font-size:28px}.login-card p{font-size:16px}}
 </style>
 </head>
 <body>
-<header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></header>
+<section id="loginScreen" class="login-screen">
+  <div class="login-top"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="login-logo"></div>
+  <div class="login-main">
+    <div class="login-card">
+      <div class="login-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M12 13.4v3.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+      <h1>Iniciar sesión</h1>
+      <p>Acceso interno autorizado</p>
+      <form id="loginForm" class="login-form" novalidate>
+        <label class="login-label" for="loginUser">Usuario</label>
+        <div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="loginUser" autocomplete="username" placeholder="Ingrese su usuario"></div>
+        <label class="login-label" for="loginPass">Contraseña</label>
+        <div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><input id="loginPass" type="password" autocomplete="current-password" placeholder="Ingrese su contraseña"><button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar u ocultar contraseña">👁️</button></div>
+        <button type="submit" class="login-submit" id="loginSubmit">Ingresar <span>→</span></button>
+        <div id="loginError" class="login-error" hidden>Usuario o contraseña incorrectos.</div>
+      </form>
+      <div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span>Uso interno · Información confidencial</span></div>
+    </div>
+  </div>
+  <div class="login-footer"><b>EXT | Exámenes</b> · Acceso corporativo</div>
+</section>
+<div id="appShell" hidden>
+<header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
 <main>
 <div id="drop" class="drop" role="button" tabindex="0"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="5" width="36" height="38" rx="9" fill="#e5f3f6"/><path d="M24 31V15m0 0-6 6m6-6 6 6M15 35h18" stroke="#0f6079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Arrastra tus informes PDF aquí</h2><p>También puedes seleccionar varios archivos a la vez</p><button type="button" id="choose">Seleccionar PDFs</button><input id="files" type="file" accept="application/pdf,.pdf" multiple></div>
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
 <div id="results"><div class="empty">Sube el primer PDF para mostrar sus datos.</div></div>
-<p class="small"><b>Importante:</b> La aplicación no emite decisiones médicas ni calcula riesgos. Copia el dictamen textual del informe. “Apelable” es una sugerencia basada en la existencia de requisitos explícitos de reconsideración y debe confirmarla el suscriptor. Para PDF escaneado sin capa de texto se necesitaría OCR. El texto de condiciones que no figure en el documento no se añadirá automáticamente.</p></main>
+<p class="small"><b>Importante:</b> La aplicación no emite decisiones médicas ni calcula riesgos. Copia el dictamen textual del informe. “Apelable” es una sugerencia basada en la existencia de requisitos explícitos de reconsideración y debe confirmarla el suscriptor. Para PDF escaneado sin capa de texto se necesitaría OCR. El texto de condiciones que no figure en el documento no se añadirá automáticamente.</p></main></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script type="module">
 import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
 const state=[],$=s=>document.querySelector(s);
-const HISTORY_KEY='ext_examenes_history_v1';
-let historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){}
-function persistHistory(){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn('No se pudo guardar historial',e)}}
+const HISTORY_KEY_BASE='ext_examenes_history_v1';
+const SESSION_KEY='ext_examenes_session_v1';
+const USERS=[
+ {username:'alexander',name:'Alexander Mendoza',password:'AM2026',role:'admin',initials:'AM',aliases:['alexander','alexander mendoza','am']},
+ {username:'javier',name:'Javier Amaguaña',password:'JA2026',role:'operator',initials:'JA',aliases:['javier','javier amaguana','javier amaguaña','ja']},
+ {username:'jonathan',name:'Jonathan Sampedro',password:'JS2026',role:'operator',initials:'JS',aliases:['jonathan','jonathan sampedro','js']},
+ {username:'lady',name:'Lady Bravo',password:'LB2026',role:'operator',initials:'LB',aliases:['lady','lady bravo','lb']}
+];
+let currentUser=null;
+let historyEntries=[];
+function slug(v){return String(v||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim()}
+function roleLabel(role){return role==='admin'?'Administrador':'Operador'}
+function historyKey(){return `${HISTORY_KEY_BASE}_${currentUser?.username||'anon'}`}
+function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(historyKey())||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){historyEntries=[]}}
+function persistHistory(){try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn('No se pudo guardar historial',e)}}
+function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
+function setSession(u){currentUser=serializeUser(u);localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser));loadHistory();renderHistory();render();applySession()}
+function clearSession(){localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession()}
+function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
+function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');if(saved?.username){const user=USERS.find(u=>u.username===saved.username);if(user){currentUser=serializeUser(user);loadHistory()}}}catch(e){currentUser=null}}
+function findUser(login,password){const loginSlug=slug(login);const pass=String(password||'');return USERS.find(u=>pass===u.password && u.aliases.some(a=>slug(a)===loginSlug))||null}
 function storeRecord(r){const id=r._historyId||('h_'+Date.now()+'_'+Math.random().toString(36).slice(2));r._historyId=id;const prev=historyEntries.find(h=>h.id===id);const stored={id,file:r.file,cliente:r.cliente,edad:r.edad,amount:r.amount,dictamen:r.dictamen,apelable:r.apelable,comentario:r.comentario,apelacion:r.apelacion,warning:r.warning,createdAt:prev?.createdAt||new Date().toISOString()};historyEntries=[stored,...historyEntries.filter(h=>h.id!==id)].slice(0,250);persistHistory();renderHistory()}
 let historySaveTimer;function queueHistorySave(r){clearTimeout(historySaveTimer);historySaveTimer=setTimeout(()=>storeRecord(r),450)}
 function renderHistory(){const list=$('#historyList');if(!list)return;const query=($('#historySearch')?.value||'').toLowerCase().trim();const rows=historyEntries.filter(h=>(h.cliente+' '+h.file).toLowerCase().includes(query));$('#historyCount').textContent=historyEntries.length+' registros';list.innerHTML=rows.length?rows.map(h=>`<div class="history-item"><button type="button" class="history-open" data-history-open="${escapeHtml(h.id)}" title="Recuperar ficha"><span class="pdfmark">PDF</span><span class="h-text"><span class="h-title">${escapeHtml(h.cliente||h.file)}</span><span class="h-sub">${escapeHtml(h.file)} · ${new Date(h.createdAt).toLocaleString('es-EC',{dateStyle:'short',timeStyle:'short'})}</span></span></button><span class="h-risk ${riskClass(h.dictamen||'')}">${escapeHtml((h.dictamen||'REVISAR').replace('RIESGO ',''))}</span><button class="h-remove" title="Borrar del historial" aria-label="Borrar del historial" data-history-remove="${escapeHtml(h.id)}">×</button></div>`).join(''):'<div class="history-empty">No hay exámenes guardados.</div>'}
@@ -235,5 +289,9 @@ $('#image').addEventListener('click',async()=>{
  }catch(e){alert('No se pudo copiar la imagen: '+e.message)}finally{node?.remove();btn.disabled=false;setTimeout(()=>btn.textContent=orig,2200)}
 });
 $('#print').addEventListener('click',()=>{if(!state.length)return;const node=captureNode();node.classList.add('print-capture');node.style.cssText='position:static;width:100%;padding:0';document.body.classList.add('printing');window.print();document.body.classList.remove('printing');node.remove()});
-$('#clear').addEventListener('click',()=>{state.length=0;render()});renderHistory();
+$('#clear').addEventListener('click',()=>{state.length=0;render()});
+$('#togglePass').addEventListener('click',()=>{const input=$('#loginPass');const show=input.type==='password';input.type=show?'text':'password';$('#togglePass').textContent=show?'🙈':'👁️';input.focus()});
+$('#loginForm').addEventListener('submit',e=>{e.preventDefault();const user=findUser($('#loginUser').value,$('#loginPass').value);if(!user){$('#loginError').hidden=false;$('#loginError').textContent='Usuario o contraseña incorrectos.';$('#loginPass').focus();return}setSession(user)});
+$('#logoutBtn').addEventListener('click',()=>{if(confirm('¿Cerrar sesión ahora?')){closeHistory();clearSession()}});
+restoreSession();renderHistory();render();applySession();
 </script></body></html>
