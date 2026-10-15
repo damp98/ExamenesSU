@@ -943,18 +943,45 @@ body.authenticated{background:var(--ext-canvas)!important}
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div id="extAdminPanel" hidden style="position:fixed;right:16px;bottom:16px;z-index:100;background:white;border:1px solid #dce4ef;border-radius:14px;padding:12px;box-shadow:0 8px 25px #1f2f5922;font:12px system-ui;color:#1f2f59"><label for="extAdminView" style="display:block;margin-bottom:6px;font-weight:700">Vista administrativa</label><select id="extAdminView" style="padding:8px;border-radius:8px;border:1px solid #ccd7e8"></select></div>
 <script type="module">
+import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
 import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
 const state=[],$=s=>document.querySelector(s);
 const HISTORY_KEY_BASE='ext_examenes_history_v1';
 const SESSION_KEY='ext_examenes_session_v1';
-const USERS=[
- {username:'amendoza',name:'Alexander Mendoza',password:'DaMp.5993',role:'admin',initials:'AM',aliases:['amendoza','alexander mendoza','alexander','am']},
- {username:'jamaguana',name:'Javier Amaguaña',password:'jamaguana2026',role:'operator',initials:'JA',aliases:['jamaguana','javier amaguana','javier amaguaña','javier','ja']},
- {username:'jsampedro',name:'Jonathan Sampedro',password:'jsampedro',role:'operator',initials:'JS',aliases:['jsampedro','jonathan sampedro','jonathan','js']},
- {username:'lbravo',name:'Ladi Bravo',password:'lbravo2026',role:'operator',initials:'LB',aliases:['lbravo','lady bravo','lady','lb']}
-];
+const USERS=[]; // Usuarios cargados desde perfiles autenticados; sin contraseñas en el cliente.
+const SUPABASE_URL='https://bzgvjyllrvbefjreveaz.supabase.co';
+const SUPABASE_KEY='sb_publishable_d3SZRrrk69C3TlaIrmMrbA_HkXpt3Bf';
+const supabase=createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
+let remoteReady=false;
+function uiUser(p){const name=p.nombre||p.usuario;return {username:p.usuario,name,role:p.rol==='admin'?'admin':'operator',initials:name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase(),id:p.id,cargo:p.cargo}}
+async function fetchProfile(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw Error('Sesión no válida');const {data:p,error:pe}=await supabase.from('perfiles').select('id,usuario,nombre,cargo,rol').eq('id',user.id).single();if(pe||!p)throw Error('No existe un perfil autorizado para esta cuenta');return uiUser(p)}
+async function loginRemote(usuario,password){const res=await fetch(SUPABASE_URL+'/functions/v1/ext-login',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({usuario,password})});const body=await res.json().catch(()=>({}));if(!res.ok)throw Error(body.error||'No fue posible iniciar sesión');const {error}=await supabase.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;return await fetchProfile()}
+async function remoteLoad(){if(!currentUser?.id)return;remoteReady=false;try{
+ const [hist,kpi,dec,profiles]=await Promise.all([
+  supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','examenes').order('creado_en',{ascending:false}).limit(1000),
+  supabase.from('kpi_ext').select('id,usuario_id,historial_id,datos,creado_en').order('creado_en',{ascending:false}).limit(1000),
+  supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','declaraciones').order('creado_en',{ascending:false}).limit(1000),
+  currentUser.role==='admin'?supabase.from('perfiles').select('id,usuario,nombre,cargo,rol'):Promise.resolve({data:[],error:null})]);
+ for(const x of [hist,kpi,dec,profiles])if(x.error)throw x.error;
+ historyEntries=(hist.data||[]).map(x=>({...x.datos,id:x.id,createdAt:x.creado_en,_ownerId:x.usuario_id}));
+ const kpiRows=(kpi.data||[]).map(x=>({...x.datos,id:x.id,historyId:x.historial_id,createdAt:x.creado_en,_ownerId:x.usuario_id}));
+ const dsRows=(dec.data||[]).map(x=>({...x.datos,id:x.id,date:x.creado_en,_ownerId:x.usuario_id}));
+ for(const key of [historyKey(),ktKey(),dsKey()]){const backup=key+'_BACKUP_4_9';if(localStorage.getItem(key)!==null&&localStorage.getItem(backup)===null)localStorage.setItem(backup,localStorage.getItem(key))}localStorage.setItem(historyKey(),JSON.stringify(historyEntries));localStorage.setItem(ktKey(),JSON.stringify(kpiRows));localStorage.setItem(dsKey(),JSON.stringify(dsRows));
+ if(currentUser.role==='admin'){
+  const selector=document.getElementById('extAdminView');selector.replaceChildren(new Option('Mis registros','own'),new Option('Todos los usuarios','all'));
+  (profiles.data||[]).filter(x=>x.id!==currentUser.id).forEach(x=>selector.add(new Option(x.nombre,x.id)));
+  document.getElementById('extAdminPanel').hidden=false;
+ }
+ remoteReady=true;renderHistory();updateDashboard();dsRefresh();ktRender();pfRender();if(typeof ehRender==='function')ehRender();
+ }catch(e){console.error('Error sincronización',e);remoteReady=false;alert('No fue posible sincronizar los registros con Supabase. No se guardarán nuevos registros hasta restablecer la conexión. '+e.message)}}
+async function remoteWrite(table,payload){if(currentUser?.role==='admin'&&document.getElementById('extAdminView')?.value!=='own')throw Error('Selecciona Mis registros para guardar');if(!remoteReady||!currentUser?.id)throw Error('Sin conexión segura a Supabase');const {error}=await supabase.from(table).upsert(payload);if(error)throw error}
+async function remoteDelete(table,id){if(!remoteReady||!currentUser?.id)throw Error('Sin conexión segura a Supabase');const {error}=await supabase.from(table).delete().eq('id',id);if(error)throw error}
+function remoteWarn(e){console.error(e);alert('No se guardó el cambio en Supabase: '+e.message)}
+function uuid(){return crypto.randomUUID()}
+
 let currentUser=null;
 let historyEntries=[];
 function scrollAppTop(){window.scrollTo(0,0)}
@@ -963,13 +990,12 @@ function slug(v){return String(v||'').normalize('NFD').replace(/[̀-ͯ]/g,'').to
 function roleLabel(role){return role==='admin'?'Administrador':'Operador'}
 function historyKey(){return `${HISTORY_KEY_BASE}_${currentUser?.username||'anon'}`}
 function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(historyKey())||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){historyEntries=[]}}
-function persistHistory(){try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn('No se pudo guardar historial',e)}}
+function persistHistory(){if(!remoteReady)return;try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn(e)}}
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
-function setSession(u){currentUser=serializeUser(u);localStorage.setItem(SESSION_KEY,JSON.stringify(currentUser));loadHistory();renderHistory();render();applySession();scrollAppTop()}
-function clearSession(){localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
+function setSession(u){currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();remoteLoad()}
+async function clearSession(){remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
 function applySession(){const logged=!!currentUser;$('#loginScreen').hidden=logged;$('#appShell').hidden=!logged;document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin')}else{$('#loginUser').focus()}}
-function restoreSession(){try{const saved=JSON.parse(localStorage.getItem(SESSION_KEY)||'null');if(saved?.username){const user=USERS.find(u=>u.username===saved.username);if(user){currentUser=serializeUser(user);loadHistory()}}}catch(e){currentUser=null}}
-function findUser(login,password){const loginSlug=slug(login);const pass=String(password||'');return USERS.find(u=>pass===u.password && u.aliases.some(a=>slug(a)===loginSlug))||null}
+async function restoreSession(){try{const {data:{session}}=await supabase.auth.getSession();if(session){const u=await fetchProfile();setSession(u)}}catch(e){console.warn('No se restauró la sesión',e);await supabase.auth.signOut()}}
 const CONTRACTORS=['COOPERATIVA DE AHORRO Y CRÉDITO FERNANDO DAQUILEMA','COOPERATIVA DE AHORRO Y CRÉDITO MUSHUC RUNA','COOPERATIVA DE AHORRO Y CRÉDITO KULLKI WASI','BANCO DEL AUSTRO','MUTUALISTA AZUAY'];
 const contractorSelect=$('#contractorSelect');
 for(const name of CONTRACTORS){const o=document.createElement('option');o.value=name;o.textContent=name;contractorSelect.appendChild(o);const f=o.cloneNode(true);$('#filterContractor').appendChild(f)}
@@ -1000,14 +1026,14 @@ $('#adminExport').addEventListener('click',()=>{if(currentUser?.role==='admin')e
 for(const id of ['sideSearch','filterRisk','filterContractor','filterUser','filterDate'])$('#'+id).addEventListener(id==='sideSearch'?'input':'change',renderSideHistory);
 $('#clearFilters').addEventListener('click',()=>{for(const id of ['sideSearch','filterRisk','filterContractor','filterUser','filterDate'])$('#'+id).value='';renderSideHistory()});
 $('#sideHistoryList').addEventListener('click',e=>{const el=e.target.closest('[data-history-open]');if(!el)return;const h=historyEntries.find(x=>x.id===el.dataset.historyOpen);if(h){state.push({...h,_historyId:h.id});render();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth'})}});
-function storeRecord(r){const id=r._historyId||('h_'+Date.now()+'_'+Math.random().toString(36).slice(2));r._historyId=id;const prev=historyEntries.find(h=>h.id===id);const stored={id,file:r.file,cliente:r.cliente,edad:r.edad,amount:r.amount,dictamen:r.dictamen,apelable:r.apelable,comentario:r.comentario,apelacion:r.apelacion,warning:r.warning,contratante:r.contratante||'',usuario:r.usuario||currentUser?.name||'',createdAt:prev?.createdAt||new Date().toISOString()};historyEntries=[stored,...historyEntries.filter(h=>h.id!==id)].slice(0,250);persistHistory();renderHistory();updateDashboard()}
+function storeRecord(r){const id=r._historyId||uuid();r._historyId=id;const prev=historyEntries.find(h=>h.id===id);const stored={id,file:r.file,cliente:r.cliente,edad:r.edad,amount:r.amount,dictamen:r.dictamen,apelable:r.apelable,comentario:r.comentario,apelacion:r.apelacion,warning:r.warning,contratante:r.contratante||'',usuario:r.usuario||currentUser?.name||'',createdAt:prev?.createdAt||new Date().toISOString()};historyEntries=[stored,...historyEntries.filter(h=>h.id!==id)].slice(0,250);persistHistory();renderHistory();updateDashboard();if(remoteReady)remoteWrite('historial_ext',{id,usuario_id:currentUser.id,modulo:'examenes',contratante:stored.contratante,asegurado:stored.cliente,datos:stored}).catch(remoteWarn)}
 let historySaveTimer;function queueHistorySave(r){clearTimeout(historySaveTimer);historySaveTimer=setTimeout(()=>storeRecord(r),450)}
 function renderHistory(){const list=$('#historyList');if(!list)return;const query=($('#historySearch')?.value||'').toLowerCase().trim();const rows=historyEntries.filter(h=>(h.cliente+' '+h.file).toLowerCase().includes(query));$('#historyCount').textContent=historyEntries.length+' registros';list.innerHTML=rows.length?rows.map(h=>`<div class="history-item"><button type="button" class="history-open" data-history-open="${escapeHtml(h.id)}" title="Recuperar ficha"><span class="pdfmark">PDF</span><span class="h-text"><span class="h-title">${escapeHtml(h.cliente||h.file)}</span><span class="h-sub">${escapeHtml(h.file)} · ${new Date(h.createdAt).toLocaleString('es-EC',{dateStyle:'short',timeStyle:'short'})}</span></span></button><span class="h-risk ${riskClass(h.dictamen||'')}">${escapeHtml((h.dictamen||'REVISAR').replace('RIESGO ',''))}</span><button class="h-remove" title="Borrar del historial" aria-label="Borrar del historial" data-history-remove="${escapeHtml(h.id)}">×</button></div>`).join(''):'<div class="history-empty">No hay exámenes guardados.</div>';renderSideHistory()}
 function closeHistory(){ $('#historyPanel').hidden=true;$('#historyToggle').setAttribute('aria-expanded','false') }
 $('#historyToggle').addEventListener('click',()=>{const panel=$('#historyPanel');panel.hidden=!panel.hidden;$('#historyToggle').setAttribute('aria-expanded',String(!panel.hidden));if(!panel.hidden)renderHistory()});
 document.addEventListener('click',e=>{if(!e.target.closest('.menu-wrap'))closeHistory()});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHistory()});$('#historySearch').addEventListener('input',renderHistory);
-$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){openConfirmModal({title:'¿Eliminar ficha?',message:'¿Quieres eliminar esta ficha del historial local?<br>Esta acción solo afecta a este navegador.',confirmText:'Eliminar',onConfirm:()=>{historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);ktRemoveByHistoryId(del.dataset.historyRemove);persistHistory();renderHistory();}});return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
-$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;openConfirmModal({title:'¿Borrar historial?',message:'¿Eliminar definitivamente todas las fichas guardadas en este navegador?<br>Esta acción no se puede deshacer.',confirmText:'Borrar historial',onConfirm:()=>{historyEntries=[];ktClearAll();persistHistory();renderHistory();updateDashboard();}})});
+$('#historyList').addEventListener('click',e=>{const del=e.target.closest('[data-history-remove]');if(del){openConfirmModal({title:'¿Eliminar ficha?',message:'¿Quieres eliminar esta ficha del historial local?<br>Esta acción solo afecta a este navegador.',confirmText:'Eliminar',onConfirm:()=>{const row=historyEntries.find(h=>h.id===del.dataset.historyRemove);if(row?._ownerId&&row._ownerId!==currentUser.id){alert('Solo puedes eliminar tus registros.');return}historyEntries=historyEntries.filter(h=>h.id!==del.dataset.historyRemove);ktRemoveByHistoryId(del.dataset.historyRemove);persistHistory();renderHistory();remoteDelete('historial_ext',del.dataset.historyRemove).catch(remoteWarn);}});return}const open=e.target.closest('[data-history-open]');if(open){const h=historyEntries.find(h=>h.id===open.dataset.historyOpen);if(!h)return;const record={...h,_historyId:h.id};delete record.id;state.push(record);render();closeHistory();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth',block:'start'})}});
+$('#historyPurge').addEventListener('click',()=>{if(!historyEntries.length)return;openConfirmModal({title:'¿Borrar historial?',message:'¿Eliminar definitivamente todas las fichas guardadas en este navegador?<br>Esta acción no se puede deshacer.',confirmText:'Borrar historial',onConfirm:()=>{const own=historyEntries.filter(h=>!h._ownerId||h._ownerId===currentUser.id);historyEntries=historyEntries.filter(h=>h._ownerId&&h._ownerId!==currentUser.id);ktClearAll();persistHistory();renderHistory();updateDashboard();own.forEach(h=>remoteDelete('historial_ext',h.id).catch(remoteWarn));}})});
 const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function match(text,regex){return (text.match(regex)||[])[1]?.trim()||''}
 function segment(t,start,end){let i=t.search(start);if(i<0)return '';let s=t.slice(i).replace(start,'');let j=s.search(end);return (j>=0?s.slice(0,j):s).trim()}
@@ -1188,7 +1214,7 @@ $('#print').addEventListener('click',()=>{if(!state.length)return;const node=cap
 $('#clear').addEventListener('click',()=>{state.length=0;render()});
 $('#togglePass').addEventListener('click',()=>{const input=$('#loginPass');const show=input.type==='password';input.type=show?'text':'password';$('#togglePass').textContent=show?'🙈':'👁️';input.focus()});
 
-$('#loginForm').addEventListener('submit',e=>{e.preventDefault();const user=findUser($('#loginUser').value,$('#loginPass').value);if(!user){$('#loginError').hidden=false;$('#loginError').textContent='Usuario o contraseña incorrectos.';$('#loginPass').focus();return}setSession(user)});
+$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#loginForm button[type=submit]')||$('#loginForm .login-submit');btn.disabled=true;$('#loginError').hidden=true;try{const user=await loginRemote($('#loginUser').value.trim().toLowerCase(),$('#loginPass').value);setSession(user)}catch(err){$('#loginError').hidden=false;$('#loginError').textContent=err.message||'No fue posible iniciar sesión';$('#loginPass').focus()}finally{btn.disabled=false}});
 let logoutReturnFocus=null,confirmModalAction=null;
 function hideLogoutModal(){ $('#logoutModal').hidden=true;$('#logoutConfirm').textContent='Aceptar';confirmModalAction=null;logoutReturnFocus?.focus() }
 function openConfirmModal({title,message,confirmText='Aceptar',onConfirm}){logoutReturnFocus=document.activeElement;closeHistory();$('#logoutTitle').textContent=title;$('#logoutMessage').innerHTML=message;$('#logoutConfirm').textContent=confirmText;confirmModalAction=typeof onConfirm==='function'?onConfirm:null;$('#logoutModal').hidden=false;$('#logoutCancel').focus()}
@@ -1197,7 +1223,7 @@ $('#logoutCancel').addEventListener('click',hideLogoutModal);
 $('#logoutConfirm').addEventListener('click',()=>{const action=confirmModalAction;hideLogoutModal();if(action)action()});
 $('#logoutModal').addEventListener('click',e=>{if(e.target===$('#logoutModal'))hideLogoutModal()});
 document.addEventListener('keydown',e=>{if($('#logoutModal').hidden)return;if(e.key==='Escape'){e.preventDefault();hideLogoutModal()}else if(e.key==='Tab'){const controls=[$('#logoutCancel'),$('#logoutConfirm')];const index=controls.indexOf(document.activeElement);if(e.shiftKey&&index===0){e.preventDefault();controls[1].focus()}else if(!e.shiftKey&&index===1){e.preventDefault();controls[0].focus()}}});
-for(const u of USERS){const o=document.createElement('option');o.value=u.name;o.textContent=u.name;$('#filterUser').appendChild(o)}restoreSession();renderHistory();render();applySession();
+restoreSession();renderHistory();render();applySession();
 
 // EXT 2.2 navigation uses existing panels and data; no new server dependencies.
 const navButtons=document.querySelectorAll('#appShell [data-nav]');
@@ -1239,7 +1265,7 @@ const dsIds=['Client','Product','Amount','Term','Decision','Approver'];
 const dsEl=id=>document.getElementById('ds'+id);
 function dsKey(){return 'ext_declaraciones_v1_'+(currentUser?.username||'sin_sesion')}
 function dsRecords(){try{return JSON.parse(localStorage.getItem(dsKey())||'[]')}catch{return []}}
-function dsStore(records){try{localStorage.setItem(dsKey(),JSON.stringify(records));return true}catch{return false}}
+function dsStore(records){if(!remoteReady)return false;try{const old=dsRecords();localStorage.setItem(dsKey(),JSON.stringify(records));const ids=new Set(records.map(x=>x.id));for(const r of records){if(!old.some(x=>x.id===r.id)){remoteWrite('historial_ext',{id:r.id,usuario_id:currentUser.id,modulo:'declaraciones',contratante:r.contractor||'',asegurado:r.client||'',datos:r}).catch(remoteWarn)}}for(const r of old){if(!ids.has(r.id)&&(!r._ownerId||r._ownerId===currentUser.id))remoteDelete('historial_ext',r.id).catch(remoteWarn)}return true}catch(e){console.error(e);return false}}
 const dsValues={Client:'',Product:'',Amount:'',Term:''};
 function dsExtract(){
  const raw=dsEl('Paste').value.replace(/\r/g,'');
@@ -1287,7 +1313,7 @@ for(const key of ['Client','Product','Amount','Term']){
 }
 function dsSaveRecord(r){
  const records=dsRecords();
- records.unshift({...r,id:Date.now()+'-'+Math.random().toString(36).slice(2),date:new Date().toISOString()});
+ records.unshift({...r,id:uuid(),date:new Date().toISOString()});
  const saved=dsStore(records);
  if(saved)dsRefresh();
  return saved;
@@ -1378,7 +1404,7 @@ function ehRender(){
   const badge=document.createElement('span');badge.className='eh-status';badge.textContent=r.ehDecision;
   const del=document.createElement('button');del.type='button';del.className='eh-delete';del.textContent='×';del.title='Eliminar definitivamente';del.setAttribute('aria-label','Eliminar registro');
   del.addEventListener('click',()=>openConfirmModal({title:'¿Eliminar este registro?',message:'Esta acción es permanente y no se puede deshacer.',confirmText:'Eliminar definitivamente',onConfirm:()=>{
-   if(ehModule==='medicos'){historyEntries=historyEntries.filter(x=>x.id!==r.ehId);ktRemoveByHistoryId(r.ehId);persistHistory();renderHistory();updateDashboard()}
+   if(ehModule==='medicos'){if(r._ownerId&&r._ownerId!==currentUser.id){alert('Solo puedes eliminar tus registros.');return}historyEntries=historyEntries.filter(x=>x.id!==r.ehId);ktRemoveByHistoryId(r.ehId);persistHistory();renderHistory();updateDashboard();remoteDelete('historial_ext',r.ehId).catch(remoteWarn)}
    else{dsStore(dsRecords().filter(x=>x.id!==r.ehId));dsRefresh()}
    ehRender();
   }}));
@@ -1407,7 +1433,7 @@ const KT_USER_MAP={amendoza:'A Mendoza',jamaguana:'J Amaguaña',jsampedro:'J Sam
 const KT_MONTHS=['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
 function ktKey(){return 'ext_kpi_medicos_v1_'+(currentUser?.username||'sin_sesion')}
 function ktRecords(){try{const arr=JSON.parse(localStorage.getItem(ktKey())||'[]');return Array.isArray(arr)?arr:[]}catch{return []}}
-function ktSave(records){try{localStorage.setItem(ktKey(),JSON.stringify(records));return true}catch(e){console.warn('No se pudo guardar el KPI',e);return false}}
+function ktSave(records){if(!remoteReady)return false;try{const old=ktRecords();localStorage.setItem(ktKey(),JSON.stringify(records));const ids=new Set(records.map(x=>x.id));for(const r of records){if(!old.some(x=>x.id===r.id)){remoteWrite('kpi_ext',{id:r.id,usuario_id:currentUser.id,historial_id:r.historyId,datos:r}).catch(remoteWarn)}}for(const r of old){if(!ids.has(r.id)&&(!r._ownerId||r._ownerId===currentUser.id))remoteDelete('kpi_ext',r.id).catch(remoteWarn)}return true}catch(e){console.warn(e);return false}}
 function ktDate(d){const dt=new Date(d);return [String(dt.getDate()).padStart(2,'0'),String(dt.getMonth()+1).padStart(2,'0'),dt.getFullYear()].join('/')}
 function ktLocalISO(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
 function ktBroker(contractor){const c=String(contractor||'').toLocaleUpperCase('es');return KT_CONTRACTOR_MAP.find(([name])=>c.includes(name))||['','','']}
@@ -1421,7 +1447,7 @@ function ktRegisterCopied(records){
   if(!r._historyId)storeRecord(r);
   const id=r._historyId;if(!id||ids.has(id))continue;
   const [match,broker,commercial]=ktBroker(r.contratante);
-  const row={id:'kt_'+id,historyId:id,createdAt:now.toISOString(),dateISO:ktLocalISO(now),contractor:r.contratante||'',broker,commercial,
+  const row={id:uuid(),historyId:id,createdAt:now.toISOString(),dateISO:ktLocalISO(now),contractor:r.contratante||'',broker,commercial,
    values:[now.getFullYear(),ktDate(now),KT_MONTHS[now.getMonth()],'MASIVO',broker,commercial,'VIDA DEUDORES',String(r.cliente).toLocaleUpperCase('es'),'0999999999',ktDate(now),KT_USER_MAP[currentUser.username]||currentUser.name,ktDate(now),'REQUISITOS DE ASEGURABILIDAD','REALIZADO','MOVIMIENTOS','EXÁMENES MÉDICOS','EXÁMENES']};
   stored.push(row);ids.add(id);count++;
  }
@@ -1461,6 +1487,7 @@ document.getElementById('ktExport').addEventListener('click',ktExportExcel);
 const ktPreviousNavigate=extNavigate;extNavigate=function(view){ktPreviousNavigate(view);if(view==='kpi')ktRender()};
 
 
+document.getElementById('extAdminView').addEventListener('change',async e=>{if(currentUser?.role!=='admin')return;const selected=e.target.value;const filter=q=>selected==='own'?q.eq('usuario_id',currentUser.id):selected==='all'?q:q.eq('usuario_id',selected);remoteReady=false;try{const [h,k,d]=await Promise.all([filter(supabase.from('historial_ext').select('*').eq('modulo','examenes')).order('creado_en',{ascending:false}),filter(supabase.from('kpi_ext').select('*')).order('creado_en',{ascending:false}),filter(supabase.from('historial_ext').select('*').eq('modulo','declaraciones')).order('creado_en',{ascending:false})]);if(h.error||k.error||d.error)throw h.error||k.error||d.error;historyEntries=h.data.map(x=>({...x.datos,id:x.id,createdAt:x.creado_en,_ownerId:x.usuario_id}));localStorage.setItem(historyKey(),JSON.stringify(historyEntries));localStorage.setItem(ktKey(),JSON.stringify(k.data.map(x=>({...x.datos,id:x.id,historyId:x.historial_id,createdAt:x.creado_en,_ownerId:x.usuario_id}))));localStorage.setItem(dsKey(),JSON.stringify(d.data.map(x=>({...x.datos,id:x.id,date:x.creado_en,_ownerId:x.usuario_id}))));renderHistory();updateDashboard();ktRender();dsRefresh();pfRender();if(typeof ehRender==='function')ehRender()}catch(err){remoteWarn(err)}finally{remoteReady=true}});
 // EXT 4.9 · Perfil de la sesión actual, sin cambiar el mecanismo de acceso existente.
 const PF_POSITIONS={amendoza:'Suscriptor Senior',jamaguana:'Jefe Técnico',jsampedro:'Suscriptor',lbravo:'Suscriptor'};
 function pfStoredCount(key){try{const data=JSON.parse(localStorage.getItem(key)||'[]');return Array.isArray(data)?data.length:0}catch{return 0}}
