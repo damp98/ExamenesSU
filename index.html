@@ -737,6 +737,13 @@ body.authenticated{background:var(--ext-canvas)!important}
 #appShell #extHistoryView .ext-history-declarations .ds-card{display:grid;gap:12px}
 #appShell #extHistoryView .ext-history-declarations button{justify-self:start}
 @media(max-width:900px){#appShell #extHistoryView .ext-history-grid{grid-template-columns:1fr}}
+
+/* EXT 4.2: encabezado uniforme en ambos módulos */
+#appShell #extMedicalView .dashboard-welcome{display:block!important;min-height:0!important;margin:5px 0 27px!important}
+#appShell #extMedicalView .dashboard-welcome .ext-view-head{margin:0!important}
+#appShell #extMedicalView .dashboard-welcome .ext-view-head h1{font-size:clamp(28px,3vw,39px)!important;letter-spacing:-1.4px!important;line-height:1.2!important;margin:9px 0 7px!important;color:#1f2f59!important}
+#appShell #extMedicalView .dashboard-welcome .ext-view-head p{font-size:14px!important;color:#8290a5!important;margin:0!important}
+#appShell #extMedicalView #welcomeName{display:none!important}
 </style>
 </head>
 <body>
@@ -767,7 +774,7 @@ body.authenticated{background:var(--ext-canvas)!important}
   <div class="ext-home-notice"><div class="ext-notice-icon" aria-hidden="true">♧</div><p><strong>Confidencialidad y protección de datos:</strong> El sistema está diseñado para no almacenar información sensible, confidencial o privada de los clientes, contratantes ni de <strong>Seguros Unidos</strong>. La información procesada se utiliza exclusivamente para fines de apoyo técnico, sin generar registros permanentes de los documentos analizados.</p></div>
 </div></section>
 <section id="extMedicalView" class="ext-view" hidden><main class="ext-main"><div class="ext-layout"><div class="ext-primary">
-<div class="dashboard-welcome"><div><h1>Hola, <span id="welcomeName">bienvenido</span></h1><p>Sube tus exámenes médicos y genera los cuadros automáticamente.</p></div><span class="welcome-badge">EXT · EXÁMENES</span></div><div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
+<div class="dashboard-welcome"><div class="ext-view-head"><span class="ext-eyebrow">MÓDULO · SUSCRIPCIÓN</span><h1>Exámenes Médicos</h1><p>Sube tus informes PDF y genera los cuadros técnicos automáticamente.</p></div><span id="welcomeName" hidden aria-hidden="true"></span></div><div class="contractor-panel ext-panel"><span class="contractor-icon">▦</span><div class="grow"><label for="contractorSelect">Contratante</label><select id="contractorSelect"><option value="">Seleccionar contratante…</option></select></div><button type="button" class="outline" id="exportKpiTop">Descargar KPI</button></div>
 <div class="kpi-row" id="kpiRow"><div class="kpi"><div class="k-label">Procesados</div><div class="k-value">0</div></div><div class="kpi red"><div class="k-label">Riesgo alto</div><div class="k-value">0</div></div><div class="kpi amber"><div class="k-label">Riesgo moderado</div><div class="k-value">0</div></div><div class="kpi"><div class="k-label">Por revisar</div><div class="k-value">0</div></div></div>
 <div id="drop" class="drop" role="button" tabindex="0"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="6" y="5" width="36" height="38" rx="9" fill="#e5f3f6"/><path d="M24 31V15m0 0-6 6m6-6 6 6M15 35h18" stroke="#0f6079" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><h2>Arrastra tus informes PDF aquí</h2><p>También puedes seleccionar varios archivos a la vez</p><button type="button" id="choose">Seleccionar PDFs</button><input id="files" type="file" accept="application/pdf,.pdf" multiple></div>
 <div class="toolbar"><h3 id="counter">Resultados (0)</h3><div class="actions"><button class="outline" id="image">Copiar como imagen</button><button class="outline" id="print">Imprimir / PDF</button><button class="outline" id="clear">Limpiar</button></div></div>
