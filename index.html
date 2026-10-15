@@ -121,7 +121,6 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 .login-brand{padding:40px 4.6vw 0;display:flex;align-items:center;gap:22px}
 .ext-mark{width:75px;height:75px;border-radius:16px;background:linear-gradient(145deg,#087fa0,#00446b);color:white;font-size:31px;font-weight:600;display:grid;place-items:center;box-shadow:0 8px 19px #0d50701b}
 .ext-wordmark{display:flex;flex-direction:column;gap:0;color:#073148}.ext-wordmark strong{font-size:58px;line-height:.93;letter-spacing:1px;font-weight:650}.ext-wordmark span{font-size:14px;letter-spacing:4.8px;font-weight:650;margin-top:6px}
-.login-theme{position:absolute;top:29px;right:32px;z-index:5;background:#ffffffd9!important;border:1px solid #e0e8f1!important;color:#6784a3!important;width:52px;height:52px;border-radius:15px!important;font-size:29px;box-shadow:0 5px 17px #30465b0b}
 .login-split{position:relative;z-index:2;grid-template-columns:55% 45%;gap:0;padding:15px 4.6vw 15px;align-items:center}
 .login-story{max-width:650px;padding-right:45px;align-self:center}.login-eyebrow{letter-spacing:4px;font-size:12px;color:#58718b}
 .login-story h2{font-size:clamp(39px,3.65vw,62px);letter-spacing:-2.6px;margin:26px 0 14px;line-height:1.05;color:#07132b}.login-story h2 em{color:#59728b}
@@ -140,14 +139,12 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 .login-note{margin:0;display:flex;justify-content:flex-start;align-items:center;padding:24px 26px;border-radius:16px;background:#f1f5fa;gap:17px}.login-note svg{width:27px;height:27px;color:#2363a2}.login-note span{display:flex;flex-direction:column;gap:5px}.login-note strong{color:#17283c;font-size:15px}.login-note small{color:#6a809a;font-size:13px}
 .login-footer{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:end;padding:10px 4.6vw 35px;color:#435c77;font-size:14px;line-height:1.45}.login-footer span:last-child{text-align:right}.login-footer small{font-size:12px;color:#7489a0}
 @media(max-width:1050px){.login-screen{height:auto;min-height:100svh}.login-split{grid-template-columns:1fr 1fr;padding:30px 28px}.login-brand{padding:25px 28px 0}.ext-mark{width:58px;height:58px;font-size:24px}.ext-wordmark strong{font-size:42px}.ext-wordmark span{font-size:10px}.login-story{padding-right:22px}.login-benefits{gap:15px}.login-card{padding:32px 25px}.login-field{height:62px}.login-submit{height:62px}.login-extras{flex-wrap:wrap}.login-footer{padding:12px 28px 24px}}
-@media(max-width:750px){.login-screen:before{background:#f5f9fbd9}.login-split{grid-template-columns:1fr;padding:25px 20px;gap:24px}.login-story{padding:0}.login-story h2{font-size:36px}.login-story>p{font-size:15px}.login-benefits{display:none}.login-main{padding:0}.login-card{max-width:none}.login-brand{padding:22px 20px 0}.login-theme{right:20px;top:22px;width:44px;height:44px}.login-footer{padding:0 20px 24px}.login-card>p{font-size:16px}.login-form{margin-top:26px}}
-.login-night{filter:brightness(.82)}
+@media(max-width:750px){.login-screen:before{background:#f5f9fbd9}.login-split{grid-template-columns:1fr;padding:25px 20px;gap:24px}.login-story{padding:0}.login-story h2{font-size:36px}.login-story>p{font-size:15px}.login-benefits{display:none}.login-main{padding:0}.login-card{max-width:none}.login-brand{padding:22px 20px 0}.login-footer{padding:0 20px 24px}.login-card>p{font-size:16px}.login-form{margin-top:26px}}
 
 /* Final visual alignment: fit the approved composition in one viewport */
 @media(min-width:751px){
   .login-screen{height:100dvh!important;min-height:0!important;overflow:hidden!important;display:block!important}
   .login-brand{position:absolute!important;top:clamp(22px,4vh,42px);left:4.6vw;padding:0!important;z-index:4}
-  .login-theme{top:clamp(20px,3vh,30px)}
   .login-split{height:100%!important;min-height:0!important;grid-template-columns:55% 45%!important;padding:0 4.6vw!important;gap:0!important}
   .login-story{transform:translateY(-1vh);padding-right:35px}
   .login-story h2{font-size:clamp(34px,3.45vw,55px);margin:clamp(14px,2.4vh,25px) 0 12px}
@@ -186,7 +183,7 @@ main.ext-main{max-width:1600px;margin:28px auto;padding:0 28px}
 </head>
 <body>
 <section id="loginScreen" class="login-screen">
-<div class="login-brand"><div class="ext-mark">EXT</div><div class="ext-wordmark"><strong>EXT</strong><span>EXÁMENES</span></div></div><button type="button" id="loginTheme" class="login-theme" title="Cambiar apariencia" aria-label="Cambiar apariencia">☼</button>
+<div class="login-brand"><div class="ext-mark">EXT</div><div class="ext-wordmark"><strong>EXT</strong><span>EXÁMENES</span></div></div>
 <div class="login-split">
 <div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
 <div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
@@ -459,7 +456,7 @@ $('#image').addEventListener('click',async()=>{
 $('#print').addEventListener('click',()=>{if(!state.length)return;const node=captureNode();node.classList.add('print-capture');node.style.cssText='position:static;width:100%;padding:0';document.body.classList.add('printing');window.print();document.body.classList.remove('printing');node.remove()});
 $('#clear').addEventListener('click',()=>{state.length=0;render()});
 $('#togglePass').addEventListener('click',()=>{const input=$('#loginPass');const show=input.type==='password';input.type=show?'text':'password';$('#togglePass').textContent=show?'🙈':'👁️';input.focus()});
-$('#loginTheme').addEventListener('click',()=>{document.querySelector('#loginScreen').classList.toggle('login-night')});
+
 $('#loginForm').addEventListener('submit',e=>{e.preventDefault();const user=findUser($('#loginUser').value,$('#loginPass').value);if(!user){$('#loginError').hidden=false;$('#loginError').textContent='Usuario o contraseña incorrectos.';$('#loginPass').focus();return}setSession(user)});
 let logoutReturnFocus=null,confirmModalAction=null;
 function hideLogoutModal(){ $('#logoutModal').hidden=true;$('#logoutConfirm').textContent='Aceptar';confirmModalAction=null;logoutReturnFocus?.focus() }
