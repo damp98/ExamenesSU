@@ -886,6 +886,10 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extAssistanceView input:not([type=file]),#extAssistanceView textarea{font:inherit;color:#1f2f59;border:1px solid #dbe4f1;background:#fff;border-radius:10px;padding:11px 12px;box-sizing:border-box;width:100%;outline:none}
 #extAssistanceView textarea{resize:vertical;min-height:145px;line-height:1.65;font-size:12px}
 #extAssistanceView input:focus,#extAssistanceView textarea:focus{border-color:#758bb5;box-shadow:0 0 0 3px #e8eef8}
+#extAssistanceView .as-bulk-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#extAssistanceView #asCopyAll{background:#f1f5fc;color:#1f2f59;border:1px solid #d9e4f4}
+#extAssistanceView #asCopyAll:hover:not(:disabled){background:#e4edf9}
+#extAssistanceView #asCopyAll:disabled{opacity:.5;cursor:not-allowed}
 #extAssistanceView .as-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
 #extAssistanceView .as-secondary{background:#fff;color:#1f2f59;border:1px solid #dbe4f1;border-radius:10px;padding:12px 15px;font-size:12px;font-weight:700;cursor:pointer}
 #extAssistanceView .as-cards{display:flex;flex-direction:column;gap:14px}
@@ -985,7 +989,7 @@ body.authenticated{background:var(--ext-canvas)!important}
  </div>
  <div id="asStatus" class="as-status" role="status">Los archivos se procesan en este navegador. Este módulo no guarda historial ni genera KPI.</div>
  <div class="as-tools"><label>Nombre del plan<input id="asPlan" value="PLAN DE ASISTENCIAS" maxlength="140"></label><label>Prestador<input id="asProvider" placeholder="Nombre del prestador" maxlength="140"></label></div>
- <div class="as-section-title"><div><h2>Coberturas identificadas <span id="asCount">(0)</span></h2><p>Edita cada cuadro. Comprueba especialmente copagos, eventos, carencias y textos que continúan en otras páginas.</p></div><button type="button" id="asAdd" class="as-secondary">+ Añadir cobertura</button></div>
+ <div class="as-section-title"><div><h2>Coberturas identificadas <span id="asCount">(0)</span></h2><p>Edita cada cuadro. Comprueba especialmente copagos, eventos, carencias y textos que continúan en otras páginas.</p></div><div class="as-bulk-actions"><button type="button" id="asCopyAll" class="as-secondary" disabled title="Copiar todas las coberturas en una sola imagen">▣ Copiar todo</button><button type="button" id="asAdd" class="as-secondary">+ Añadir cobertura</button></div></div>
  <div id="asCards" class="as-cards"><div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div></div>
  <div class="as-footer"><span>Revisión técnica obligatoria: la extracción automática puede cometer errores en tablas complejas o documentos escaneados.</span><button type="button" id="asExport" class="as-export" disabled>Descargar Word (.docx)</button></div>
 </div>
@@ -1761,6 +1765,7 @@ function asHasMetrics(c){return ['copay','events','waiting'].some(k=>String(c[k]
 function asDraw(){
  const host=asNode('asCards');host.replaceChildren();asNode('asCount').textContent=`(${asCoverages.length})`;
  asNode('asExport').disabled=!asCoverages.length;
+ asNode('asCopyAll').disabled=!asCoverages.length;
  if(!asCoverages.length){host.innerHTML='<div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div>';return}
  asCoverages.forEach((coverage,index)=>{
   if(!coverage.labels)coverage.labels={...asHeaderDefaults};
@@ -1778,11 +1783,7 @@ function asDraw(){
  });
 }
 // Copia solo el cuadro individual, sin encabezado corporativo repetido.
-async function asCopyCoverageImage(coverage,index,button){
- if(typeof window.html2canvas!=='function'){asSetStatus('No se cargó el generador de imágenes. Comprueba la conexión.',true);return}
- const original=button.textContent;button.disabled=true;button.textContent='Preparando...';
- const wrap=document.createElement('div');
- Object.assign(wrap.style,{position:'fixed',left:'0',top:'0',transform:'translateX(-150vw)',width:'1200px',boxSizing:'border-box',padding:'2px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
+function asCreateImageTable(coverage,index){
  const table=document.createElement('table');Object.assign(table.style,{borderCollapse:'collapse',tableLayout:'fixed',width:'100%',fontSize:'15px',border:'1px solid #dbe5f2'});
  const metrics=asHasMetrics(coverage);
  const colgroup=document.createElement('colgroup');(metrics?[60,16,13,11]:[100]).forEach(p=>{const col=document.createElement('col');col.style.width=p+'%';colgroup.appendChild(col)});table.appendChild(colgroup);
@@ -1798,7 +1799,15 @@ async function asCopyCoverageImage(coverage,index,button){
  table.appendChild(trHead);
  const trBody=document.createElement('tr');const desc=document.createElement('td');Object.assign(desc.style,{background:'#fff',border:'1px solid #dbe5f2',padding:'20px 20px 14px',verticalAlign:'top',textAlign:'justify',textJustify:'inter-word',overflowWrap:'break-word',lineHeight:'1.65',fontWeight:'400',fontSize:'15px'});asDescriptionNodes(desc,coverage.description);trBody.appendChild(desc);
  if(metrics){['copay','events','waiting'].forEach(key=>{const td=document.createElement('td');td.textContent=asMetricDisplay(coverage,key);Object.assign(td.style,{background:'#f3f7fc',border:'1px solid #dbe5f2',padding:'20px 9px',verticalAlign:'middle',textAlign:'center',overflowWrap:'break-word',lineHeight:'1.6',fontWeight:'700',fontSize:'17px'});trBody.appendChild(td)})}
- table.appendChild(trBody);wrap.appendChild(table);document.body.appendChild(wrap);
+ table.appendChild(trBody);return table;
+}
+async function asCopyCoverageImage(coverage,index,button){
+ if(typeof window.html2canvas!=='function'){asSetStatus('No se cargó el generador de imágenes. Comprueba la conexión.',true);return}
+ const original=button.textContent;button.disabled=true;button.textContent='Preparando...';
+ const wrap=document.createElement('div');
+ Object.assign(wrap.style,{position:'fixed',left:'0',top:'0',transform:'translateX(-150vw)',width:'1200px',boxSizing:'border-box',padding:'2px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
+ const table=asCreateImageTable(coverage,index);wrap.appendChild(table);document.body.appendChild(wrap);
+
  try{
   const canvas=await window.html2canvas(wrap,{backgroundColor:'#ffffff',scale:2,logging:false,width:1200,windowWidth:1400});
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
@@ -1812,6 +1821,39 @@ async function asCopyCoverageImage(coverage,index,button){
  }catch(err){asSetStatus('No se pudo generar la imagen: '+(err?.message||'Error desconocido'),true)}
  finally{wrap.remove();button.disabled=false;button.textContent=original}
 }
+// Copiado general: una sola imagen con todos los cuadros en su orden actual.
+// Se genera a partir del mismo diseño utilizado para copiar una cobertura individual.
+async function asCopyAllImages(){
+ if(!asCoverages.length){asSetStatus('Primero añade o carga alguna cobertura.',true);return}
+ if(typeof window.html2canvas!=='function'){asSetStatus('No se cargó el generador de imágenes. Comprueba la conexión.',true);return}
+ const button=asNode('asCopyAll'),original=button.textContent;
+ button.disabled=true;button.textContent='Preparando imagen...';
+ const wrap=document.createElement('div');
+ Object.assign(wrap.style,{position:'fixed',left:'0',top:'0',transform:'translateX(-150vw)',width:'1200px',boxSizing:'border-box',padding:'2px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
+ for(let i=0;i<asCoverages.length;i++){
+  const table=asCreateImageTable(asCoverages[i],i);
+  table.style.marginBottom=i===asCoverages.length-1?'0':'24px';
+  wrap.appendChild(table);
+ }
+ document.body.appendChild(wrap);
+ try{
+  // Limitar dimensiones para evitar fallos por exceso de altura con muchos cuadros.
+  const height=Math.ceil(wrap.scrollHeight);
+  const scale=Math.min(1.6,24000/Math.max(1,height));
+  if(scale<0.6)throw Error('El documento es demasiado extenso para una sola imagen. Utiliza el Word o copia las coberturas por separado.');
+  const canvas=await window.html2canvas(wrap,{backgroundColor:'#ffffff',scale,logging:false,width:1200,windowWidth:1400});
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('No se pudo generar el PNG completo');
+  if(navigator.clipboard?.write&&window.ClipboardItem&&window.isSecureContext){
+   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);asSetStatus('Se copiaron '+asCoverages.length+' coberturas en una sola imagen. Pégala con Ctrl + V.');return}
+   catch(err){/* Si el portapapeles bloquea la copia, descargar el PNG. */}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Seguros_Unidos_Todas_las_Coberturas.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);
+  asSetStatus('El navegador no permitió copiar directamente. Se descargó una imagen PNG con las '+asCoverages.length+' coberturas.');
+ }catch(err){asSetStatus('No se pudo copiar todo: '+(err?.message||'Error desconocido'),true)}
+ finally{wrap.remove();button.disabled=!asCoverages.length;button.textContent=original}
+}
+asNode('asCopyAll').addEventListener('click',asCopyAllImages);
 // EXT Asistencias 1.3: detector por geometría, encabezados flexibles y planes múltiples.
 const asSkipTitle=/^(PLAN\b|SERVICIOS CUBIERTOS|PERFIL DEL CLIENTE|NOMBRE DE LA EMPRESA|CONDICIONES PARTICULARES|EXCLUSIONES|BENEFICIOS ADICIONALES|L[IÍ]MITES DEL SERVICIO|TIPO\b|TITULAR\b|COBERTURA\b|EVENTOS\b|CARENCIA\b|COPAGO\b|VALOR MENSUAL\b|COTIZACI[OÓ]N\b|VALOR OPCI[OÓ]N|REVISI[OÓ]N SINIESTRALIDAD|SERVICIOS DENTALES|PROCEDIMIENTOS (PREVENTIVOS|OPERATIVOS|OPERATORIOS)|DESCUENTOS PREFERENCIALES)/i;
 function asCleanLine(v){return String(v||'').replace(/\s+/g,' ').trim()}
