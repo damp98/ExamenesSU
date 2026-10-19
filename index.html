@@ -853,6 +853,20 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extProfileView .pf-note p{margin:0;font-size:12px;line-height:1.7;color:#748198}
 @media(max-width:850px){#extProfileView .pf-grid{grid-template-columns:1fr}#extProfileView .pf-card{padding:22px}}
 @media(max-width:450px){#extProfileView .pf-stats{grid-template-columns:1fr}#extProfileView .pf-stat{flex-direction:row;align-items:center;justify-content:space-between}#extProfileView .pf-hero{gap:12px}#extProfileView .pf-avatar{width:60px;height:60px;border-radius:16px;font-size:20px}#extProfileView .pf-person h2{font-size:19px!important}}
+
+/* EXT · Selector administrativo integrado en barra superior. Solo visible para administradores. */
+#appShell .ext-admin-top-control{display:flex;align-items:center;gap:10px;box-sizing:border-box;width:224px;min-height:49px;padding:7px 11px;background:#f1f5fb;border:1px solid #e4ebf5;border-radius:14px;color:#1f2f59;transition:background .2s,border-color .2s,box-shadow .2s}
+#appShell .ext-admin-top-control[hidden]{display:none!important}
+#appShell .ext-admin-top-control:hover,#appShell .ext-admin-top-control:focus-within{background:#edf3fc;border-color:#d0ddf0;box-shadow:0 3px 12px rgba(31,47,89,.045)}
+#appShell .ext-admin-top-icon{flex:0 0 29px;height:29px;border-radius:9px;background:#e1eafb;color:#1f2f59;display:grid;place-items:center}
+#appShell .ext-admin-top-icon svg{width:16px;height:16px}
+#appShell .ext-admin-top-fields{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+#appShell .ext-admin-top-fields label{font-size:9px;font-weight:800;letter-spacing:.085em;color:#7889a5;line-height:1.15;white-space:nowrap}
+#appShell .ext-admin-top-fields select{appearance:none;-webkit-appearance:none;display:block;width:100%;max-width:100%;height:auto;min-height:19px;margin:0;padding:0 2px 0 0;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline-offset:3px;font-family:inherit;font-size:12px;font-weight:700;line-height:1.5;color:#1f2f59;cursor:pointer;text-overflow:ellipsis}
+#appShell .ext-admin-top-chevron{flex:0 0 13px;width:13px;height:13px;pointer-events:none;color:#7085a3}
+@media(max-width:760px){#appShell .ext-admin-top-control{width:185px;min-height:44px;padding:5px 8px;gap:7px;border-radius:11px}#appShell .ext-admin-top-icon{flex-basis:26px;height:26px}#appShell .ext-admin-top-fields label{font-size:8px}#appShell .ext-admin-top-fields select{font-size:11px}#appShell .ext-topbar{gap:9px!important}}
+@media(max-width:390px){#appShell .ext-admin-top-control{width:158px}#appShell .ext-admin-top-icon{display:none}}
+
 </style>
 </head>
 <body>
@@ -873,7 +887,11 @@ body.authenticated{background:var(--ext-canvas)!important}
 <button type="button" class="ext-subitem" data-nav="examenes"><span class="sub-dot"></span>Exámenes Médicos</button>
 <button type="button" class="ext-subitem" data-nav="declaraciones"><span class="sub-dot"></span>Declaraciones de Salud</button>
 </div><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
-<div class="ext-topbar"><div class="ext-topbar-search">⌕ <input type="search" id="globalSearch" placeholder="Buscar en historial..." aria-label="Buscar en historial"></div><div class="ext-topbar-user"><span class="ext-top-avatar" id="topAvatar">AM</span><span><strong id="topName">Usuario</strong><small id="topRole">Suscriptor</small></span></div><button type="button" id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Abrir navegación">☰</button></div>
+<div class="ext-topbar"><div id="extAdminPanel" class="ext-admin-top-control" hidden aria-label="Vista administrativa">
+  <span class="ext-admin-top-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
+  <div class="ext-admin-top-fields"><label for="extAdminView">VISTA ADMINISTRATIVA</label><select id="extAdminView" aria-label="Seleccionar registros administrativos"></select></div>
+  <svg class="ext-admin-top-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+</div><div class="ext-topbar-user"><span class="ext-top-avatar" id="topAvatar">AM</span><span><strong id="topName">Usuario</strong><small id="topRole">Suscriptor</small></span></div><button type="button" id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Abrir navegación">☰</button></div>
 <header class="app-header"><div class="header-inner"><img src="./LOGO.png" alt="EXÁMENES TÉCNICO" class="brand-logo"><div class="header-tools"><div class="session-chip" id="sessionChip"><span class="session-avatar" id="sessionInitials">AM</span><div class="session-meta"><strong id="sessionName">Alexander Mendoza</strong><span id="sessionRole">Administrador</span></div></div><button type="button" class="outline logout-btn" id="logoutBtn">Salir</button><div class="menu-wrap"><button type="button" class="menu-trigger" id="historyToggle" aria-label="Abrir historial" aria-expanded="false" aria-controls="historyPanel"><span></span><span></span><span></span></button><aside class="history-panel" id="historyPanel" hidden><div class="history-top"><strong>Historial</strong><span id="historyCount">0 registros</span></div><div class="history-search"><input id="historySearch" type="search" placeholder="Buscar por cliente o archivo…" aria-label="Buscar historial"></div><div id="historyList" class="history-list"></div><div class="history-bottom"><span>Guardado solo en este navegador</span><button class="history-purge" id="historyPurge" type="button">Borrar historial</button></div></aside></div></div></div></header>
 <section id="extWelcome" class="ext-view">
 <div class="ext-view-head"><span class="ext-eyebrow">ESPACIO DE TRABAJO</span><h1>Bienvenido a EXT, <span id="extWelcomeName">Usuario</span></h1><p>Selecciona el módulo con el que deseas trabajar.</p></div>
@@ -944,7 +962,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<div id="extAdminPanel" hidden style="position:fixed;right:16px;bottom:16px;z-index:100;background:white;border:1px solid #dce4ef;border-radius:14px;padding:12px;box-shadow:0 8px 25px #1f2f5922;font:12px system-ui;color:#1f2f59"><label for="extAdminView" style="display:block;margin-bottom:6px;font-weight:700">Vista administrativa</label><select id="extAdminView" style="padding:8px;border-radius:8px;border:1px solid #ccd7e8"></select></div>
+
 <style>
 /* EXT 5.0.2: transición de autenticación, sin espera artificial */
 #extLoading[hidden]{display:none!important}
@@ -1344,7 +1362,7 @@ navButtons.forEach(btn=>btn.addEventListener('click',()=>{
 document.querySelectorAll('[data-open-module]').forEach(b=>b.addEventListener('click',()=>extNavigate(b.dataset.openModule)));
 document.querySelector('#navLogout')?.addEventListener('click',()=>document.querySelector('#logoutBtn')?.click());
 document.querySelector('#mobileNavToggle')?.addEventListener('click',()=>document.querySelector('#appShell')?.classList.toggle('nav-open'));
-document.querySelector('#globalSearch')?.addEventListener('input',e=>{const el=document.querySelector('#sideSearch');if(el){el.value=e.target.value;el.dispatchEvent(new Event('input',{bubbles:true}));}});
+
 const originalApplySession=applySession;
 applySession=function(){
  originalApplySession();
