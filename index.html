@@ -1801,37 +1801,99 @@ async function asCopyCoverageImage(coverage,index,button){
  }catch(err){asSetStatus('No se pudo generar la imagen: '+(err?.message||'Error desconocido'),true)}
  finally{wrap.remove();button.disabled=false;button.textContent=original}
 }
-const asSkipTitle=/^(PLAN\b|SERVICIOS CUBIERTOS|PERFIL DEL CLIENTE|NOMBRE DE LA EMPRESA|CONDICIONES PARTICULARES|EXCLUSIONES|BENEFICIOS ADICIONALES|L[IÍ]MITES DEL SERVICIO|TIPO\b|TITULAR\b|COBERTURA\b|EVENTOS\b|CARENCIA\b|COPAGO\b|VALOR MENSUAL\b|COTIZACI[OÓ]N\b)/i;
-function asIsHeading(t){const s=t.trim().replace(/\s+/g,' ');if(s.length<7||s.length>85||asSkipTitle.test(s)||/[.:;]$/.test(s))return false;const letters=s.match(/[A-Za-zÁÉÍÓÚÑáéíóúñ]/g)||[];const upper=s.match(/[A-ZÁÉÍÓÚÑ]/g)||[];return letters.length>=7&&upper.length/letters.length>.89&&!/\d{3,}/.test(s)}
+// EXT Asistencias 1.3: detector por geometría, encabezados flexibles y planes múltiples.
+const asSkipTitle=/^(PLAN\b|SERVICIOS CUBIERTOS|PERFIL DEL CLIENTE|NOMBRE DE LA EMPRESA|CONDICIONES PARTICULARES|EXCLUSIONES|BENEFICIOS ADICIONALES|L[IÍ]MITES DEL SERVICIO|TIPO\b|TITULAR\b|COBERTURA\b|EVENTOS\b|CARENCIA\b|COPAGO\b|VALOR MENSUAL\b|COTIZACI[OÓ]N\b|VALOR OPCI[OÓ]N|REVISI[OÓ]N SINIESTRALIDAD|SERVICIOS DENTALES|PROCEDIMIENTOS (PREVENTIVOS|OPERATIVOS|OPERATORIOS)|DESCUENTOS PREFERENCIALES)/i;
+function asCleanLine(v){return String(v||'').replace(/\s+/g,' ').trim()}
+function asIsHeading(t){const s=asCleanLine(t);if(s.length<7||s.length>95||asSkipTitle.test(s)||/[.:;]$/.test(s))return false;const letters=s.match(/[A-Za-zÁÉÍÓÚÑáéíóúñ]/g)||[];const upper=s.match(/[A-ZÁÉÍÓÚÑ]/g)||[];return letters.length>=7&&upper.length/letters.length>.86&&!/\d{3,}/.test(s)}
 function asRowsFromPage(items,width){
  const grouped=[];
- for(const item of items){if(typeof item.str!=='string'||!item.str.trim())continue;const x=item.transform[4],y=item.transform[5];let row=grouped.find(r=>Math.abs(r.y-y)<3.3);if(!row){row={y,items:[]};grouped.push(row)}row.items.push({x,str:item.str.trim()})}
- return grouped.sort((a,b)=>b.y-a.y).map(r=>{r.items.sort((a,b)=>a.x-b.x);return {left:r.items.filter(i=>i.x<width*.66).map(i=>i.str).join(' ').trim(),right:r.items.filter(i=>i.x>=width*.66).map(i=>i.str).join(' ').trim(),rightItems:r.items.filter(i=>i.x>=width*.66),width}});
-}
-function asParsePages(pages){
- const all=pages.flatMap(p=>p.rows);const covers=[];let active=null;let metricRows=0;
- for(const row of all){
-  const left=row.left.replace(/\s+/g,' ').trim();if(!left)continue;
-  if(asIsHeading(left)&&/(copago|cobertura)/i.test(row.right)&&/eventos/i.test(row.right)){
-   active={title:left,description:'',copay:'',events:'',waiting:'',labels:{...asHeaderDefaults}};covers.push(active);metricRows=0;continue;
+ for(const item of items){if(typeof item.str!=='string'||!item.str.trim())continue;
+  const x=item.transform[4],y=item.transform[5];let row=grouped.find(r=>Math.abs(r.y-y)<3.3);
+  if(!row){row={y,items:[]};grouped.push(row)}
+  row.items.push({x,str:item.str.trim()});
+ }
+ return grouped.sort((a,b)=>b.y-a.y).map(r=>{
+  r.items.sort((a,b)=>a.x-b.x);
+  const left=[],cells=[[],[],[]];
+  for(const it of r.items){
+   const fraction=it.x/width;
+   if(fraction<.555)left.push(it.str);
+   else cells[fraction<.70?0:fraction<.825?1:2].push(it.str);
   }
-  if(!active)continue;
-  if(/^(\d+\s*\/\s*\d+|P[ÁA]GINA\s+\d+)$/.test(left))continue;
-  // Avoid repeating table headings in the description; retain every substantive clause.
-  if(!/^(COPAGO|EVENTOS|CARENCIA|COBERTURA)$/i.test(left))active.description+=(active.description?'\n':'')+left;
-  if(metricRows++<17&&row.rightItems.length){
-   const segments=[[],[],[]];for(const it of row.rightItems){const frac=it.x/row.width;segments[frac<.75?0:frac<.88?1:2].push(it.str)}
-   const clean=s=>s.join(' ').trim().replace(/^(Copago|Cobertura|Eventos|Carencia)\s*/i,'').trim();
-   const a=clean(segments[0]),b=clean(segments[1]),c=clean(segments[2]);
-   if(!active.copay&&a&&(/\d/.test(a)||/sin copago|gratuito/i.test(a)))active.copay=asMoney(a);
-   if(!active.events&&b&&(/\d|ilimitad|sin l[ií]mite/i.test(b)))active.events=b;
-   if(!active.waiting&&c&&(/\d|inmediat|sin carencia/i.test(c)))active.waiting=c;
-   else if(active.waiting&&/^(horas?|d[ií]as?|meses?)$/i.test(c)&&!new RegExp(c,'i').test(active.waiting))active.waiting+=' '+c;
-   if(active.events&&b&&/^(hospedaje|año|mes|estad[ií]a)$/i.test(b)&&!new RegExp(b,'i').test(active.events))active.events+=' '+b;
+  // Some PDF producers embed several headings in one text fragment.
+  const leftText=asCleanLine(left.join(' ')).replace(/\s+(?:Copago|Eventos|Carencia)\s*$/i,'').trim();
+  const allText=asCleanLine(r.items.map(it=>it.str).join(' '));
+  return {left:leftText,right:asCleanLine(cells.flat().join(' ')),cells:cells.map(c=>asCleanLine(c.join(' '))),allText,width,y:r.y};
+ });
+}
+function asMetricHeader(row){
+ const t=asCleanLine(row.allText||((row.left||'')+' '+(row.right||'')));
+ return /\b(COPAGO|COBERTURA)\b/i.test(t)&&/\b(EVENTOS|N\s*EVENTOS)\b/i.test(t);
+}
+function asMetricValue(v){return asCleanLine(v).replace(/^(?:Copago|Cobertura|Eventos|N eventos|Carencia)\s*/i,'').trim()}
+function asPlanLabel(t){const m=asCleanLine(t).match(/PLAN\s+AMBULATORIO\s+M[EÉ]DICO\s+OPCI[OÓ]N\s*(\d+)/i);return m?'OPCIÓN '+m[1]:''}
+function asParsePages(pages){
+ const covers=[];let active=null,plan='',dental=false,category='',pendingDental=false;
+ let seenPlan=new Set();
+ function finish(){if(active){active.description=asDescriptionText(active.description);if(active.description.trim().length>5)covers.push(active)}active=null}
+ function create(title,labels){finish();active={title:(plan?plan+' · ':'')+title,description:'',copay:'',events:'',waiting:'',labels:{...asHeaderDefaults,...(labels||{})}}}
+ function addDescription(line){if(active&&line)active.description+=(active.description?'\n':'')+line}
+ function readMetrics(row,isDental){
+  if(!active)return;
+  const v=(row.cells||[]).map(asMetricValue);
+  if(!isDental&&v[0]&&!v[1]){
+   // PDF writers often merge copay and event count into a single text fragment.
+   const m=v[0].match(/^(.*?\b(?:usd|d[oó]lares?|\$)(?:\s*\/\s*[\p{L}]+)?)\s+((?:\d+\s+sesiones?\b|seg[uú]n\s+el\s+n[uú]mero\b|ilimitad[oa]s?\b|\d+\s*\/\s*año\b).*)$/iu);
+   if(m){v[0]=m[1].trim();v[1]=m[2].trim()}
+  }
+  if(isDental){
+   if(v[0]&&!active.labels._coverage){active.labels._coverage=v[0];}
+   if(v[1]&&!active.copay)active.copay=asMoney(v[1]);
+   if(v[2]&&!active.events)active.events=v[2];
+   // Cobertura porcentual forma parte de la descripción, no es una carencia.
+   if(v[0]&&!active.description.includes('Cobertura: '+v[0]))addDescription('Cobertura: '+v[0]);
+  }else{
+   if(v[0]&&!active.copay)active.copay=asMoney(v[0]);
+   if(v[1]&&!active.events)active.events=v[1];
+   else if(v[1]&&active.events&&/^(de\s+|por\s+|año$|mes$)/i.test(v[1])&&!active.events.includes(v[1]))active.events+=' '+v[1];
+   if(v[2]&&!active.waiting)active.waiting=v[2];
+   else if(v[2]&&active.waiting&&/^(horas?|d[ií]as?|meses?)$/i.test(v[2])&&!active.waiting.includes(v[2]))active.waiting+=' '+v[2];
+   if(v[1]&&active.events&&/^(año|mes|hospedaje|titular|enfermedad)$/i.test(v[1])&&!active.events.includes(v[1]))active.events+=' '+v[1];
   }
  }
- // The parser deliberately preserves the captured text and leaves ambiguous cells for human review.
- return covers.filter(c=>c.description.trim().length>12).map(c=>({...c,description:asDescriptionText(c.description)}));
+ for(const page of pages){
+  for(const row of page.rows){
+   let left=asCleanLine(row.left).replace(/\s+(?:Copago|Eventos|Carencia)$/i,'').trim(),all=asCleanLine(row.allText||'');
+   if(!left&&!all)continue;
+   // Option boundaries are semantic: never merge conditions from separate alternatives.
+   const foundPlan=asPlanLabel(all);
+   if(foundPlan){finish();plan=foundPlan;seenPlan.add(plan);dental=false;category='';continue}
+   if(/^VALOR\s+OPCI[OÓ]N\b/i.test(left)){finish();dental=false;continue}
+   if(/^SERVICIOS\s+DENTALES$/i.test(left)){finish();dental=true;category='';continue}
+   if(/^PROCEDIMIENTOS\s+(PREVENTIVOS|OPERATIVOS|OPERATORIOS)/i.test(left)){finish();dental=true;category=left;continue}
+   if(/^DESCUENTOS\s+PREFERENCIALES/i.test(left)){finish();dental=true;category='';continue}
+   if(/^(EXCLUSIONES|L[IÍ]MITES DEL SERVICIO|BENEFICIOS ADICIONALES)\s*:?$/i.test(left)){finish();dental=false;continue}
+   if(/^((?:SERVICIOS CUBIERTOS)|(?:PERFIL DEL CLIENTE)|(?:COTIZACION CLIENTES CORPORATIVOS))$/i.test(left))continue;
+   if(asMetricHeader(row)&&!asIsHeading(left))continue;
+   // Main medical services have a blue uppercase heading and usually three metric headings.
+   if(!dental&&asIsHeading(left)){
+    create(left);continue;
+   }
+   if(dental){
+    // Dental procedures are ordinary title-case rows, with 100%, copay and events.
+    const v=row.cells||[];
+    const looksDental=v.some(x=>/\b100\s*%|\busd\b|\b\d+\s*\/\s*año|ilimitad/i.test(x));
+    const looksTitle=left.length>=5&&left.length<=110&&!left.startsWith('(')&&!left.startsWith('•')&&!/^(Cobertura|Copago|Eventos)$/i.test(left);
+    if(looksDental&&looksTitle){create((category?category+' · ':'')+left,{copay:'Copago',events:'Eventos',waiting:'Carencia'});readMetrics(row,true);continue}
+   }
+   if(!active)continue;
+   // Discard only exact column labels, never substantive conditions.
+   if(left&&!/^(COPAGO|EVENTOS|CARENCIA|COBERTURA|N EVENTOS)$/i.test(left))addDescription(left);
+   if((row.cells||[]).some(Boolean)&&!asMetricHeader(row))readMetrics(row,dental);
+  }
+ }
+ finish();
+ return {covers,plans:[...seenPlan]};
 }
 asNode('asAdd').addEventListener('click',()=>{asCoverages.push({title:'NUEVA COBERTURA',description:'',copay:'',events:'',waiting:'',labels:{...asHeaderDefaults}});asDraw()});
 async function asProcessPdf(file){
@@ -1847,10 +1909,10 @@ async function asProcessPdf(file){
    pages.push({rows:asRowsFromPage(text.items,width)});
   }
   if(chars<80){asCoverages=[];asDraw();asSetStatus('El PDF no contiene suficiente texto seleccionable. Puede estar escaneado y requerir OCR. No se ha generado contenido.',true);return}
-  asCoverages=asParsePages(pages);asDraw();
-  asNode('asPlan').value=pages.flatMap(p=>p.rows).map(r=>r.left).find(t=>/^PLAN\s/i.test(t))||'PLAN DE ASISTENCIAS';
-  if(asCoverages.length)asSetStatus(`Se detectaron ${asCoverages.length} coberturas en «${file.name}». Comprueba cada campo y los párrafos antes de exportar. Los datos no se guardan.`);
-  else asSetStatus('No se pudieron identificar cuadros automáticamente. Añádelos manualmente o prueba un PDF con texto seleccionable.',true);
+  const result=asParsePages(pages);asCoverages=result.covers;asDraw();
+  asNode('asPlan').value=result.plans.length>1?'PLAN AMBULATORIO MÉDICO · '+result.plans.length+' OPCIONES':(pages.flatMap(p=>p.rows).map(r=>r.left).find(t=>/^PLAN\s/i.test(t))||'PLAN DE ASISTENCIAS');
+  if(asCoverages.length)asSetStatus(`Se detectaron ${asCoverages.length} cuadros en «${file.name}»${result.plans.length?" ("+result.plans.join(", ")+")":""}. Revisa cada cuadro, especialmente las tablas dentales y las condiciones que continúan en otra página, antes de exportar. No se guardan datos.`);
+  else asSetStatus('El PDF contiene texto, pero no se identificaron coberturas con suficiente seguridad. Comprueba su distribución y añade cuadros manualmente si es necesario.',true);
  }catch(e){asSetStatus('No se pudo leer el documento: '+(e?.message||'Error desconocido'),true)}
 }
 asNode('asFile').addEventListener('change',async event=>{
