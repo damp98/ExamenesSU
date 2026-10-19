@@ -902,6 +902,19 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extAssistanceView .as-footer span{color:#8a96a9;font-size:11px;line-height:1.6;max-width:690px}
 @media(max-width:900px){#extAssistanceView{padding:23px 16px}#extAssistanceView .as-card-body{grid-template-columns:repeat(3,minmax(0,1fr))}#extAssistanceView .as-card-body label:first-child{grid-column:1/-1}#extAssistanceView .as-import{flex-wrap:wrap}#extAssistanceView .as-tools{grid-template-columns:1fr}#extAssistanceView .as-footer{flex-direction:column;align-items:stretch}}
 @media(max-width:500px){#extAssistanceView .as-card-body{grid-template-columns:1fr}#extAssistanceView .as-card-body label:first-child{grid-column:auto}#extAssistanceView .as-section-title{flex-direction:column;align-items:stretch}}
+
+/* EXT Asistencias 1.1: carga por arrastre, copia individual y textos justificados */
+#extAssistanceView .as-import{position:relative;transition:background .18s,border-color .18s,box-shadow .18s}
+#extAssistanceView .as-import.as-drag-over{background:#edf4ff;border:2px dashed #42689d;box-shadow:0 0 0 4px rgba(66,104,157,.10)}
+#extAssistanceView .as-import.as-drag-over:after{content:'Suelta aquí tu PDF';position:absolute;inset:5px;display:flex;align-items:center;justify-content:center;background:rgba(237,244,255,.94);border-radius:14px;color:#1f2f59;font-size:18px;font-weight:800;pointer-events:none}
+#extAssistanceView .as-copy-number{border:0;cursor:pointer;font-family:inherit;min-width:34px}
+#extAssistanceView .as-copy-number:hover{background:#cfdef5}
+#extAssistanceView .as-copy{background:#e6edf9;color:#1f2f59;border:1px solid #d3e0f2;border-radius:9px;padding:10px 12px;font-size:11px;font-weight:800;white-space:nowrap;cursor:pointer;font-family:inherit}
+#extAssistanceView .as-copy:hover{background:#d9e5f7}
+#extAssistanceView .as-copy:disabled,#extAssistanceView .as-copy-number:disabled{opacity:.55;cursor:wait}
+#extAssistanceView .as-card-body textarea{text-align:justify;text-justify:inter-word;white-space:pre-wrap;overflow-wrap:break-word;font-weight:500}
+#extAssistanceView .as-card-body textarea::selection{background:#c8d9f4}
+@media(max-width:540px){#extAssistanceView .as-card-head{flex-wrap:wrap}#extAssistanceView .as-copy{order:4;flex:1}}
 </style></head>
 <body>
 <section id="loginScreen" class="login-screen">
@@ -955,8 +968,8 @@ body.authenticated{background:var(--ext-canvas)!important}
 <section id="extAssistanceView" class="ext-view" hidden>
 <div class="ext-view-head"><span class="ext-eyebrow">HERRAMIENTA · APOYO TÉCNICO</span><h1>Estandarización de Asistencias</h1><p>Convierte cotizaciones PDF en cuadros corporativos editables de Seguros Unidos.</p></div>
 <div class="as-wrap">
- <div class="as-import">
-  <div class="as-import-icon">▤</div><div><h2>Documento del prestador</h2><p>Selecciona un PDF con texto para identificar sus coberturas. Revisa el contenido antes de descargarlo.</p></div>
+ <div class="as-import" id="asDropZone" role="region" aria-label="Área para arrastrar o seleccionar un documento PDF">
+  <div class="as-import-icon">▤</div><div><h2>Documento del prestador</h2><p>Arrastra y suelta tu PDF aquí o selecciónalo. Revisa las coberturas antes de descargar.</p></div>
   <label class="as-file-button" for="asFile">Seleccionar PDF</label><input id="asFile" type="file" accept="application/pdf,.pdf" hidden>
  </div>
  <div id="asStatus" class="as-status" role="status">Los archivos se procesan en este navegador. Este módulo no guarda historial ni genera KPI.</div>
@@ -1707,11 +1720,47 @@ function asDraw(){
  if(!asCoverages.length){host.innerHTML='<div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div>';return}
  asCoverages.forEach((coverage,index)=>{
   const card=document.createElement('article');card.className='as-card';
-  card.innerHTML=`<div class="as-card-head"><span class="as-number">${String(index+1).padStart(2,'0')}</span><input class="as-title" aria-label="Nombre de cobertura" value="${asEscape(coverage.title)}"><button type="button" class="as-remove">Eliminar</button></div><div class="as-card-body"><label>Descripción y condiciones completas<textarea data-field="description" spellcheck="true">${asEscape(coverage.description)}</textarea></label><label>Copago / cobertura<input data-field="copay" value="${asEscape(coverage.copay)}" placeholder="No especificado"></label><label>Eventos<input data-field="events" value="${asEscape(coverage.events)}" placeholder="No especificado"></label><label>Carencia<input data-field="waiting" value="${asEscape(coverage.waiting)}" placeholder="No especificado"></label></div>`;
+  card.innerHTML=`<div class="as-card-head"><button type="button" class="as-number as-copy-number" title="Copiar esta cobertura como imagen" aria-label="Copiar cobertura ${index+1} como imagen">${String(index+1).padStart(2,'0')}</button><input class="as-title" aria-label="Nombre de cobertura" value="${asEscape(coverage.title)}"><button type="button" class="as-copy" title="Copiar cuadro completo como imagen">▣ Copiar imagen</button><button type="button" class="as-remove">Eliminar</button></div><div class="as-card-body"><label>Descripción y condiciones completas<textarea data-field="description" spellcheck="true">${asEscape(coverage.description)}</textarea></label><label>Copago / cobertura<input data-field="copay" value="${asEscape(coverage.copay)}" placeholder="No especificado"></label><label>Eventos<input data-field="events" value="${asEscape(coverage.events)}" placeholder="No especificado"></label><label>Carencia<input data-field="waiting" value="${asEscape(coverage.waiting)}" placeholder="No especificado"></label></div>`;
   card.querySelector('.as-title').addEventListener('input',e=>coverage.title=e.target.value);
   card.querySelectorAll('[data-field]').forEach(el=>el.addEventListener('input',e=>coverage[e.target.dataset.field]=e.target.value));
+  card.querySelectorAll('.as-copy,.as-copy-number').forEach(btn=>btn.addEventListener('click',()=>asCopyCoverageImage(coverage,index,btn)));
   card.querySelector('.as-remove').addEventListener('click',()=>{asCoverages.splice(index,1);asDraw()});host.append(card);
  });
+}
+
+// Copia una cobertura como PNG real, con toda su descripción (sin recortes del textarea).
+async function asCopyCoverageImage(coverage,index,button){
+ if(typeof window.html2canvas!=='function'){asSetStatus('No se cargó el generador de imágenes. Comprueba la conexión.',true);return}
+ const original=button.textContent;button.disabled=true;button.textContent='Preparando...';
+ const wrap=document.createElement('div');
+ Object.assign(wrap.style,{position:'fixed',left:'-20000px',top:'0',width:'1180px',boxSizing:'border-box',padding:'24px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
+ const heading=document.createElement('div');heading.textContent='SEGUROS UNIDOS  |  '+(asNode('asPlan').value.trim()||'PLAN DE ASISTENCIAS');
+ Object.assign(heading.style,{fontSize:'14px',fontWeight:'800',letterSpacing:'1.3px',paddingBottom:'14px',borderBottom:'2px solid #dce6f3'});
+ const table=document.createElement('table');Object.assign(table.style,{borderCollapse:'collapse',tableLayout:'fixed',width:'100%',marginTop:'16px',fontSize:'15px'});
+ const colgroup=document.createElement('colgroup');[60,16,13,11].forEach(p=>{const col=document.createElement('col');col.style.width=p+'%';colgroup.appendChild(col)});table.appendChild(colgroup);
+ const trHead=document.createElement('tr');
+ [coverage.title||'COBERTURA SIN TÍTULO','COPAGO / COBERTURA','EVENTOS','CARENCIA'].forEach((value,i)=>{
+  const th=document.createElement('th');th.textContent=i===0?String(index+1).padStart(2,'0')+'  '+value:value;
+  Object.assign(th.style,{background:'#1f2f59',color:'#fff',fontSize:i===0?'17px':'13px',textAlign:i===0?'left':'center',padding:'16px 13px',border:'1px solid #dbe5f2',verticalAlign:'middle',overflowWrap:'anywhere'});trHead.appendChild(th)
+ });table.appendChild(trHead);
+ const trBody=document.createElement('tr');
+ [coverage.description||'No especificado',coverage.copay||'No especificado',coverage.events||'No especificado',coverage.waiting||'No especificado'].forEach((value,i)=>{
+  const td=document.createElement('td');
+  td.textContent=value;Object.assign(td.style,{background:i===0?'#fff':'#f3f7fc',border:'1px solid #dbe5f2',padding:i===0?'22px 18px':'20px 10px',verticalAlign:i===0?'top':'middle',textAlign:i===0?'justify':'center',textJustify:'inter-word',whiteSpace:'pre-wrap',overflowWrap:'break-word',lineHeight:'1.75',fontWeight:i===0?'400':'700',fontSize:i===0?'15px':'17px'});
+  trBody.appendChild(td)
+ });table.appendChild(trBody);wrap.append(heading,table);document.body.appendChild(wrap);
+ try{
+  const canvas=await window.html2canvas(wrap,{backgroundColor:'#ffffff',scale:2,logging:false,width:1180,windowWidth:1300});
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw Error('No se pudo generar el archivo PNG');
+  if(navigator.clipboard?.write&&window.ClipboardItem&&window.isSecureContext){
+   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);asSetStatus('Cobertura '+String(index+1).padStart(2,'0')+' copiada como imagen. Pégala con Ctrl + V en Word o en tu documento.');return}
+   catch(err){/* Fallback para permisos de portapapeles bloqueados */}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Seguros_Unidos_Cobertura_'+String(index+1).padStart(2,'0')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);
+  asSetStatus('El navegador no permitió copiar directamente. Se descargó el PNG de la cobertura '+String(index+1).padStart(2,'0')+'.');
+ }catch(err){asSetStatus('No se pudo generar la imagen: '+(err?.message||'Error desconocido'),true)}
+ finally{wrap.remove();button.disabled=false;button.textContent=original}
 }
 const asSkipTitle=/^(PLAN\b|SERVICIOS CUBIERTOS|PERFIL DEL CLIENTE|NOMBRE DE LA EMPRESA|CONDICIONES PARTICULARES|EXCLUSIONES|BENEFICIOS ADICIONALES|L[IÍ]MITES DEL SERVICIO|TIPO\b|TITULAR\b|COBERTURA\b|EVENTOS\b|CARENCIA\b|COPAGO\b|VALOR MENSUAL\b|COTIZACI[OÓ]N\b)/i;
 function asIsHeading(t){const s=t.trim().replace(/\s+/g,' ');if(s.length<7||s.length>85||asSkipTitle.test(s)||/[.:;]$/.test(s))return false;const letters=s.match(/[A-Za-zÁÉÍÓÚÑáéíóúñ]/g)||[];const upper=s.match(/[A-ZÁÉÍÓÚÑ]/g)||[];return letters.length>=7&&upper.length/letters.length>.89&&!/\d{3,}/.test(s)}
@@ -1746,8 +1795,8 @@ function asParsePages(pages){
  return covers.filter(c=>c.description.trim().length>12);
 }
 asNode('asAdd').addEventListener('click',()=>{asCoverages.push({title:'NUEVA COBERTURA',description:'',copay:'',events:'',waiting:''});asDraw()});
-asNode('asFile').addEventListener('change',async event=>{
- const file=event.target.files?.[0];if(!file)return;
+async function asProcessPdf(file){
+ if(!file)return;
  if(!/\.pdf$/i.test(file.name)&&file.type!=='application/pdf'){asSetStatus('Selecciona un documento PDF válido.',true);return}
  asSetStatus('Leyendo el PDF y localizando cuadros de coberturas...');
  try{
@@ -1764,12 +1813,30 @@ asNode('asFile').addEventListener('change',async event=>{
   if(asCoverages.length)asSetStatus(`Se detectaron ${asCoverages.length} coberturas en «${file.name}». Comprueba cada campo y los párrafos antes de exportar. Los datos no se guardan.`);
   else asSetStatus('No se pudieron identificar cuadros automáticamente. Añádelos manualmente o prueba un PDF con texto seleccionable.',true);
  }catch(e){asSetStatus('No se pudo leer el documento: '+(e?.message||'Error desconocido'),true)}
- event.target.value='';
+}
+asNode('asFile').addEventListener('change',async event=>{
+ const file=event.target.files?.[0];event.target.value='';
+ await asProcessPdf(file);
 });
+const asDropZone=asNode('asDropZone');
+let asDragDepth=0;
+const asIsFileDrag=e=>Array.from(e.dataTransfer?.types||[]).includes('Files');
+asDropZone.addEventListener('dragenter',e=>{if(!asIsFileDrag(e))return;e.preventDefault();asDragDepth++;asDropZone.classList.add('as-drag-over')});
+asDropZone.addEventListener('dragover',e=>{if(!asIsFileDrag(e))return;e.preventDefault();e.dataTransfer.dropEffect='copy';asDropZone.classList.add('as-drag-over')});
+asDropZone.addEventListener('dragleave',e=>{if(!asIsFileDrag(e))return;e.preventDefault();asDragDepth=Math.max(0,asDragDepth-1);if(!asDragDepth)asDropZone.classList.remove('as-drag-over')});
+asDropZone.addEventListener('drop',async e=>{
+ if(!asIsFileDrag(e))return;e.preventDefault();asDragDepth=0;asDropZone.classList.remove('as-drag-over');
+ const files=Array.from(e.dataTransfer?.files||[]);
+ if(files.length!==1){asSetStatus('Arrastra un único archivo PDF por vez.',true);return}
+ await asProcessPdf(files[0]);
+});
+// Impide que el navegador navegue fuera de EXT cuando se suelta un archivo sobre otra zona.
+document.addEventListener('dragover',e=>{if(asIsFileDrag(e))e.preventDefault()});
+document.addEventListener('drop',e=>{if(asIsFileDrag(e))e.preventDefault()});
 const asXml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function asPara(text,{bold=false,color='1F2F59',size=19}={}){
  const parts=String(text||'No especificado').split(/\r?\n/);
- return parts.map(part=>`<w:p><w:pPr><w:spacing w:after="110"/></w:pPr><w:r><w:rPr>${bold?'<w:b/>':''}<w:color w:val="${color}"/><w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${asXml(part||' ')}</w:t></w:r></w:p>`).join('');
+ return parts.map(part=>`<w:p><w:pPr><w:spacing w:after="110"/><w:jc w:val="both"/></w:pPr><w:r><w:rPr>${bold?'<w:b/>':''}<w:color w:val="${color}"/><w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${asXml(part||' ')}</w:t></w:r></w:p>`).join('');
 }
 function asCell(text,width,{head=false,fill='FFFFFF'}={}){return `<w:tc><w:tcPr><w:tcW w:w="${width}" w:type="dxa"/><w:shd w:fill="${fill}"/><w:tcMar><w:top w:w="170" w:type="dxa"/><w:start w:w="160" w:type="dxa"/><w:bottom w:w="170" w:type="dxa"/><w:end w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${asPara(text,{bold:head,size:head?19:18,color:head?'FFFFFF':'1F2F59'})}</w:tc>`}
 function asTable(c){const widths=[6900,1300,1300,1006];return `<w:tbl><w:tblPr><w:tblW w:w="10506" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="DDE6F1"/><w:left w:val="single" w:sz="4" w:color="DDE6F1"/><w:bottom w:val="single" w:sz="4" w:color="DDE6F1"/><w:right w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideH w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideV w:val="single" w:sz="4" w:color="DDE6F1"/></w:tblBorders></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid><w:tr>${[c.title,'COPAGO / COBERTURA','EVENTOS','CARENCIA'].map((v,i)=>asCell(v,widths[i],{head:true,fill:'1F2F59'})).join('')}</w:tr><w:tr>${[c.description,c.copay,c.events,c.waiting].map((v,i)=>asCell(v,widths[i],{fill:i===0?'FFFFFF':'F3F7FC'})).join('')}</w:tr></w:tbl>`}
