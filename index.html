@@ -868,7 +868,41 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:390px){#appShell .ext-admin-top-control{width:158px}#appShell .ext-admin-top-icon{display:none}}
 
 </style>
-</head>
+<style>
+/* EXT | Asistencias: herramienta independiente, sin persistencia */
+#extAssistanceView{padding:42px 34px 55px;max-width:1500px;margin:auto;color:#1f2f59}
+#extAssistanceView .ext-view-head{margin-bottom:25px}
+#extAssistanceView .as-wrap{display:flex;flex-direction:column;gap:20px}
+#extAssistanceView .as-import{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #dfe7f2;border-radius:19px;padding:22px 25px;box-shadow:0 6px 24px #1f2f5909}
+#extAssistanceView .as-import-icon{height:55px;width:55px;border-radius:15px;background:#eaf0fa;display:grid;place-items:center;font-size:26px;flex-shrink:0}
+#extAssistanceView h2{font-size:18px;letter-spacing:-.4px;margin:0 0 5px}
+#extAssistanceView p{font-size:12px;color:#8290a6;line-height:1.65;margin:0}
+#extAssistanceView .as-import>div:nth-child(2){flex:1}
+#extAssistanceView .as-file-button,#extAssistanceView .as-export{background:#1f2f59;color:#fff;border:0;border-radius:11px;padding:13px 18px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+#extAssistanceView .as-export:disabled{opacity:.4;cursor:not-allowed}
+#extAssistanceView .as-status{background:#eef3fb;border:1px solid #dce6f4;color:#4d6285;border-radius:11px;padding:12px 16px;font-size:12px}
+#extAssistanceView .as-tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#extAssistanceView label:not(.as-file-button){display:flex;flex-direction:column;gap:7px;font-size:11px;color:#6e7f9b;font-weight:750}
+#extAssistanceView input:not([type=file]),#extAssistanceView textarea{font:inherit;color:#1f2f59;border:1px solid #dbe4f1;background:#fff;border-radius:10px;padding:11px 12px;box-sizing:border-box;width:100%;outline:none}
+#extAssistanceView textarea{resize:vertical;min-height:145px;line-height:1.65;font-size:12px}
+#extAssistanceView input:focus,#extAssistanceView textarea:focus{border-color:#758bb5;box-shadow:0 0 0 3px #e8eef8}
+#extAssistanceView .as-section-title{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#extAssistanceView .as-secondary{background:#fff;color:#1f2f59;border:1px solid #dbe4f1;border-radius:10px;padding:12px 15px;font-size:12px;font-weight:700;cursor:pointer}
+#extAssistanceView .as-cards{display:flex;flex-direction:column;gap:14px}
+#extAssistanceView .as-empty{padding:40px 20px;text-align:center;background:#fff;border:1px dashed #cdd9eb;border-radius:16px;color:#8492a9;font-size:13px}
+#extAssistanceView .as-card{border:1px solid #dce5f1;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 5px 22px #1f2f5908}
+#extAssistanceView .as-card-head{display:flex;align-items:center;gap:10px;background:#f1f5fb;border-bottom:1px solid #dce5f1;padding:14px 17px}
+#extAssistanceView .as-number{background:#e0e9f6;border-radius:8px;color:#1f2f59;font-weight:800;font-size:12px;padding:8px}
+#extAssistanceView .as-title{font-weight:750!important;font-size:14px!important;flex:1;background:#fff!important}
+#extAssistanceView .as-remove{background:transparent;border:0;color:#9a4252;font-size:12px;cursor:pointer}
+#extAssistanceView .as-card-body{display:grid;grid-template-columns:minmax(0,2.9fr) repeat(3,minmax(105px,1fr));gap:12px;padding:17px}
+#extAssistanceView .as-card-body textarea{min-height:170px}
+#extAssistanceView .as-card-body input{font-size:12px}
+#extAssistanceView .as-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:10px 0}
+#extAssistanceView .as-footer span{color:#8a96a9;font-size:11px;line-height:1.6;max-width:690px}
+@media(max-width:900px){#extAssistanceView{padding:23px 16px}#extAssistanceView .as-card-body{grid-template-columns:repeat(3,minmax(0,1fr))}#extAssistanceView .as-card-body label:first-child{grid-column:1/-1}#extAssistanceView .as-import{flex-wrap:wrap}#extAssistanceView .as-tools{grid-template-columns:1fr}#extAssistanceView .as-footer{flex-direction:column;align-items:stretch}}
+@media(max-width:500px){#extAssistanceView .as-card-body{grid-template-columns:1fr}#extAssistanceView .as-card-body label:first-child{grid-column:auto}#extAssistanceView .as-section-title{flex-direction:column;align-items:stretch}}
+</style></head>
 <body>
 <section id="loginScreen" class="login-screen">
 <div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.png" alt="EXT Exámenes"></div>
@@ -886,7 +920,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 <nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><div class="ext-submenu" id="extSubmenu">
 <button type="button" class="ext-subitem" data-nav="examenes"><span class="sub-dot"></span>Exámenes Médicos</button>
 <button type="button" class="ext-subitem" data-nav="declaraciones"><span class="sub-dot"></span>Declaraciones de Salud</button>
-</div><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
+</div><button type="button" class="nav-link" data-nav="asistencias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> <span>Asistencias</span></button><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
 <div class="ext-topbar"><div id="extAdminPanel" class="ext-admin-top-control" hidden aria-label="Vista administrativa">
   <span class="ext-admin-top-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
   <div class="ext-admin-top-fields"><label for="extAdminView">VISTA ADMINISTRATIVA</label><select id="extAdminView" aria-label="Seleccionar registros administrativos"></select></div>
@@ -918,6 +952,20 @@ body.authenticated{background:var(--ext-canvas)!important}
 <div id="dsCapture" class="ds-capture"><div class="ds-capture-head">DECLARACIÓN DE SALUD</div><div class="ds-capture-row"><span>Nombre del cliente</span><strong id="dsPreviewClient" contenteditable="true" role="textbox" aria-label="Editar Client" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Producto</span><strong id="dsPreviewProduct" contenteditable="true" role="textbox" aria-label="Editar Product" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Monto</span><strong id="dsPreviewAmount" contenteditable="true" role="textbox" aria-label="Editar Amount" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Plazo</span><strong id="dsPreviewTerm" contenteditable="true" role="textbox" aria-label="Editar Term" spellcheck="false">—</strong></div><div class="ds-capture-row"><span>Aprobación de riesgo</span><select id="dsDecision" class="ds-decision" aria-label="Aprobación de riesgo"><option value="">Seleccionar dictamen…</option><option value="Aprobado">Aprobado</option><option value="Negado">Negado</option><option value="Revisión Médica">Revisión Médica</option></select></div><div class="ds-capture-row"><span>Persona que aprueba</span><strong id="dsPreviewApprover">—</strong></div></div>
 <div class="ds-response-footer"><button type="button" id="dsCopy" class="ds-primary">Copiar imagen y guardar</button><p class="ds-help">Edita directamente la tabla y elige el dictamen. EXT no decide automáticamente la aprobación.</p></div></div>
 </aside><div class="ds-history-full ds-card"><div class="ds-card-title"><span class="ds-step">↗</span><div><h2>Historial de declaraciones</h2><p>Independiente de Exámenes Médicos.</p></div></div><div class="ds-stats"><div><strong id="dsCount">0</strong><small>Total</small></div><div><strong id="dsApproved">0</strong><small>Aprobadas</small></div><div><strong id="dsDenied">0</strong><small>Negadas</small></div><div><strong id="dsReview">0</strong><small>Revisión</small></div></div><div id="dsHistory" class="ds-history"></div></div></div></section>
+<section id="extAssistanceView" class="ext-view" hidden>
+<div class="ext-view-head"><span class="ext-eyebrow">HERRAMIENTA · APOYO TÉCNICO</span><h1>Estandarización de Asistencias</h1><p>Convierte cotizaciones PDF en cuadros corporativos editables de Seguros Unidos.</p></div>
+<div class="as-wrap">
+ <div class="as-import">
+  <div class="as-import-icon">▤</div><div><h2>Documento del prestador</h2><p>Selecciona un PDF con texto para identificar sus coberturas. Revisa el contenido antes de descargarlo.</p></div>
+  <label class="as-file-button" for="asFile">Seleccionar PDF</label><input id="asFile" type="file" accept="application/pdf,.pdf" hidden>
+ </div>
+ <div id="asStatus" class="as-status" role="status">Los archivos se procesan en este navegador. Este módulo no guarda historial ni genera KPI.</div>
+ <div class="as-tools"><label>Nombre del plan<input id="asPlan" value="PLAN DE ASISTENCIAS" maxlength="140"></label><label>Prestador<input id="asProvider" placeholder="Nombre del prestador" maxlength="140"></label></div>
+ <div class="as-section-title"><div><h2>Coberturas identificadas <span id="asCount">(0)</span></h2><p>Edita cada cuadro. Comprueba especialmente copagos, eventos, carencias y textos que continúan en otras páginas.</p></div><button type="button" id="asAdd" class="as-secondary">+ Añadir cobertura</button></div>
+ <div id="asCards" class="as-cards"><div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div></div>
+ <div class="as-footer"><span>Revisión técnica obligatoria: la extracción automática puede cometer errores en tablas complejas o documentos escaneados.</span><button type="button" id="asExport" class="as-export" disabled>Descargar Word (.docx)</button></div>
+</div>
+</section>
 <section id="extProfileView" class="ext-view" hidden>
   <div class="ext-view-head"><span class="ext-eyebrow">CUENTA · PERSONAL</span><h1>Mi perfil</h1><p>Tu información de acceso y un resumen de tu actividad en EXT.</p></div>
   <div class="pf-grid">
@@ -962,6 +1010,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
 /* EXT 5.0.2: transición de autenticación, sin espera artificial */
@@ -1325,7 +1374,7 @@ document.addEventListener('keydown',e=>{if($('#logoutModal').hidden)return;if(e.
 // EXT 2.2 navigation uses existing panels and data; no new server dependencies.
 const navButtons=document.querySelectorAll('#appShell [data-nav]');
 let extCurrentView='inicio';
-const extViews={inicio:'extWelcome',examenes:'extMedicalView',declaraciones:'extDeclarationsView',historial:'extHistoryView',kpi:'extKpiView',perfil:'extProfileView'};
+const extViews={inicio:'extWelcome',examenes:'extMedicalView',declaraciones:'extDeclarationsView',asistencias:'extAssistanceView',historial:'extHistoryView',kpi:'extKpiView',perfil:'extProfileView'};
 const extSubmenu=document.getElementById('extSubmenu');
 function extNavigate(view){
  if(!extViews[view])return;
@@ -1646,4 +1695,100 @@ document.getElementById('extPasswordForm').addEventListener('submit',async e=>{
 });
 document.getElementById('extPasswordSignout').addEventListener('click',async()=>{if(extVoluntaryPasswordChange){document.getElementById('extPasswordGate').hidden=true;return}document.getElementById('extPasswordGate').hidden=true;await clearSession()});
 document.getElementById('extProfileChangePassword').addEventListener('click',()=>extOpenPasswordChange(true));
+
+// EXT Asistencias: datos en memoria únicamente; no se envían a Supabase ni se guardan en Historial/KPI.
+let asCoverages=[];
+const asNode=id=>document.getElementById(id);
+const asSetStatus=(message,isError=false)=>{asNode('asStatus').textContent=message;asNode('asStatus').style.color=isError?'#a12f44':'#4d6285'};
+const asEscape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function asDraw(){
+ const host=asNode('asCards');host.replaceChildren();asNode('asCount').textContent=`(${asCoverages.length})`;
+ asNode('asExport').disabled=!asCoverages.length;
+ if(!asCoverages.length){host.innerHTML='<div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div>';return}
+ asCoverages.forEach((coverage,index)=>{
+  const card=document.createElement('article');card.className='as-card';
+  card.innerHTML=`<div class="as-card-head"><span class="as-number">${String(index+1).padStart(2,'0')}</span><input class="as-title" aria-label="Nombre de cobertura" value="${asEscape(coverage.title)}"><button type="button" class="as-remove">Eliminar</button></div><div class="as-card-body"><label>Descripción y condiciones completas<textarea data-field="description" spellcheck="true">${asEscape(coverage.description)}</textarea></label><label>Copago / cobertura<input data-field="copay" value="${asEscape(coverage.copay)}" placeholder="No especificado"></label><label>Eventos<input data-field="events" value="${asEscape(coverage.events)}" placeholder="No especificado"></label><label>Carencia<input data-field="waiting" value="${asEscape(coverage.waiting)}" placeholder="No especificado"></label></div>`;
+  card.querySelector('.as-title').addEventListener('input',e=>coverage.title=e.target.value);
+  card.querySelectorAll('[data-field]').forEach(el=>el.addEventListener('input',e=>coverage[e.target.dataset.field]=e.target.value));
+  card.querySelector('.as-remove').addEventListener('click',()=>{asCoverages.splice(index,1);asDraw()});host.append(card);
+ });
+}
+const asSkipTitle=/^(PLAN\b|SERVICIOS CUBIERTOS|PERFIL DEL CLIENTE|NOMBRE DE LA EMPRESA|CONDICIONES PARTICULARES|EXCLUSIONES|BENEFICIOS ADICIONALES|L[IÍ]MITES DEL SERVICIO|TIPO\b|TITULAR\b|COBERTURA\b|EVENTOS\b|CARENCIA\b|COPAGO\b|VALOR MENSUAL\b|COTIZACI[OÓ]N\b)/i;
+function asIsHeading(t){const s=t.trim().replace(/\s+/g,' ');if(s.length<7||s.length>85||asSkipTitle.test(s)||/[.:;]$/.test(s))return false;const letters=s.match(/[A-Za-zÁÉÍÓÚÑáéíóúñ]/g)||[];const upper=s.match(/[A-ZÁÉÍÓÚÑ]/g)||[];return letters.length>=7&&upper.length/letters.length>.89&&!/\d{3,}/.test(s)}
+function asRowsFromPage(items,width){
+ const grouped=[];
+ for(const item of items){if(typeof item.str!=='string'||!item.str.trim())continue;const x=item.transform[4],y=item.transform[5];let row=grouped.find(r=>Math.abs(r.y-y)<3.3);if(!row){row={y,items:[]};grouped.push(row)}row.items.push({x,str:item.str.trim()})}
+ return grouped.sort((a,b)=>b.y-a.y).map(r=>{r.items.sort((a,b)=>a.x-b.x);return {left:r.items.filter(i=>i.x<width*.66).map(i=>i.str).join(' ').trim(),right:r.items.filter(i=>i.x>=width*.66).map(i=>i.str).join(' ').trim(),rightItems:r.items.filter(i=>i.x>=width*.66),width}});
+}
+function asParsePages(pages){
+ const all=pages.flatMap(p=>p.rows);const covers=[];let active=null;let metricRows=0;
+ for(const row of all){
+  const left=row.left.replace(/\s+/g,' ').trim();if(!left)continue;
+  if(asIsHeading(left)&&/(copago|cobertura)/i.test(row.right)&&/eventos/i.test(row.right)){
+   active={title:left,description:'',copay:'',events:'',waiting:''};covers.push(active);metricRows=0;continue;
+  }
+  if(!active)continue;
+  if(/^(\d+\s*\/\s*\d+|P[ÁA]GINA\s+\d+)$/.test(left))continue;
+  // Avoid repeating table headings in the description; retain every substantive clause.
+  if(!/^(COPAGO|EVENTOS|CARENCIA|COBERTURA)$/i.test(left))active.description+=(active.description?'\n':'')+left;
+  if(metricRows++<17&&row.rightItems.length){
+   const segments=[[],[],[]];for(const it of row.rightItems){const frac=it.x/row.width;segments[frac<.75?0:frac<.88?1:2].push(it.str)}
+   const clean=s=>s.join(' ').trim().replace(/^(Copago|Cobertura|Eventos|Carencia)\s*/i,'').trim();
+   const a=clean(segments[0]),b=clean(segments[1]),c=clean(segments[2]);
+   if(!active.copay&&a&&(/\d/.test(a)||/sin copago|gratuito/i.test(a)))active.copay=a;
+   if(!active.events&&b&&(/\d|ilimitad|sin l[ií]mite/i.test(b)))active.events=b;
+   if(!active.waiting&&c&&(/\d|inmediat|sin carencia/i.test(c)))active.waiting=c;
+   else if(active.waiting&&/^(horas?|d[ií]as?|meses?)$/i.test(c)&&!new RegExp(c,'i').test(active.waiting))active.waiting+=' '+c;
+   if(active.events&&b&&/^(hospedaje|año|mes|estad[ií]a)$/i.test(b)&&!new RegExp(b,'i').test(active.events))active.events+=' '+b;
+  }
+ }
+ // The parser deliberately preserves the captured text and leaves ambiguous cells for human review.
+ return covers.filter(c=>c.description.trim().length>12);
+}
+asNode('asAdd').addEventListener('click',()=>{asCoverages.push({title:'NUEVA COBERTURA',description:'',copay:'',events:'',waiting:''});asDraw()});
+asNode('asFile').addEventListener('change',async event=>{
+ const file=event.target.files?.[0];if(!file)return;
+ if(!/\.pdf$/i.test(file.name)&&file.type!=='application/pdf'){asSetStatus('Selecciona un documento PDF válido.',true);return}
+ asSetStatus('Leyendo el PDF y localizando cuadros de coberturas...');
+ try{
+  const bytes=new Uint8Array(await file.arrayBuffer());const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+  const pages=[];let chars=0;
+  for(let i=1;i<=pdf.numPages;i++){
+   const page=await pdf.getPage(i),text=await page.getTextContent(),width=page.getViewport({scale:1}).width;
+   chars+=text.items.map(t=>t.str||'').join('').length;
+   pages.push({rows:asRowsFromPage(text.items,width)});
+  }
+  if(chars<80){asCoverages=[];asDraw();asSetStatus('El PDF no contiene suficiente texto seleccionable. Puede estar escaneado y requerir OCR. No se ha generado contenido.',true);return}
+  asCoverages=asParsePages(pages);asDraw();
+  asNode('asPlan').value=pages.flatMap(p=>p.rows).map(r=>r.left).find(t=>/^PLAN\s/i.test(t))||'PLAN DE ASISTENCIAS';
+  if(asCoverages.length)asSetStatus(`Se detectaron ${asCoverages.length} coberturas en «${file.name}». Comprueba cada campo y los párrafos antes de exportar. Los datos no se guardan.`);
+  else asSetStatus('No se pudieron identificar cuadros automáticamente. Añádelos manualmente o prueba un PDF con texto seleccionable.',true);
+ }catch(e){asSetStatus('No se pudo leer el documento: '+(e?.message||'Error desconocido'),true)}
+ event.target.value='';
+});
+const asXml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+function asPara(text,{bold=false,color='1F2F59',size=19}={}){
+ const parts=String(text||'No especificado').split(/\r?\n/);
+ return parts.map(part=>`<w:p><w:pPr><w:spacing w:after="110"/></w:pPr><w:r><w:rPr>${bold?'<w:b/>':''}<w:color w:val="${color}"/><w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${asXml(part||' ')}</w:t></w:r></w:p>`).join('');
+}
+function asCell(text,width,{head=false,fill='FFFFFF'}={}){return `<w:tc><w:tcPr><w:tcW w:w="${width}" w:type="dxa"/><w:shd w:fill="${fill}"/><w:tcMar><w:top w:w="170" w:type="dxa"/><w:start w:w="160" w:type="dxa"/><w:bottom w:w="170" w:type="dxa"/><w:end w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${asPara(text,{bold:head,size:head?19:18,color:head?'FFFFFF':'1F2F59'})}</w:tc>`}
+function asTable(c){const widths=[6900,1300,1300,1006];return `<w:tbl><w:tblPr><w:tblW w:w="10506" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="DDE6F1"/><w:left w:val="single" w:sz="4" w:color="DDE6F1"/><w:bottom w:val="single" w:sz="4" w:color="DDE6F1"/><w:right w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideH w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideV w:val="single" w:sz="4" w:color="DDE6F1"/></w:tblBorders></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid><w:tr>${[c.title,'COPAGO / COBERTURA','EVENTOS','CARENCIA'].map((v,i)=>asCell(v,widths[i],{head:true,fill:'1F2F59'})).join('')}</w:tr><w:tr>${[c.description,c.copay,c.events,c.waiting].map((v,i)=>asCell(v,widths[i],{fill:i===0?'FFFFFF':'F3F7FC'})).join('')}</w:tr></w:tbl>`}
+asNode('asExport').addEventListener('click',async()=>{
+ if(!asCoverages.length)return;
+ if(typeof window.JSZip!=='function'){asSetStatus('No se cargó la biblioteca para generar Word. Comprueba la conexión a internet.',true);return}
+ const button=asNode('asExport');button.disabled=true;button.textContent='Generando Word...';
+ try{
+  const zip=new window.JSZip();const title=asNode('asPlan').value.trim()||'PLAN DE ASISTENCIAS';const provider=asNode('asProvider').value.trim();
+  const content=asPara('SEGUROS UNIDOS',{bold:true,size:23})+asPara(title,{bold:true,size:32})+(provider?asPara('Prestador: '+provider,{size:18}):'')+asPara('CUADRO DE SERVICIOS CUBIERTOS',{bold:true,size:20})+asCoverages.map(asTable).join('<w:p/>');
+  const xml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${content}<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="800" w:right="700" w:bottom="800" w:left="700" w:header="400" w:footer="400" w:gutter="0"/></w:sectPr></w:body></w:document>`;
+  zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+  zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+  zip.folder('word').file('document.xml',xml);
+  const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Seguros_Unidos_Asistencias.docx';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);
+  asSetStatus('Documento Word generado. Verifica que coincida con el PDF original antes de utilizarlo.');
+ }catch(e){asSetStatus('No fue posible generar Word: '+(e?.message||'Error'),true)}
+ finally{button.disabled=!asCoverages.length;button.textContent='Descargar Word (.docx)'}
+});
+
 </script></body></html>
