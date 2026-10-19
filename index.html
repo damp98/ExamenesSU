@@ -915,6 +915,12 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extAssistanceView .as-card-body textarea{text-align:justify;text-justify:inter-word;white-space:pre-wrap;overflow-wrap:break-word;font-weight:500}
 #extAssistanceView .as-card-body textarea::selection{background:#c8d9f4}
 @media(max-width:540px){#extAssistanceView .as-card-head{flex-wrap:wrap}#extAssistanceView .as-copy{order:4;flex:1}}
+
+/* EXT Asistencias 1.2: encabezados editables y numeración independiente */
+#extAssistanceView .as-metric-label{border:0!important;border-bottom:1px dashed #bccce4!important;border-radius:0!important;padding:2px 0 7px!important;font-size:10px!important;font-weight:800!important;letter-spacing:.3px;color:#526b95!important;background:transparent!important;margin-bottom:1px;text-transform:uppercase}
+#extAssistanceView .as-metric-label:focus{border-bottom-color:#1f2f59!important;box-shadow:none!important}
+#extAssistanceView .as-copy-number{background:#1f2f59!important;color:#fff!important;min-width:38px;height:39px;border-radius:9px!important;flex-shrink:0}
+#extAssistanceView .as-card-body textarea{font-weight:500!important;text-align:justify!important;text-justify:inter-word!important;line-height:1.8!important;tab-size:4}
 </style></head>
 <body>
 <section id="loginScreen" class="login-screen">
@@ -1714,48 +1720,81 @@ let asCoverages=[];
 const asNode=id=>document.getElementById(id);
 const asSetStatus=(message,isError=false)=>{asNode('asStatus').textContent=message;asNode('asStatus').style.color=isError?'#a12f44':'#4d6285'};
 const asEscape=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const asHeaderDefaults={copay:'COPAGO / COBERTURA',events:'EVENTOS',waiting:'CARENCIA'};
+function asHeader(c,key){return (c.labels?.[key]||asHeaderDefaults[key]).trim()||asHeaderDefaults[key]}
+function asMoney(v){
+ const t=String(v??'').trim();if(!t)return '';
+ // Solo normaliza cantidades expresadas en USD. No modifica otros valores ni monedas.
+ const m=t.match(/^(?:USD\.?\s*|US\$\s*|\$\s*)(\d[\d.,]*)(.*)$/i)||t.match(/^(\d[\d.,]*)\s*(?:USD\.?|US\$)(.*)$/i);
+ return m?'USD. '+m[1]+((m[2]||'').trim()?' '+m[2].trim():''):t;
+}
+function asDescriptionText(value){
+ // Los saltos artificiales del PDF no deben forzar alineación a la izquierda.
+ // Conserva los elementos de lista y separa los párrafos semánticos.
+ const lines=String(value??'').replace(/\r/g,'').split('\n');const result=[];
+ for(const raw of lines){const line=raw.trim();if(!line){if(result.length&&result[result.length-1]!=='')result.push('');continue}
+  const bullet=/^[•●▪◦\-*]\s+/.test(line);
+  const prev=result[result.length-1]||'';
+  if(!result.length||bullet||!prev||/^[•●▪◦\-*]\s+/.test(prev)||/[.!?;:]$/.test(prev)||/^(Condiciones particulares|Exclusiones(?: específicas)?|Requisitos|Límites del servicio)$/i.test(line))result.push(line);
+  else result[result.length-1]=prev+' '+line;
+ }
+ return result.join('\n').replace(/\n{3,}/g,'\n\n');
+}
+function asDescriptionNodes(container,value){
+ const lines=asDescriptionText(value).split('\n');let list=null;
+ for(const line of lines){
+  const bullet=line.match(/^[•●▪◦\-*]\s+(.*)$/);
+  if(bullet){if(!list){list=document.createElement('ul');Object.assign(list.style,{margin:'6px 0 11px',paddingLeft:'23px'});container.appendChild(list)}
+   const li=document.createElement('li');li.textContent=bullet[1];Object.assign(li.style,{marginBottom:'3px',textAlign:'justify',textJustify:'inter-word'});list.appendChild(li);continue}
+  list=null;
+  if(!line.trim())continue;
+  const para=document.createElement('p');para.textContent=line;Object.assign(para.style,{margin:'0 0 11px',textAlign:'justify',textJustify:'inter-word',lineHeight:'1.65',whiteSpace:'normal',hyphens:'auto'});container.appendChild(para);
+ }
+}
+function asHasMetrics(c){return ['copay','events','waiting'].some(k=>String(c[k]??'').trim())}
 function asDraw(){
  const host=asNode('asCards');host.replaceChildren();asNode('asCount').textContent=`(${asCoverages.length})`;
  asNode('asExport').disabled=!asCoverages.length;
  if(!asCoverages.length){host.innerHTML='<div class="as-empty">Carga una cotización para comenzar o añade una cobertura manualmente.</div>';return}
  asCoverages.forEach((coverage,index)=>{
+  if(!coverage.labels)coverage.labels={...asHeaderDefaults};
   const card=document.createElement('article');card.className='as-card';
-  card.innerHTML=`<div class="as-card-head"><button type="button" class="as-number as-copy-number" title="Copiar esta cobertura como imagen" aria-label="Copiar cobertura ${index+1} como imagen">${String(index+1).padStart(2,'0')}</button><input class="as-title" aria-label="Nombre de cobertura" value="${asEscape(coverage.title)}"><button type="button" class="as-copy" title="Copiar cuadro completo como imagen">▣ Copiar imagen</button><button type="button" class="as-remove">Eliminar</button></div><div class="as-card-body"><label>Descripción y condiciones completas<textarea data-field="description" spellcheck="true">${asEscape(coverage.description)}</textarea></label><label>Copago / cobertura<input data-field="copay" value="${asEscape(coverage.copay)}" placeholder="No especificado"></label><label>Eventos<input data-field="events" value="${asEscape(coverage.events)}" placeholder="No especificado"></label><label>Carencia<input data-field="waiting" value="${asEscape(coverage.waiting)}" placeholder="No especificado"></label></div>`;
+  card.innerHTML=`<div class="as-card-head"><button type="button" class="as-number as-copy-number" title="Copiar esta cobertura como imagen" aria-label="Copiar cobertura ${index+1} como imagen">${String(index+1).padStart(2,'0')}</button><input class="as-title" aria-label="Nombre de cobertura" value="${asEscape(coverage.title)}"><button type="button" class="as-copy" title="Copiar cuadro completo como imagen">▣ Copiar imagen</button><button type="button" class="as-remove">Eliminar</button></div><div class="as-card-body"><label>Descripción y condiciones completas<textarea data-field="description" spellcheck="true">${asEscape(coverage.description)}</textarea></label><label><input class="as-metric-label" data-label="copay" aria-label="Editar encabezado de copago o cobertura" value="${asEscape(asHeader(coverage,'copay'))}"><input data-field="copay" value="${asEscape(asMoney(coverage.copay))}" placeholder="Opcional"></label><label><input class="as-metric-label" data-label="events" aria-label="Editar encabezado de eventos" value="${asEscape(asHeader(coverage,'events'))}"><input data-field="events" value="${asEscape(coverage.events)}" placeholder="Opcional"></label><label><input class="as-metric-label" data-label="waiting" aria-label="Editar encabezado de carencia" value="${asEscape(asHeader(coverage,'waiting'))}"><input data-field="waiting" value="${asEscape(coverage.waiting)}" placeholder="Opcional"></label></div>`;
   card.querySelector('.as-title').addEventListener('input',e=>coverage.title=e.target.value);
+  card.querySelectorAll('[data-label]').forEach(el=>el.addEventListener('input',e=>coverage.labels[e.target.dataset.label]=e.target.value));
   card.querySelectorAll('[data-field]').forEach(el=>el.addEventListener('input',e=>coverage[e.target.dataset.field]=e.target.value));
+  const money=card.querySelector('[data-field="copay"]');money.addEventListener('blur',()=>{coverage.copay=asMoney(money.value);money.value=coverage.copay});
   card.querySelectorAll('.as-copy,.as-copy-number').forEach(btn=>btn.addEventListener('click',()=>asCopyCoverageImage(coverage,index,btn)));
   card.querySelector('.as-remove').addEventListener('click',()=>{asCoverages.splice(index,1);asDraw()});host.append(card);
  });
 }
-
-// Copia una cobertura como PNG real, con toda su descripción (sin recortes del textarea).
+// Copia solo el cuadro individual, sin encabezado corporativo repetido.
 async function asCopyCoverageImage(coverage,index,button){
  if(typeof window.html2canvas!=='function'){asSetStatus('No se cargó el generador de imágenes. Comprueba la conexión.',true);return}
  const original=button.textContent;button.disabled=true;button.textContent='Preparando...';
  const wrap=document.createElement('div');
- Object.assign(wrap.style,{position:'fixed',left:'-20000px',top:'0',width:'1180px',boxSizing:'border-box',padding:'24px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
- const heading=document.createElement('div');heading.textContent='SEGUROS UNIDOS  |  '+(asNode('asPlan').value.trim()||'PLAN DE ASISTENCIAS');
- Object.assign(heading.style,{fontSize:'14px',fontWeight:'800',letterSpacing:'1.3px',paddingBottom:'14px',borderBottom:'2px solid #dce6f3'});
- const table=document.createElement('table');Object.assign(table.style,{borderCollapse:'collapse',tableLayout:'fixed',width:'100%',marginTop:'16px',fontSize:'15px'});
- const colgroup=document.createElement('colgroup');[60,16,13,11].forEach(p=>{const col=document.createElement('col');col.style.width=p+'%';colgroup.appendChild(col)});table.appendChild(colgroup);
+ Object.assign(wrap.style,{position:'fixed',left:'0',top:'0',transform:'translateX(-150vw)',width:'1200px',boxSizing:'border-box',padding:'2px',background:'#fff',fontFamily:'Arial, sans-serif',color:'#1f2f59',zIndex:'-1'});
+ const table=document.createElement('table');Object.assign(table.style,{borderCollapse:'collapse',tableLayout:'fixed',width:'100%',fontSize:'15px',border:'1px solid #dbe5f2'});
+ const metrics=asHasMetrics(coverage);
+ const colgroup=document.createElement('colgroup');(metrics?[60,16,13,11]:[100]).forEach(p=>{const col=document.createElement('col');col.style.width=p+'%';colgroup.appendChild(col)});table.appendChild(colgroup);
  const trHead=document.createElement('tr');
- [coverage.title||'COBERTURA SIN TÍTULO','COPAGO / COBERTURA','EVENTOS','CARENCIA'].forEach((value,i)=>{
-  const th=document.createElement('th');th.textContent=i===0?String(index+1).padStart(2,'0')+'  '+value:value;
-  Object.assign(th.style,{background:'#1f2f59',color:'#fff',fontSize:i===0?'17px':'13px',textAlign:i===0?'left':'center',padding:'16px 13px',border:'1px solid #dbe5f2',verticalAlign:'middle',overflowWrap:'anywhere'});trHead.appendChild(th)
- });table.appendChild(trHead);
- const trBody=document.createElement('tr');
- [coverage.description||'No especificado',coverage.copay||'No especificado',coverage.events||'No especificado',coverage.waiting||'No especificado'].forEach((value,i)=>{
-  const td=document.createElement('td');
-  td.textContent=value;Object.assign(td.style,{background:i===0?'#fff':'#f3f7fc',border:'1px solid #dbe5f2',padding:i===0?'22px 18px':'20px 10px',verticalAlign:i===0?'top':'middle',textAlign:i===0?'justify':'center',textJustify:'inter-word',whiteSpace:'pre-wrap',overflowWrap:'break-word',lineHeight:'1.75',fontWeight:i===0?'400':'700',fontSize:i===0?'15px':'17px'});
-  trBody.appendChild(td)
- });table.appendChild(trBody);wrap.append(heading,table);document.body.appendChild(wrap);
+ const th=document.createElement('th');if(!metrics)th.colSpan=1;
+ Object.assign(th.style,{background:'#1f2f59',color:'#fff',fontSize:'17px',textAlign:'left',padding:'14px 15px',border:'1px solid #dbe5f2',verticalAlign:'middle'});
+ const titleRow=document.createElement('div');Object.assign(titleRow.style,{display:'flex',alignItems:'center',gap:'14px'});
+ const num=document.createElement('span');num.textContent=String(index+1).padStart(2,'0');Object.assign(num.style,{display:'inline-block',minWidth:'34px',padding:'7px 9px',borderRadius:'7px',background:'#e7eef9',color:'#1f2f59',textAlign:'center',fontWeight:'800',fontSize:'15px'});
+ const name=document.createElement('span');name.textContent=coverage.title||'COBERTURA';name.style.flex='1';titleRow.append(num,name);th.appendChild(titleRow);trHead.appendChild(th);
+ if(metrics){['copay','events','waiting'].forEach(key=>{const h=document.createElement('th');h.textContent=asHeader(coverage,key);Object.assign(h.style,{background:'#1f2f59',color:'#fff',fontSize:'12px',textAlign:'center',padding:'14px 9px',border:'1px solid #dbe5f2',verticalAlign:'middle',overflowWrap:'anywhere'});trHead.appendChild(h)})}
+ table.appendChild(trHead);
+ const trBody=document.createElement('tr');const desc=document.createElement('td');Object.assign(desc.style,{background:'#fff',border:'1px solid #dbe5f2',padding:'20px 20px 14px',verticalAlign:'top',textAlign:'justify',textJustify:'inter-word',overflowWrap:'break-word',lineHeight:'1.65',fontWeight:'400',fontSize:'15px'});asDescriptionNodes(desc,coverage.description);trBody.appendChild(desc);
+ if(metrics){['copay','events','waiting'].forEach(key=>{const td=document.createElement('td');td.textContent=key==='copay'?asMoney(coverage[key]):coverage[key]||'';Object.assign(td.style,{background:'#f3f7fc',border:'1px solid #dbe5f2',padding:'20px 9px',verticalAlign:'middle',textAlign:'center',overflowWrap:'break-word',lineHeight:'1.6',fontWeight:'700',fontSize:'17px'});trBody.appendChild(td)})}
+ table.appendChild(trBody);wrap.appendChild(table);document.body.appendChild(wrap);
  try{
-  const canvas=await window.html2canvas(wrap,{backgroundColor:'#ffffff',scale:2,logging:false,width:1180,windowWidth:1300});
+  const canvas=await window.html2canvas(wrap,{backgroundColor:'#ffffff',scale:2,logging:false,width:1200,windowWidth:1400});
   const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
   if(!blob)throw Error('No se pudo generar el archivo PNG');
   if(navigator.clipboard?.write&&window.ClipboardItem&&window.isSecureContext){
-   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);asSetStatus('Cobertura '+String(index+1).padStart(2,'0')+' copiada como imagen. Pégala con Ctrl + V en Word o en tu documento.');return}
-   catch(err){/* Fallback para permisos de portapapeles bloqueados */}
+   try{await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);asSetStatus('Cobertura '+String(index+1).padStart(2,'0')+' copiada como imagen. Pégala con Ctrl + V.');return}
+   catch(err){/* Si se bloquea el portapapeles, descargar PNG. */}
   }
   const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Seguros_Unidos_Cobertura_'+String(index+1).padStart(2,'0')+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);
   asSetStatus('El navegador no permitió copiar directamente. Se descargó el PNG de la cobertura '+String(index+1).padStart(2,'0')+'.');
@@ -1774,7 +1813,7 @@ function asParsePages(pages){
  for(const row of all){
   const left=row.left.replace(/\s+/g,' ').trim();if(!left)continue;
   if(asIsHeading(left)&&/(copago|cobertura)/i.test(row.right)&&/eventos/i.test(row.right)){
-   active={title:left,description:'',copay:'',events:'',waiting:''};covers.push(active);metricRows=0;continue;
+   active={title:left,description:'',copay:'',events:'',waiting:'',labels:{...asHeaderDefaults}};covers.push(active);metricRows=0;continue;
   }
   if(!active)continue;
   if(/^(\d+\s*\/\s*\d+|P[ÁA]GINA\s+\d+)$/.test(left))continue;
@@ -1784,7 +1823,7 @@ function asParsePages(pages){
    const segments=[[],[],[]];for(const it of row.rightItems){const frac=it.x/row.width;segments[frac<.75?0:frac<.88?1:2].push(it.str)}
    const clean=s=>s.join(' ').trim().replace(/^(Copago|Cobertura|Eventos|Carencia)\s*/i,'').trim();
    const a=clean(segments[0]),b=clean(segments[1]),c=clean(segments[2]);
-   if(!active.copay&&a&&(/\d/.test(a)||/sin copago|gratuito/i.test(a)))active.copay=a;
+   if(!active.copay&&a&&(/\d/.test(a)||/sin copago|gratuito/i.test(a)))active.copay=asMoney(a);
    if(!active.events&&b&&(/\d|ilimitad|sin l[ií]mite/i.test(b)))active.events=b;
    if(!active.waiting&&c&&(/\d|inmediat|sin carencia/i.test(c)))active.waiting=c;
    else if(active.waiting&&/^(horas?|d[ií]as?|meses?)$/i.test(c)&&!new RegExp(c,'i').test(active.waiting))active.waiting+=' '+c;
@@ -1792,9 +1831,9 @@ function asParsePages(pages){
   }
  }
  // The parser deliberately preserves the captured text and leaves ambiguous cells for human review.
- return covers.filter(c=>c.description.trim().length>12);
+ return covers.filter(c=>c.description.trim().length>12).map(c=>({...c,description:asDescriptionText(c.description)}));
 }
-asNode('asAdd').addEventListener('click',()=>{asCoverages.push({title:'NUEVA COBERTURA',description:'',copay:'',events:'',waiting:''});asDraw()});
+asNode('asAdd').addEventListener('click',()=>{asCoverages.push({title:'NUEVA COBERTURA',description:'',copay:'',events:'',waiting:'',labels:{...asHeaderDefaults}});asDraw()});
 async function asProcessPdf(file){
  if(!file)return;
  if(!/\.pdf$/i.test(file.name)&&file.type!=='application/pdf'){asSetStatus('Selecciona un documento PDF válido.',true);return}
@@ -1835,18 +1874,28 @@ document.addEventListener('dragover',e=>{if(asIsFileDrag(e))e.preventDefault()})
 document.addEventListener('drop',e=>{if(asIsFileDrag(e))e.preventDefault()});
 const asXml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
 function asPara(text,{bold=false,color='1F2F59',size=19}={}){
- const parts=String(text||'No especificado').split(/\r?\n/);
+ const parts=String(text??'').split(/\r?\n/);
  return parts.map(part=>`<w:p><w:pPr><w:spacing w:after="110"/><w:jc w:val="both"/></w:pPr><w:r><w:rPr>${bold?'<w:b/>':''}<w:color w:val="${color}"/><w:sz w:val="${size}"/></w:rPr><w:t xml:space="preserve">${asXml(part||' ')}</w:t></w:r></w:p>`).join('');
 }
-function asCell(text,width,{head=false,fill='FFFFFF'}={}){return `<w:tc><w:tcPr><w:tcW w:w="${width}" w:type="dxa"/><w:shd w:fill="${fill}"/><w:tcMar><w:top w:w="170" w:type="dxa"/><w:start w:w="160" w:type="dxa"/><w:bottom w:w="170" w:type="dxa"/><w:end w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${asPara(text,{bold:head,size:head?19:18,color:head?'FFFFFF':'1F2F59'})}</w:tc>`}
-function asTable(c){const widths=[6900,1300,1300,1006];return `<w:tbl><w:tblPr><w:tblW w:w="10506" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="DDE6F1"/><w:left w:val="single" w:sz="4" w:color="DDE6F1"/><w:bottom w:val="single" w:sz="4" w:color="DDE6F1"/><w:right w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideH w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideV w:val="single" w:sz="4" w:color="DDE6F1"/></w:tblBorders></w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid><w:tr>${[c.title,'COPAGO / COBERTURA','EVENTOS','CARENCIA'].map((v,i)=>asCell(v,widths[i],{head:true,fill:'1F2F59'})).join('')}</w:tr><w:tr>${[c.description,c.copay,c.events,c.waiting].map((v,i)=>asCell(v,widths[i],{fill:i===0?'FFFFFF':'F3F7FC'})).join('')}</w:tr></w:tbl>`}
+function asCell(text,width,{head=false,fill='FFFFFF',center=false}={}){
+ const content=asPara(text,{bold:head||center,size:head?19:18,color:head?'FFFFFF':'1F2F59'});
+ return `<w:tc><w:tcPr><w:tcW w:w="${width}" w:type="dxa"/><w:shd w:fill="${fill}"/><w:tcMar><w:top w:w="170" w:type="dxa"/><w:start w:w="160" w:type="dxa"/><w:bottom w:w="170" w:type="dxa"/><w:end w:w="160" w:type="dxa"/></w:tcMar></w:tcPr>${center?content.replaceAll('<w:jc w:val="both"/>','<w:jc w:val="center"/>'):content}</w:tc>`;
+}
+function asTable(c,index){
+ const metrics=asHasMetrics(c),widths=metrics?[6304,1680,1380,1142]:[10506];
+ const borders='<w:tblBorders><w:top w:val="single" w:sz="4" w:color="DDE6F1"/><w:left w:val="single" w:sz="4" w:color="DDE6F1"/><w:bottom w:val="single" w:sz="4" w:color="DDE6F1"/><w:right w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideH w:val="single" w:sz="4" w:color="DDE6F1"/><w:insideV w:val="single" w:sz="4" w:color="DDE6F1"/></w:tblBorders>';
+ const name=String(index+1).padStart(2,'0')+'     '+(c.title||'COBERTURA');
+ const headings=metrics?[name,asHeader(c,'copay'),asHeader(c,'events'),asHeader(c,'waiting')]:[name];
+ const values=metrics?[c.description,asMoney(c.copay),c.events,c.waiting]:[c.description];
+ return `<w:tbl><w:tblPr><w:tblW w:w="10506" w:type="dxa"/>${borders}</w:tblPr><w:tblGrid>${widths.map(w=>`<w:gridCol w:w="${w}"/>`).join('')}</w:tblGrid><w:tr>${headings.map((v,i)=>asCell(v,widths[i],{head:true,fill:'1F2F59',center:i>0})).join('')}</w:tr><w:tr>${values.map((v,i)=>asCell(v,widths[i],{fill:i===0?'FFFFFF':'F3F7FC',center:i>0})).join('')}</w:tr></w:tbl>`;
+}
 asNode('asExport').addEventListener('click',async()=>{
  if(!asCoverages.length)return;
  if(typeof window.JSZip!=='function'){asSetStatus('No se cargó la biblioteca para generar Word. Comprueba la conexión a internet.',true);return}
  const button=asNode('asExport');button.disabled=true;button.textContent='Generando Word...';
  try{
   const zip=new window.JSZip();const title=asNode('asPlan').value.trim()||'PLAN DE ASISTENCIAS';const provider=asNode('asProvider').value.trim();
-  const content=asPara('SEGUROS UNIDOS',{bold:true,size:23})+asPara(title,{bold:true,size:32})+(provider?asPara('Prestador: '+provider,{size:18}):'')+asPara('CUADRO DE SERVICIOS CUBIERTOS',{bold:true,size:20})+asCoverages.map(asTable).join('<w:p/>');
+  const content=asPara('SEGUROS UNIDOS',{bold:true,size:23})+asPara(title,{bold:true,size:32})+(provider?asPara('Prestador: '+provider,{size:18}):'')+asPara('CUADRO DE SERVICIOS CUBIERTOS',{bold:true,size:20})+asCoverages.map((c,i)=>asTable(c,i)).join('<w:p/>');
   const xml=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${content}<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="800" w:right="700" w:bottom="800" w:left="700" w:header="400" w:footer="400" w:gutter="0"/></w:sectPr></w:body></w:document>`;
   zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
   zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
