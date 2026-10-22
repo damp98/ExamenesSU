@@ -1175,6 +1175,47 @@ body.authenticated{background:var(--ext-canvas)!important}
   object-fit:contain;
 }
 </style>
+
+<style>
+/* EXT 2.0.6: extiende solamente el fondo de bienvenida hasta el borde derecho.
+   Las tarjetas mantienen su separacion lateral original. */
+@media (min-width: 761px) {
+  #appShell #extWelcome .ext-home-hero {
+    margin-right: -36px !important;
+    padding-right: 36px !important;
+  }
+}
+@media (max-width: 760px) {
+  #appShell #extWelcome .ext-home-hero {
+    margin-right: -16px !important;
+    padding-right: 16px !important;
+  }
+}
+</style>
+
+<style>
+/* EXT 2.0.7: logotipo lateral centrado y proporcionado */
+#appShell .ext-nav .ext-nav-logo {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  padding: 0 !important;
+  height: 78px !important;
+  margin: 0 0 12px !important;
+}
+#appShell .ext-nav .ext-nav-logo img {
+  display: block !important;
+  width: 155px !important;
+  max-width: calc(100% - 16px) !important;
+  max-height: 58px !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+</style>
 </head>
 <body>
 <div id="appShell" hidden>
