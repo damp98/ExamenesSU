@@ -930,9 +930,57 @@ body.authenticated{background:var(--ext-canvas)!important}
 #extAssistanceView .as-hierarchy label{font-size:10px;color:#607495;font-weight:800}
 #extAssistanceView .as-hierarchy input{font-size:12px!important;font-weight:600!important;padding:9px 10px!important}
 @media(max-width:700px){#extAssistanceView .as-hierarchy{grid-template-columns:1fr}}
+
+/* EXT login corporativo con video, 2026. Solo presentación. */
+#loginScreen.login-screen{isolation:isolate!important;position:relative!important;min-height:100svh!important;height:100svh!important;display:block!important;overflow:hidden!important;background:#0e1c32 url('./VIDEO_POSTER.jpg') center center/cover no-repeat!important;color:#fff!important}
+#loginScreen .ext-login-video{display:block!important;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center!important;z-index:-3!important;pointer-events:none!important}
+#loginScreen.login-screen::before{content:''!important;display:block!important;position:absolute!important;inset:0!important;z-index:-2!important;opacity:1!important;background:linear-gradient(90deg,rgba(9,22,46,.87) 0%,rgba(11,26,51,.65) 48%,rgba(11,25,47,.35) 100%)!important;clip-path:none!important;border-radius:0!important;width:auto!important;height:auto!important}
+#loginScreen.login-screen::after{content:''!important;display:block!important;position:absolute!important;inset:0!important;z-index:-1!important;background:linear-gradient(0deg,rgba(7,19,41,.7),transparent 30%,transparent 70%,rgba(7,19,41,.18))!important;clip-path:none!important;opacity:1!important;width:auto!important;height:auto!important}
+#loginScreen .login-brand{position:absolute!important;top:clamp(24px,4.5vh,48px)!important;left:clamp(28px,5vw,90px)!important;padding:0!important;z-index:5!important}
+#loginScreen .login-brand-image{width:clamp(185px,15vw,250px)!important;max-height:86px!important;filter:brightness(0) invert(1)!important}
+#loginScreen .login-split{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(390px,480px)!important;align-items:center!important;gap:clamp(36px,6vw,110px)!important;max-width:1700px!important;margin:auto!important;padding:110px clamp(28px,5vw,90px) 72px!important;height:100%!important;min-height:0!important;box-sizing:border-box!important}
+#loginScreen .login-story{max-width:690px!important;padding:0!important;transform:none!important}
+#loginScreen .login-eyebrow{font-size:11px!important;font-weight:800!important;letter-spacing:3px!important;color:#c4d6f1!important}
+#loginScreen .login-story h2{font-size:clamp(42px,4.5vw,78px)!important;line-height:1.06!important;letter-spacing:-2.6px!important;font-weight:780!important;color:#fff!important;margin:20px 0 22px!important;text-wrap:balance!important}
+#loginScreen .login-story h2 em{font-style:normal!important;color:#8db7e8!important}
+#loginScreen .login-story>p{font-size:clamp(16px,1.25vw,20px)!important;line-height:1.65!important;color:#e0e8f3!important;max-width:520px!important}
+#loginScreen .login-benefits{display:none!important}
+#loginScreen .login-main{width:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;align-self:center!important;padding:0!important;min-width:0!important}
+#loginScreen .login-card{box-sizing:border-box!important;width:100%!important;max-width:480px!important;max-height:calc(100svh - 150px)!important;overflow-y:auto!important;background:rgba(255,255,255,.97)!important;border:1px solid rgba(255,255,255,.88)!important;box-shadow:0 24px 80px rgba(4,13,31,.38)!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important;border-radius:24px!important;padding:clamp(27px,3vw,43px)!important;color:#1f2f59!important}
+#loginScreen .login-card h1{font-size:clamp(29px,2.5vw,36px)!important;letter-spacing:-1.1px!important;color:#1f2f59!important;text-align:left!important;margin:0 0 6px!important}
+#loginScreen .login-card>p{font-size:14px!important;color:#72829b!important;text-align:left!important}
+#loginScreen .login-form{margin-top:28px!important}
+#loginScreen .login-label{font-size:12px!important;font-weight:750!important;color:#324469!important;margin-bottom:8px!important}
+#loginScreen .login-field{height:54px!important;border-radius:12px!important;border:1px solid #dbe3f1!important;background:#f6f8fd!important;box-shadow:none!important;padding:0 14px!important;margin-bottom:19px!important}
+#loginScreen .login-field:focus-within{background:#fff!important;border-color:#6d88bb!important;box-shadow:0 0 0 3px #b7c7e640!important}
+#loginScreen .login-field input{font-size:14px!important;color:#1f2f59!important}
+#loginScreen .login-field svg{color:#8b9dbb!important;width:19px!important}
+#loginScreen .login-extras{margin:0 0 19px!important;font-size:12px!important}
+#loginScreen .login-submit{height:54px!important;border-radius:12px!important;background:#1f2f59!important;box-shadow:0 10px 22px rgba(31,47,89,.18)!important;color:#fff!important;font-size:15px!important}
+#loginScreen .login-submit:hover{background:#2d4275!important}
+#loginScreen .login-divider{display:none!important}
+#loginScreen .login-note{margin-top:22px!important;padding:16px!important;background:#f4f6fb!important;border-radius:12px!important;border:1px solid #e9edf5!important;justify-content:flex-start!important}
+#loginScreen .login-note strong{font-size:12px!important;color:#1f2f59!important}
+#loginScreen .login-note small{font-size:11px!important;color:#7686a2!important}
+#loginScreen .login-footer{position:absolute!important;bottom:0!important;left:0!important;right:0!important;display:flex!important;justify-content:space-between!important;padding:0 clamp(28px,5vw,90px) 23px!important;color:#dce7f8!important;font-size:11px!important;z-index:4!important;pointer-events:none!important}
+#loginScreen .login-footer small{color:#b6c6dc!important}
+@media(max-width:900px){
+#loginScreen.login-screen{height:auto!important;min-height:100svh!important;overflow:auto!important}
+#loginScreen .login-split{grid-template-columns:1fr!important;gap:26px!important;padding:125px 24px 90px!important;height:auto!important;min-height:100svh!important;justify-items:center!important}
+#loginScreen .login-story{max-width:480px!important;width:100%!important}
+#loginScreen .login-story h2{font-size:clamp(32px,7vw,50px)!important;margin:12px 0!important}
+#loginScreen .login-story>p{font-size:14px!important}
+#loginScreen .login-card{max-height:none!important;padding:28px!important}
+#loginScreen .login-brand{left:24px!important;top:22px!important}
+#loginScreen .login-brand-image{width:175px!important}
+#loginScreen .login-footer{padding:0 24px 17px!important}
+}
+@media(max-width:520px){#loginScreen .login-split{padding-top:105px!important;gap:20px!important}#loginScreen .login-story h2{font-size:35px!important}#loginScreen .login-card{padding:26px 22px!important;border-radius:20px!important}#loginScreen .login-note{margin-top:17px!important}}
+@media(prefers-reduced-motion:reduce){#loginScreen .ext-login-video{display:none!important}}
 </style></head>
 <body>
 <section id="loginScreen" class="login-screen">
+<video class="ext-login-video" autoplay muted loop playsinline preload="metadata" poster="./VIDEO_POSTER.jpg" aria-hidden="true"><source src="./VIDEO.mp4" type="video/mp4"></video>
 <div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.png" alt="EXT Exámenes"></div>
 <div class="login-split">
 <div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
