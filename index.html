@@ -977,21 +977,12 @@ body.authenticated{background:var(--ext-canvas)!important}
 }
 @media(max-width:520px){#loginScreen .login-split{padding-top:105px!important;gap:20px!important}#loginScreen .login-story h2{font-size:35px!important}#loginScreen .login-card{padding:26px 22px!important;border-radius:20px!important}#loginScreen .login-note{margin-top:17px!important}}
 @media(prefers-reduced-motion:reduce){#loginScreen .ext-login-video{display:none!important}}
+/* CORRECCIÓN: respetar el estado de autenticación aunque el diseño use display!important. */
+#loginScreen.login-screen[hidden]{display:none!important}
+#appShell[hidden]{display:none!important}
+
 </style></head>
 <body>
-<section id="loginScreen" class="login-screen">
-<video class="ext-login-video" autoplay muted loop playsinline preload="metadata" poster="./VIDEO_POSTER.jpg" aria-hidden="true"><source src="./VIDEO.mp4" type="video/mp4"></video>
-<div class="login-brand"><img class="login-brand-image" src="./LOGOBLUE.png" alt="EXT Exámenes"></div>
-<div class="login-split">
-<div class="login-story"><span class="login-eyebrow">PROCESAMIENTO AUTOMÁTICO</span><h2>Exámenes médicos<br><em>en segundos.</em></h2><p>Sube tus informes, genera los cuadros automáticamente y enfócate en lo importante.</p>
-<div class="login-benefits"><div><span class="benefit-icon">▤</span><span><strong>Procesamiento local</strong><small>Tus PDF se procesan en tu navegador.</small></span></div><div><span class="benefit-icon">↗</span><span><strong>Resultados automáticos</strong><small>Cuadros listos para copiar y utilizar.</small></span></div><div><span class="benefit-icon">▥</span><span><strong>Control de trabajo</strong><small>Historial e indicadores de actividad.</small></span></div></div></div>
-<div class="login-main"><div class="login-card"><h1>Hola de nuevo</h1><p>Ingresa a tu cuenta para continuar.</p>
-<form id="loginForm" class="login-form" novalidate><label class="login-label" for="loginUser">Usuario</label>
-<div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 20a7.5 7.5 0 0 1 15 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="loginUser" autocomplete="username" placeholder="Usuario"></div>
-<label class="login-label" for="loginPass">Contraseña</label><div class="login-field"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><input id="loginPass" type="password" autocomplete="current-password" placeholder="Contraseña"><button type="button" class="toggle-pass" id="togglePass" aria-label="Mostrar u ocultar contraseña">👁️</button></div>
-<div class="login-extras"><label class="remember-wrap"><input type="checkbox" id="rememberLogin" checked> Mantener sesión activa</label><span class="forgot-label" title="Disponible cuando se implemente la autenticación segura">¿Olvidaste tu contraseña?</span></div><button type="submit" class="login-submit" id="loginSubmit">Iniciar sesión <span>→</span></button><div id="loginError" class="login-error" hidden>Usuario o contraseña incorrectos.</div></form>
-<div class="login-divider"><span>o</span></div><div class="login-note"><svg viewBox="0 0 24 24" fill="none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect x="5" y="10" width="14" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/></svg><span><strong>Sistema de acceso interno</strong><small>Acceso exclusivo para usuarios autorizados.</small></span></div>
-</div></div></div><div class="login-footer"><span>♙ &nbsp; Acceso restringido<br><small>Uso interno · EXT Exámenes</small></span><span>EXT v2.0<br><small>Exámenes</small></span></div></section>
 <div id="appShell" hidden>
 <nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><div class="ext-submenu" id="extSubmenu">
 <button type="button" class="ext-subitem" data-nav="examenes"><span class="sub-dot"></span>Exámenes Médicos</button>
@@ -1161,7 +1152,7 @@ async function extSavePassword(currentPassword,newPassword){
 let remoteReady=false;
 function uiUser(p){const name=p.nombre||p.usuario;return {username:p.usuario,name,role:p.rol==='admin'?'admin':'operator',initials:name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase(),id:p.id,cargo:p.cargo,mustChangePassword:p.debe_cambiar_clave===true}}
 async function fetchProfile(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw Error('Sesión no válida');const {data:p,error:pe}=await supabase.from('perfiles').select('id,usuario,nombre,cargo,rol,debe_cambiar_clave').eq('id',user.id).single();if(pe||!p)throw Error('No existe un perfil autorizado para esta cuenta');return uiUser(p)}
-async function loginRemote(usuario,password){const res=await fetch(SUPABASE_URL+'/functions/v1/ext-login',{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY},body:JSON.stringify({usuario,password})});const body=await res.json().catch(()=>({}));if(!res.ok)throw Error(body.error||'No fue posible iniciar sesión');const {error}=await supabase.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;return await fetchProfile()}
+
 async function remoteLoad(){if(!currentUser?.id||currentUser.mustChangePassword)return;remoteReady=false;try{
  const [hist,kpi,dec,profiles]=await Promise.all([
   supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','examenes').order('creado_en',{ascending:false}).limit(1000),
@@ -1196,9 +1187,38 @@ function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage
 function persistHistory(){if(!remoteReady)return;try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn(e)}}
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
 async function setSession(u){contractorSelect.value='';currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();if(!u.mustChangePassword)await remoteLoad()}
-async function clearSession(){if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop()}
-function applySession(){const pending=!!currentUser?.mustChangePassword;const logged=!!currentUser&&!pending;$('#loginScreen').hidden=!!currentUser;$('#appShell').hidden=!logged;$('#extPasswordGate').hidden=!pending;if(pending)extOpenPasswordChange(false);document.body.classList.toggle('authenticated',logged);if(logged){$('#sessionInitials').textContent=currentUser.initials;$('#sessionName').textContent=currentUser.name;$('#welcomeName').textContent=currentUser.name.split(' ')[0];$('#sessionRole').textContent=roleLabel(currentUser.role);$('#loginError').hidden=true;updateDashboard();$('#loginForm').reset();$('#loginPass').type='password';$('#togglePass').textContent='👁️';document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin');document.getElementById('extAdminPanel').hidden=currentUser.role!=='admin'||pending}else{$('#loginUser').focus()}}
-async function restoreSession(){try{const {data:{session}}=await supabase.auth.getSession();if(session){const u=await fetchProfile();await setSession(u);const previous=sessionStorage.getItem('ext_active_view_'+u.id);if(previous&&extViews[previous])extNavigate(previous)}}catch(e){console.warn('No se restauró la sesión',e);await supabase.auth.signOut();currentUser=null;applySession()}}
+async function clearSession(){if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop();window.location.replace('./login.html')}
+function applySession(){
+ const pending=!!currentUser?.mustChangePassword;
+ const logged=!!currentUser&&!pending;
+ $('#appShell').hidden=!logged;
+ $('#extPasswordGate').hidden=!pending;
+ if(pending)extOpenPasswordChange(false);
+ document.body.classList.toggle('authenticated',logged);
+ if(logged){
+  $('#sessionInitials').textContent=currentUser.initials;
+  $('#sessionName').textContent=currentUser.name;
+  $('#welcomeName').textContent=currentUser.name.split(' ')[0];
+  $('#sessionRole').textContent=roleLabel(currentUser.role);
+  updateDashboard();
+  document.querySelectorAll('.admin-only').forEach(el=>el.hidden=currentUser.role!=='admin');
+  document.getElementById('extAdminPanel').hidden=currentUser.role!=='admin'||pending;
+ }
+}
+async function restoreSession(){
+ try{
+  const {data:{session},error}=await supabase.auth.getSession();
+  if(error||!session)throw Error('No hay sesión');
+  const u=await fetchProfile();
+  await setSession(u);
+  const previous=sessionStorage.getItem('ext_active_view_'+u.id);
+  if(previous&&extViews[previous])extNavigate(previous);
+ }catch(e){
+  console.warn('Sesión no disponible',e);
+  currentUser=null;
+  window.location.replace('./login.html');
+ }
+}
 const CONTRACTORS=['COOPERATIVA DE AHORRO Y CRÉDITO FERNANDO DAQUILEMA','COOPERATIVA DE AHORRO Y CRÉDITO MUSHUC RUNA','COOPERATIVA DE AHORRO Y CRÉDITO KULLKI WASI','BANCO DEL AUSTRO','MUTUALISTA AZUAY'];
 const contractorSelect=$('#contractorSelect');
 for(const name of CONTRACTORS){const o=document.createElement('option');o.value=name;o.textContent=name;contractorSelect.appendChild(o);const f=o.cloneNode(true);$('#filterContractor').appendChild(f)}
@@ -1416,27 +1436,6 @@ $('#image').addEventListener('click',async()=>{
 });
 $('#print').addEventListener('click',()=>{if(!state.length)return;const node=captureNode();node.classList.add('print-capture');node.style.cssText='position:static;width:100%;padding:0';document.body.classList.add('printing');window.print();document.body.classList.remove('printing');node.remove()});
 $('#clear').addEventListener('click',()=>{state.length=0;render()});
-$('#togglePass').addEventListener('click',()=>{const input=$('#loginPass');const show=input.type==='password';input.type=show?'text':'password';$('#togglePass').textContent=show?'🙈':'👁️';input.focus()});
-
-$('#loginForm').addEventListener('submit',async e=>{
- e.preventDefault();
- const btn=$('#loginForm button[type=submit]')||$('#loginForm .login-submit');
- const loading=$('#extLoading');
- btn.disabled=true;$('#loginError').hidden=true;
- loading.classList.remove('ext-fade');loading.hidden=false;
- try{
-  const user=await loginRemote($('#loginUser').value.trim().toLowerCase(),$('#loginPass').value);
-  await setSession(user);
- }catch(err){
-  $('#loginError').hidden=false;
-  $('#loginError').textContent=err.message||'No fue posible iniciar sesión';
-  $('#loginPass').focus();
- }finally{
-  loading.classList.add('ext-fade');
-  setTimeout(()=>{loading.hidden=true;loading.classList.remove('ext-fade')},300);
-  btn.disabled=false;
- }
-});
 let logoutReturnFocus=null,confirmModalAction=null;
 function hideLogoutModal(){ $('#logoutModal').hidden=true;$('#logoutConfirm').textContent='Aceptar';confirmModalAction=null;logoutReturnFocus?.focus() }
 function openConfirmModal({title,message,confirmText='Aceptar',onConfirm}){logoutReturnFocus=document.activeElement;closeHistory();$('#logoutTitle').textContent=title;$('#logoutMessage').innerHTML=message;$('#logoutConfirm').textContent=confirmText;confirmModalAction=typeof onConfirm==='function'?onConfirm:null;$('#logoutModal').hidden=false;$('#logoutCancel').focus()}
@@ -1765,7 +1764,7 @@ document.getElementById('extPasswordForm').addEventListener('submit',async e=>{
  if(next!==confirm){extPasswordMessage('Las contraseñas nuevas no coinciden.');return}
  if(next===current){extPasswordMessage('La nueva contraseña debe ser diferente a la anterior.');return}
  const button=document.getElementById('extPasswordSubmit');button.disabled=true;button.textContent='Actualizando contraseña...';extPasswordMessage('');
- try{await extSavePassword(current,next);document.getElementById('extPasswordGate').hidden=true;await clearSession();alert('Contraseña actualizada correctamente. Ingresa con tu nueva contraseña.');}
+ try{await extSavePassword(current,next);document.getElementById('extPasswordGate').hidden=true;alert('Contraseña actualizada correctamente. Ingresa con tu nueva contraseña.');await clearSession();}
  catch(err){extPasswordMessage(err.message||'No fue posible cambiar la contraseña.');}
  finally{button.disabled=false;button.textContent='Guardar contraseña y continuar';}
 });
