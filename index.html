@@ -1083,6 +1083,49 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media (max-width:760px) {
  #appShell #extWelcome .ext-module-card small { max-width:65% !important; }
 }
+
+/* EXT 2.0.1 | Tarjetas: arte desplazado a la derecha y zona de lectura despejada.
+   No se altera navegación, autenticación ni funciones de los módulos. */
+#appShell #extWelcome button.ext-module-card::before {
+  background-size: 100% 100%, auto 82% !important;
+  background-position: center, right -5px center !important;
+  background-repeat: no-repeat, no-repeat !important;
+}
+#appShell #extWelcome button.ext-module-medical::before {
+  background-color: #edf3ff !important;
+  background-image: linear-gradient(90deg, #f5f8ff 0%, rgba(245,248,255,.99) 43%, rgba(245,248,255,.86) 58%, rgba(245,248,255,.14) 89%), url('./EXT_Examenes_Medicos.png') !important;
+}
+#appShell #extWelcome button.ext-module-declarations::before {
+  background-color: #fff8f4 !important;
+  background-image: linear-gradient(90deg, #fffaf7 0%, rgba(255,250,247,.99) 43%, rgba(255,250,247,.88) 59%, rgba(255,250,247,.14) 89%), url('./EXT_Declaraciones_Salud.png') !important;
+}
+#appShell #extWelcome button.ext-module-assistance::before {
+  background-color: #eff9f5 !important;
+  background-image: linear-gradient(90deg, #f6fcf9 0%, rgba(246,252,249,.99) 43%, rgba(246,252,249,.86) 59%, rgba(246,252,249,.12) 89%), url('./EXT_Asistencias.png') !important;
+}
+#appShell #extWelcome .ext-module-card strong {
+  max-width: 68% !important;
+  font-size: clamp(18px, 1.5vw, 23px) !important;
+  line-height: 1.22 !important;
+  text-wrap: balance;
+  overflow-wrap: normal;
+}
+#appShell #extWelcome .ext-module-card small {
+  max-width: 58% !important;
+  line-height: 1.6 !important;
+  font-size: 12.5px !important;
+}
+@media (min-width: 1160px) and (max-width: 1480px) {
+  #appShell #extWelcome button.ext-module-card { padding: 21px 19px 20px !important; }
+  #appShell #extWelcome .ext-module-card strong { max-width: 68% !important; font-size: 19px !important; }
+  #appShell #extWelcome .ext-module-card small { max-width: 60% !important; font-size: 12px !important; }
+  #appShell #extWelcome button.ext-module-card::before { background-size: 100% 100%, auto 76% !important; }
+}
+@media (max-width: 760px) {
+  #appShell #extWelcome button.ext-module-card::before { background-size: 100% 100%, auto 78% !important; }
+  #appShell #extWelcome .ext-module-card strong { max-width: 68% !important; }
+  #appShell #extWelcome .ext-module-card small { max-width: 60% !important; }
+}
 </style>
 </head>
 <body>
