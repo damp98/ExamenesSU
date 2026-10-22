@@ -1155,6 +1155,26 @@ body.authenticated{background:var(--ext-canvas)!important}
   #appShell #extWelcome .ext-module-card small { max-width: 60% !important; }
 }
 </style>
+
+<style>
+/* EXT 2.0.5 | Iconos SVG personalizados de las tarjetas */
+#appShell #extWelcome .ext-module-card .ext-module-icon,
+#appShell #extWelcome .ext-module-declarations .ext-module-icon,
+#appShell #extWelcome .ext-module-assistance .ext-module-icon {
+  width:62px !important;
+  height:62px !important;
+  padding:0 !important;
+  background:transparent !important;
+  border-radius:16px !important;
+  overflow:hidden;
+}
+#appShell #extWelcome .ext-module-card .ext-module-icon img {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+</style>
 </head>
 <body>
 <div id="appShell" hidden>
@@ -1171,9 +1191,9 @@ body.authenticated{background:var(--ext-canvas)!important}
 <section id="extWelcome" class="ext-view">
 <div class="ext-home-hero"><div class="ext-home-hero-copy"><div class="ext-view-head"><span class="ext-eyebrow">ESPACIO DE TRABAJO</span><h1>Bienvenido a EXT, <span id="extWelcomeName">Usuario</span></h1><p>Selecciona el módulo con el que deseas trabajar.</p></div><div class="ext-hero-line"></div></div><div class="ext-hero-quote">Procesos técnicos más simples,<br>decisiones más seguras.<span></span></div></div>
 <div class="ext-module-grid">
-<button type="button" class="ext-module-card ext-module-medical" data-open-module="examenes"><span class="ext-module-num">01</span><span class="ext-module-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3h11l6 6v19H8z"/><path d="M19 3v7h6M12 15h9M16.5 12v12M12 19h9"/></svg></span><span class="ext-card-illustration ext-illus-medical" aria-hidden="true"><i class="paper paper-one"></i><i class="paper paper-two"></i><i class="paper paper-three"></i><i class="illus-shield">✚</i></span><strong>Exámenes Médicos</strong><small>Procesamiento de informes PDF y dictámenes médicos.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
-<button type="button" class="ext-module-card ext-module-declarations" data-open-module="declaraciones"><span class="ext-module-num">02</span><span class="ext-module-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="4" width="18" height="24" rx="2"/><path d="M11 10h10M11 15h10M11 20h10"/></svg></span><span class="ext-card-illustration ext-illus-declarations" aria-hidden="true"><i class="form-sheet"><b></b><b></b><b></b><b></b></i><i class="form-check">✓</i></span><strong>Declaraciones de Salud</strong><small>Respuestas a solicitudes comerciales y aprobaciones de riesgo.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
-<button type="button" class="ext-module-card ext-module-assistance" data-open-module="asistencias"><span class="ext-module-num">03</span><span class="ext-module-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 5v9a9 9 0 0 0 18 0V5M7 5H4v5h3m18-5h3v5h-3M16 23v3a4 4 0 0 0 8 0v-2"/><circle cx="24" cy="21" r="2"/></svg></span><span class="ext-card-illustration ext-illus-assistance" aria-hidden="true"><i class="assist-clipboard"><b>✚</b></i><i class="assist-details"><b>◉ &nbsp; Copagos</b><b>▤ &nbsp; Eventos</b><b>▧ &nbsp; Carencias</b></i></span><strong>Asistencias</strong><small>Estandarización de cotizaciones y cuadros de coberturas asistenciales.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
+<button type="button" class="ext-module-card ext-module-medical" data-open-module="examenes"><span class="ext-module-num">01</span><span class="ext-module-icon" aria-hidden="true"><img src="./EXT_Icono_Examenes.svg" alt="" loading="eager" decoding="async"></span><span class="ext-card-illustration ext-illus-medical" aria-hidden="true"><i class="paper paper-one"></i><i class="paper paper-two"></i><i class="paper paper-three"></i><i class="illus-shield">✚</i></span><strong>Exámenes Médicos</strong><small>Procesamiento de informes PDF y dictámenes médicos.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
+<button type="button" class="ext-module-card ext-module-declarations" data-open-module="declaraciones"><span class="ext-module-num">02</span><span class="ext-module-icon" aria-hidden="true"><img src="./EXT_Icono_Declaraciones.svg" alt="" loading="eager" decoding="async"></span><span class="ext-card-illustration ext-illus-declarations" aria-hidden="true"><i class="form-sheet"><b></b><b></b><b></b><b></b></i><i class="form-check">✓</i></span><strong>Declaraciones de Salud</strong><small>Respuestas a solicitudes comerciales y aprobaciones de riesgo.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
+<button type="button" class="ext-module-card ext-module-assistance" data-open-module="asistencias"><span class="ext-module-num">03</span><span class="ext-module-icon" aria-hidden="true"><img src="./EXT_Icono_Asistencias.svg" alt="" loading="eager" decoding="async"></span><span class="ext-card-illustration ext-illus-assistance" aria-hidden="true"><i class="assist-clipboard"><b>✚</b></i><i class="assist-details"><b>◉ &nbsp; Copagos</b><b>▤ &nbsp; Eventos</b><b>▧ &nbsp; Carencias</b></i></span><strong>Asistencias</strong><small>Estandarización de cotizaciones y cuadros de coberturas asistenciales.</small><span class="ext-module-arrow">Abrir módulo <span>→</span></span></button>
 </div>
 <div class="ext-home-notices" aria-label="Avisos de uso y confidencialidad"><div class="ext-home-notice"><div class="ext-notice-icon" aria-hidden="true">ⓘ</div><p><strong>Importante:</strong> Esta aplicación es una herramienta de apoyo técnico y <strong>no reemplaza el criterio, análisis ni la responsabilidad del suscriptor</strong>. No realiza evaluaciones médicas, calcula riesgos ni toma decisiones de suscripción. Su función es extraer y reproducir fielmente el dictamen del informe original.</p></div><div class="ext-home-notice"><div class="ext-notice-icon" aria-hidden="true">♙</div><p><strong>Confidencialidad y protección de datos:</strong> El sistema está diseñado para no almacenar información sensible, confidencial o privada de los clientes, contratantes ni de <strong>Seguros Unidos</strong>. La información procesada se utiliza exclusivamente para fines de apoyo técnico, sin generar registros permanentes de los documentos analizados.</p></div></div>
 <footer class="ext-home-footer"><span><b>Seguros Unidos</b> &nbsp; | &nbsp; EXT · Exámenes Técnico</span><span>♧ &nbsp; Uso exclusivo interno &nbsp; | &nbsp; v2.0</span></footer>
