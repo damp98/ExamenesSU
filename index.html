@@ -1059,7 +1059,32 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:760px){#appShell .ext-topbar{left:0!important}#appShell .ext-nav{width:232px!important}#appShell #extWelcome.ext-view{padding:0 16px 24px!important}#appShell #extWelcome .ext-home-hero{min-height:170px}#appShell #extWelcome .ext-module-grid{grid-template-columns:1fr!important}#appShell #extWelcome button.ext-module-card{min-height:295px!important}#appShell #extWelcome .ext-home-footer{flex-wrap:wrap;gap:8px}}
 @media(prefers-reduced-motion:reduce){#appShell #extWelcome button.ext-module-card{transition:none!important}}
 
-</style></head>
+</style><style>
+
+/* EXT 2.0 | Fondos ilustrados aprobados por el equipo */
+#appShell #extWelcome button.ext-module-card::before {
+  background-size: cover !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+}
+#appShell #extWelcome button.ext-module-medical::before {
+  background-image: linear-gradient(90deg, rgba(244,248,255,.95) 0%, rgba(244,248,255,.80) 37%, rgba(244,248,255,0) 73%), url('./EXT_Examenes_Medicos.png') !important;
+}
+#appShell #extWelcome button.ext-module-declarations::before {
+  background-image: linear-gradient(90deg, rgba(255,250,247,.96) 0%, rgba(255,250,247,.80) 38%, rgba(255,250,247,0) 75%), url('./EXT_Declaraciones_Salud.png') !important;
+}
+#appShell #extWelcome button.ext-module-assistance::before {
+  background-image: linear-gradient(90deg, rgba(246,252,249,.96) 0%, rgba(246,252,249,.80) 38%, rgba(246,252,249,0) 75%), url('./EXT_Asistencias.png') !important;
+}
+/* Se eliminan las ilustraciones HTML anteriores para evitar duplicados */
+#appShell #extWelcome .ext-card-illustration { display:none !important; }
+#appShell #extWelcome .ext-module-card strong { max-width:82% !important; }
+#appShell #extWelcome .ext-module-card small { max-width:63% !important; }
+@media (max-width:760px) {
+ #appShell #extWelcome .ext-module-card small { max-width:65% !important; }
+}
+</style>
+</head>
 <body>
 <div id="appShell" hidden>
 <nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"><div class="ext-nav-brand-fallback">EXÁMENES <span>TÉCNICO</span></div></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><div class="ext-submenu" id="extSubmenu">
