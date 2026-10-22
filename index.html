@@ -867,6 +867,34 @@ body.authenticated{background:var(--ext-canvas)!important}
 @media(max-width:760px){#appShell .ext-admin-top-control{width:185px;min-height:44px;padding:5px 8px;gap:7px;border-radius:11px}#appShell .ext-admin-top-icon{flex-basis:26px;height:26px}#appShell .ext-admin-top-fields label{font-size:8px}#appShell .ext-admin-top-fields select{font-size:11px}#appShell .ext-topbar{gap:9px!important}}
 @media(max-width:390px){#appShell .ext-admin-top-control{width:158px}#appShell .ext-admin-top-icon{display:none}}
 
+
+/* EXT 2.0.2 | Menú lateral sin marca pendiente de aprobación y sin scroll horizontal */
+#appShell .ext-nav {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  max-width: 100vw !important;
+}
+#appShell .ext-nav-logo,
+#appShell .ext-nav-links,
+#appShell .ext-submenu {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+#appShell .ext-nav button.nav-link,
+#appShell .ext-nav button.ext-subitem,
+#appShell .ext-nav button.nav-logout {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+#appShell .ext-nav .nav-logout {
+  margin-top: auto !important;
+  border-top: 1px solid rgba(255,255,255,.13) !important;
+  border-radius: 0 !important;
+  padding-top: 19px !important;
+}
 </style>
 <style>
 /* EXT | Asistencias: herramienta independiente, sin persistencia */
@@ -1133,7 +1161,7 @@ body.authenticated{background:var(--ext-canvas)!important}
 <nav class="ext-nav" aria-label="Navegación principal"><div class="ext-nav-logo"><img src="./LOGOBLUE.png" alt="EXT Exámenes"><div class="ext-nav-brand-fallback">EXÁMENES <span>TÉCNICO</span></div></div><div class="ext-nav-links"><button type="button" class="nav-link active" data-nav="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg> <span>Inicio</span></button><div class="ext-submenu" id="extSubmenu">
 <button type="button" class="ext-subitem" data-nav="examenes"><span class="sub-dot"></span>Exámenes Médicos</button>
 <button type="button" class="ext-subitem" data-nav="declaraciones"><span class="sub-dot"></span>Declaraciones de Salud</button>
-</div><button type="button" class="nav-link" data-nav="asistencias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> <span>Asistencias</span></button><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><div class="ext-nav-bottom-brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="25" height="25"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 10v2m6-2v2m-6 4v2m6-2v2"/></svg><span><strong>Seguros Unidos</strong><small>Protegemos lo que te importa</small></span></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
+</div><button type="button" class="nav-link" data-nav="asistencias"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> <span>Asistencias</span></button><button type="button" class="nav-link" data-nav="historial"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg> <span>Historial</span></button><button type="button" class="nav-link" data-nav="kpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V12h4v8M10 20V4h4v16M16 20v-9h4v9M3 20h18"/></svg> <span>KPI</span></button><button type="button" class="nav-link" data-nav="perfil"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg> <span>Mi perfil</span></button></div><button type="button" class="nav-logout" id="navLogout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17l5-5-5-5M15 12H3M12 3h6a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-6"/></svg> <span>Cerrar sesión</span></button></nav>
 <div class="ext-topbar"><div id="extAdminPanel" class="ext-admin-top-control" hidden aria-label="Vista administrativa">
   <span class="ext-admin-top-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></span>
   <div class="ext-admin-top-fields"><label for="extAdminView">VISTA ADMINISTRATIVA</label><select id="extAdminView" aria-label="Seleccionar registros administrativos"></select></div>
