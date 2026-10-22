@@ -1257,32 +1257,75 @@ body.authenticated{background:var(--ext-canvas)!important}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
-/* EXT 5.0.2: transición de autenticación, sin espera artificial */
+/* EXT 2.0.4: carga integrada. No revela datos antes de validar la sesión. */
 #extLoading[hidden]{display:none!important}
-#extLoading{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#1f2f59;color:white;padding:28px;opacity:1;transition:opacity .3s ease}
+#extLoading{position:fixed;inset:0;z-index:99999;display:flex;overflow:hidden;background:#f7f9fc;color:#20345c;opacity:1;transition:opacity .22s ease;pointer-events:auto;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
 #extLoading.ext-fade{opacity:0;pointer-events:none}
-.ext-loading-content{text-align:center;width:min(380px,100%);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-.ext-loading-brand{font-size:53px;font-weight:750;letter-spacing:-2px;line-height:1}
-.ext-loading-subbrand{font-size:11px;letter-spacing:4px;margin-top:9px;color:#bfcbe3}
-.ext-loading-spinner{width:46px;height:46px;border:3px solid #ffffff33;border-top-color:#fff;border-radius:50%;margin:44px auto 30px;animation:ext-spin .9s linear infinite}
-.ext-loading-content h2{font-size:21px;font-weight:650;letter-spacing:-.5px;margin:0 0 10px;color:white}
-.ext-loading-content p{font-size:13px;color:#c6d2e8;margin:0;line-height:1.5}
-.ext-loading-track{height:3px;border-radius:10px;background:#ffffff25;overflow:hidden;margin:35px auto 20px;width:240px;max-width:100%}
-.ext-loading-track:before{content:"";display:block;width:38%;height:100%;background:#fff;border-radius:10px;animation:ext-progress 1.6s ease-in-out infinite alternate}
-.ext-loading-foot{font-size:11px;color:#b8c6e3}
-@keyframes ext-spin{to{transform:rotate(360deg)}}
-@keyframes ext-progress{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
-@media(prefers-reduced-motion:reduce){.ext-loading-spinner,.ext-loading-track:before{animation:none}#extLoading{transition:none}}
+#extLoading .ext-skel-sidebar{width:215px;flex:0 0 215px;background:#142749;display:flex;flex-direction:column;padding:29px 18px 24px;gap:24px}
+#extLoading .ext-skel-brand{font-size:29px;font-weight:800;letter-spacing:-1.3px;text-align:center;color:white}
+#extLoading .ext-skel-brand span{display:block;font-size:9px;letter-spacing:4px;font-weight:600;margin-top:2px;color:#c5d5ed}
+#extLoading .ext-skel-nav{display:grid;gap:14px;padding-top:12px}
+#extLoading .ext-skel-nav-line{height:36px;border-radius:11px;display:flex;align-items:center;gap:12px;padding:0 13px}
+#extLoading .ext-skel-nav-line:first-child{background:#2d4775}
+#extLoading .ext-skel-nav-dot{height:16px;width:16px;border:2px solid #90a7c9;border-radius:5px;opacity:.8}
+#extLoading .ext-skel-nav-text{height:8px;width:105px;background:#7187aa70;border-radius:10px}
+#extLoading .ext-skel-nav-line:first-child .ext-skel-nav-text{background:#d6e2f6a8}
+#extLoading .ext-skel-nav-bottom{margin-top:auto;border-top:1px solid #ffffff1d;padding-top:22px}
+#extLoading .ext-skel-nav-bottom .ext-skel-nav-text{width:85px}
+#extLoading .ext-skel-main{flex:1;min-width:0;display:flex;flex-direction:column}
+#extLoading .ext-skel-top{height:64px;background:#fff;border-bottom:1px solid #e7edf6;display:flex;align-items:center;justify-content:flex-end;padding:0 34px;gap:13px}
+#extLoading .ext-skel-top-pill{height:31px;width:145px;border-radius:10px;background:#eef2f9}
+#extLoading .ext-skel-top-avatar{width:33px;height:33px;border-radius:50%;background:#e3eaf6}
+#extLoading .ext-skel-content{padding:35px clamp(20px,3vw,42px);max-width:1550px;width:100%;margin:0 auto}
+#extLoading .ext-skel-eyebrow{width:140px;height:8px;border-radius:8px;background:#d6e1f0;margin:0 0 23px}
+#extLoading .ext-skel-title{font-size:clamp(25px,3vw,38px);line-height:1.15;font-weight:750;letter-spacing:-1.2px;margin:0 0 9px;color:#1f315b}
+#extLoading .ext-skel-description{color:#7184a3;font-size:14px;margin:0 0 29px}
+#extLoading .ext-skel-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#extLoading .ext-skel-card{height:265px;border-radius:18px;border:1px solid #e1e8f4;background:#fff;padding:20px;position:relative;overflow:hidden;box-shadow:0 9px 28px #1f2f5909}
+#extLoading .ext-skel-card:nth-child(1){background:linear-gradient(125deg,#f7faff,#eaf1ff)}
+#extLoading .ext-skel-card:nth-child(2){background:linear-gradient(125deg,#fffdfc,#f9f0ed)}
+#extLoading .ext-skel-card:nth-child(3){background:linear-gradient(125deg,#fafffd,#eaf6f2)}
+#extLoading .ext-skel-icon{width:48px;height:48px;border-radius:13px;background:#dce7f7}
+#extLoading .ext-skel-card:nth-child(2) .ext-skel-icon{background:#f0e4df}
+#extLoading .ext-skel-card:nth-child(3) .ext-skel-icon{background:#dceee9}
+#extLoading .ext-skel-placeholder{height:13px;width:72%;background:#d6e0ee;border-radius:20px;margin-top:37px}
+#extLoading .ext-skel-placeholder.small{height:9px;width:52%;margin-top:17px;background:#e0e8f2}
+#extLoading .ext-skel-placeholder.short{height:9px;width:38%;margin-top:11px;background:#e0e8f2}
+#extLoading .ext-skel-card:nth-child(2) .ext-skel-placeholder{background:#e9deda}
+#extLoading .ext-skel-card:nth-child(3) .ext-skel-placeholder{background:#d9eae6}
+#extLoading .ext-skel-foot{margin-top:18px;height:74px;border-radius:16px;background:#fff;border:1px solid #e6ebf3;display:flex;align-items:center;justify-content:center;gap:10px;color:#7083a1;font-size:12px}
+#extLoading .ext-skel-lock{width:14px;height:14px;stroke:#627aa1;fill:none;stroke-width:1.8}
+#extLoading .ext-skel-shimmer:after{content:"";position:absolute;inset:0;transform:translateX(-110%);background:linear-gradient(100deg,transparent 20%,#ffffff8c 50%,transparent 80%);animation:ext-skel-sweep 2s ease-in-out infinite;pointer-events:none}
+@keyframes ext-skel-sweep{to{transform:translateX(110%)}}
+@media(max-width:950px){#extLoading .ext-skel-sidebar{width:75px;flex-basis:75px;padding:24px 12px}#extLoading .ext-skel-brand{font-size:17px}#extLoading .ext-skel-brand span{display:none}#extLoading .ext-skel-nav-line{justify-content:center;padding:0}#extLoading .ext-skel-nav-text{display:none}#extLoading .ext-skel-cards{grid-template-columns:repeat(2,minmax(0,1fr))}#extLoading .ext-skel-card:last-child{display:none}}
+@media(max-width:620px){#extLoading .ext-skel-sidebar{width:55px;flex-basis:55px;padding:24px 8px}#extLoading .ext-skel-content{padding:28px 16px}#extLoading .ext-skel-top{height:58px;padding-right:16px}#extLoading .ext-skel-top-pill{width:95px}#extLoading .ext-skel-cards{grid-template-columns:1fr}#extLoading .ext-skel-card{height:220px}#extLoading .ext-skel-card:nth-child(n+2){display:none}#extLoading .ext-skel-foot{height:60px;text-align:center;padding:10px}}
+@media(prefers-reduced-motion:reduce){#extLoading{transition:none}#extLoading .ext-skel-shimmer:after{animation:none;display:none}}
 </style>
-<div id="extLoading" role="status" aria-live="polite" aria-label="Iniciando sesión, cargando información">
-  <div class="ext-loading-content">
-    <div class="ext-loading-brand">EXT</div>
-    <div class="ext-loading-subbrand">EXÁMENES TÉCNICO</div>
-    <div class="ext-loading-spinner" aria-hidden="true"></div>
-    <h2>Preparando tu espacio de trabajo</h2>
-    <p>Validando el acceso y cargando tu información...</p>
-    <div class="ext-loading-track" aria-hidden="true"></div>
-    <div class="ext-loading-foot">EXT · Acceso seguro</div>
+<div id="extLoading" role="status" aria-live="polite" aria-label="Verificando el acceso a EXT" aria-busy="true">
+  <aside class="ext-skel-sidebar" aria-hidden="true">
+    <div class="ext-skel-brand">EXT<span>EXÁMENES TÉCNICO</span></div>
+    <div class="ext-skel-nav">
+      <div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div>
+      <div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div>
+      <div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div>
+      <div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div>
+      <div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div>
+    </div>
+    <div class="ext-skel-nav-bottom"><div class="ext-skel-nav-line"><i class="ext-skel-nav-dot"></i><i class="ext-skel-nav-text"></i></div></div>
+  </aside>
+  <div class="ext-skel-main">
+    <div class="ext-skel-top" aria-hidden="true"><div class="ext-skel-top-pill"></div><div class="ext-skel-top-avatar"></div></div>
+    <div class="ext-skel-content">
+      <div class="ext-skel-eyebrow" aria-hidden="true"></div>
+      <h2 class="ext-skel-title">Tu espacio de trabajo</h2>
+      <p class="ext-skel-description">Preparando los módulos de EXT.</p>
+      <div class="ext-skel-cards" aria-hidden="true">
+        <div class="ext-skel-card ext-skel-shimmer"><div class="ext-skel-icon"></div><div class="ext-skel-placeholder"></div><div class="ext-skel-placeholder small"></div><div class="ext-skel-placeholder short"></div></div>
+        <div class="ext-skel-card ext-skel-shimmer"><div class="ext-skel-icon"></div><div class="ext-skel-placeholder"></div><div class="ext-skel-placeholder small"></div><div class="ext-skel-placeholder short"></div></div>
+        <div class="ext-skel-card ext-skel-shimmer"><div class="ext-skel-icon"></div><div class="ext-skel-placeholder"></div><div class="ext-skel-placeholder small"></div><div class="ext-skel-placeholder short"></div></div>
+      </div>
+      <div class="ext-skel-foot"><svg class="ext-skel-lock" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Verificando tu sesión de forma segura...</span></div>
+    </div>
   </div>
 </div>
 <style>
