@@ -1413,8 +1413,18 @@ body.authenticated{background:var(--ext-canvas)!important}
 </section>
 <script type="module">
 import {createClient} from 'https://esm.sh/@supabase/supabase-js@2';
-import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs';
-pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+// El motor PDF solo se descarga al abrir un PDF, no durante el inicio de sesión.
+let extPdfEnginePromise;
+function extGetPdfEngine(){
+ if(!extPdfEnginePromise){
+  extPdfEnginePromise=import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs')
+   .then(engine=>{
+    engine.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';
+    return engine;
+   }).catch(error=>{extPdfEnginePromise=null;throw error});
+ }
+ return extPdfEnginePromise;
+}
 const state=[],$=s=>document.querySelector(s);
 const HISTORY_KEY_BASE='ext_examenes_history_v1';
 const SESSION_KEY='ext_examenes_session_v1';
@@ -1434,12 +1444,13 @@ let remoteReady=false;
 function uiUser(p){const name=p.nombre||p.usuario;return {username:p.usuario,name,role:p.rol==='admin'?'admin':'operator',initials:name.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase(),id:p.id,cargo:p.cargo,mustChangePassword:p.debe_cambiar_clave===true}}
 async function fetchProfile(){const {data:{user},error}=await supabase.auth.getUser();if(error||!user)throw Error('Sesión no válida');const {data:p,error:pe}=await supabase.from('perfiles').select('id,usuario,nombre,cargo,rol,debe_cambiar_clave').eq('id',user.id).single();if(pe||!p)throw Error('No existe un perfil autorizado para esta cuenta');return uiUser(p)}
 
-async function remoteLoad(){if(!currentUser?.id||currentUser.mustChangePassword)return;remoteReady=false;try{
+async function remoteLoad(){if(!currentUser?.id||currentUser.mustChangePassword)return;const syncingUserId=currentUser.id;remoteReady=false;try{
  const [hist,kpi,dec,profiles]=await Promise.all([
   supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','examenes').order('creado_en',{ascending:false}).limit(1000),
   supabase.from('kpi_ext').select('id,usuario_id,historial_id,datos,creado_en').order('creado_en',{ascending:false}).limit(1000),
   supabase.from('historial_ext').select('id,usuario_id,modulo,datos,creado_en').eq('modulo','declaraciones').order('creado_en',{ascending:false}).limit(1000),
   currentUser.role==='admin'?supabase.from('perfiles').select('id,usuario,nombre,cargo,rol'):Promise.resolve({data:[],error:null})]);
+ if(currentUser?.id!==syncingUserId)return;
  for(const x of [hist,kpi,dec,profiles])if(x.error)throw x.error;
  historyEntries=(hist.data||[]).map(x=>({...x.datos,id:x.id,createdAt:x.creado_en,_ownerId:x.usuario_id}));
  const kpiRows=(kpi.data||[]).map(x=>({...x.datos,id:x.id,historyId:x.historial_id,createdAt:x.creado_en,_ownerId:x.usuario_id}));
@@ -1467,8 +1478,24 @@ function historyKey(){return `${HISTORY_KEY_BASE}_${currentUser?.username||'anon
 function loadHistory(){historyEntries=[];try{const saved=JSON.parse(localStorage.getItem(historyKey())||'[]');if(Array.isArray(saved))historyEntries=saved.slice(0,250)}catch(e){historyEntries=[]}}
 function persistHistory(){if(!remoteReady)return;try{localStorage.setItem(historyKey(),JSON.stringify(historyEntries.slice(0,250)))}catch(e){console.warn(e)}}
 function serializeUser(u){return {username:u.username,name:u.name,role:u.role,initials:u.initials}}
-async function setSession(u){contractorSelect.value='';currentUser=u;historyEntries=[];renderHistory();render();applySession();scrollAppTop();if(!u.mustChangePassword)await remoteLoad()}
-async function clearSession(){if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop();window.location.replace('./login.html')}
+let extSyncTimer=null;
+function extScheduleBackgroundSync(userId){
+ clearTimeout(extSyncTimer);
+ // Dejar que el navegador dibuje el dashboard y retire la pantalla de acceso.
+ extSyncTimer=setTimeout(()=>{
+  if(currentUser?.id!==userId||currentUser.mustChangePassword)return;
+  remoteLoad();
+ },180);
+}
+async function setSession(u){
+ contractorSelect.value='';
+ currentUser=u;
+ remoteReady=false;
+ historyEntries=[];
+ renderHistory();render();applySession();scrollAppTop();
+ if(!u.mustChangePassword)extScheduleBackgroundSync(u.id);
+}
+async function clearSession(){clearTimeout(extSyncTimer);if(currentUser?.id)sessionStorage.removeItem('ext_active_view_'+currentUser.id);contractorSelect.value='';remoteReady=false;await supabase.auth.signOut();localStorage.removeItem(SESSION_KEY);currentUser=null;historyEntries=[];state.length=0;renderHistory();render();applySession();scrollAppTop();window.location.replace('./login.html')}
 function applySession(){
  const pending=!!currentUser?.mustChangePassword;
  const logged=!!currentUser&&!pending;
@@ -1531,7 +1558,7 @@ $('#adminExport').addEventListener('click',()=>{if(currentUser?.role==='admin')e
 for(const id of ['sideSearch','filterRisk','filterContractor','filterUser','filterDate'])$('#'+id).addEventListener(id==='sideSearch'?'input':'change',renderSideHistory);
 $('#clearFilters').addEventListener('click',()=>{for(const id of ['sideSearch','filterRisk','filterContractor','filterUser','filterDate'])$('#'+id).value='';renderSideHistory()});
 $('#sideHistoryList').addEventListener('click',e=>{const el=e.target.closest('[data-history-open]');if(!el)return;const h=historyEntries.find(x=>x.id===el.dataset.historyOpen);if(h){state.push({...h,_historyId:h.id});render();$('#results').lastElementChild?.scrollIntoView({behavior:'smooth'})}});
-function storeRecord(r){const id=r._historyId||uuid();r._historyId=id;const prev=historyEntries.find(h=>h.id===id);const stored={id,file:r.file,cliente:r.cliente,edad:r.edad,amount:r.amount,dictamen:r.dictamen,apelable:r.apelable,comentario:r.comentario,apelacion:r.apelacion,warning:r.warning,contratante:r.contratante||'',usuario:r.usuario||currentUser?.name||'',createdAt:prev?.createdAt||new Date().toISOString()};historyEntries=[stored,...historyEntries.filter(h=>h.id!==id)].slice(0,250);persistHistory();renderHistory();updateDashboard();if(remoteReady)remoteWrite('historial_ext',{id,usuario_id:currentUser.id,modulo:'examenes',contratante:stored.contratante,asegurado:stored.cliente,datos:stored}).catch(remoteWarn)}
+function storeRecord(r){if(!remoteReady){console.warn('EXT: guardado bloqueado durante sincronización');return}const id=r._historyId||uuid();r._historyId=id;const prev=historyEntries.find(h=>h.id===id);const stored={id,file:r.file,cliente:r.cliente,edad:r.edad,amount:r.amount,dictamen:r.dictamen,apelable:r.apelable,comentario:r.comentario,apelacion:r.apelacion,warning:r.warning,contratante:r.contratante||'',usuario:r.usuario||currentUser?.name||'',createdAt:prev?.createdAt||new Date().toISOString()};historyEntries=[stored,...historyEntries.filter(h=>h.id!==id)].slice(0,250);persistHistory();renderHistory();updateDashboard();if(remoteReady)remoteWrite('historial_ext',{id,usuario_id:currentUser.id,modulo:'examenes',contratante:stored.contratante,asegurado:stored.cliente,datos:stored}).catch(remoteWarn)}
 let historySaveTimer;function queueHistorySave(r){clearTimeout(historySaveTimer);historySaveTimer=setTimeout(()=>storeRecord(r),450)}
 function renderHistory(){const list=$('#historyList');if(!list)return;const query=($('#historySearch')?.value||'').toLowerCase().trim();const rows=historyEntries.filter(h=>(h.cliente+' '+h.file).toLowerCase().includes(query));$('#historyCount').textContent=historyEntries.length+' registros';list.innerHTML=rows.length?rows.map(h=>`<div class="history-item"><button type="button" class="history-open" data-history-open="${escapeHtml(h.id)}" title="Recuperar ficha"><span class="pdfmark">PDF</span><span class="h-text"><span class="h-title">${escapeHtml(h.cliente||h.file)}</span><span class="h-sub">${escapeHtml(h.file)} · ${new Date(h.createdAt).toLocaleString('es-EC',{dateStyle:'short',timeStyle:'short'})}</span></span></button><span class="h-risk ${riskClass(h.dictamen||'')}">${escapeHtml((h.dictamen||'REVISAR').replace('RIESGO ',''))}</span><button class="h-remove" title="Borrar del historial" aria-label="Borrar del historial" data-history-remove="${escapeHtml(h.id)}">×</button></div>`).join(''):'<div class="history-empty">No hay exámenes guardados.</div>';renderSideHistory()}
 function closeHistory(){ $('#historyPanel').hidden=true;$('#historyToggle').setAttribute('aria-expanded','false') }
@@ -1687,7 +1714,7 @@ function rowsFromItems(items){
  }
  return groups.sort((a,b)=>b.y-a.y).map(g=>joinParts(g.parts));
 }
-async function load(files){if(!contractorSelect.value){alert('Selecciona un contratante antes de subir los PDF.');contractorSelect.focus();return}for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[],allRows=[],geometry=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let rows=rowsFromItems(items);geometry.push(items);pages.push(rows.join('\n'));allRows.push(...rows)}const raw=pages.join('\n');let record=parse(raw,f.name,allRows,geometry);record.contratante=contractorSelect.value;record.usuario=currentUser?.name||'';if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record);storeRecord(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true,contratante:contractorSelect.value,usuario:currentUser?.name||''})}}render()}
+async function load(files){if(!remoteReady){alert('EXT está sincronizando tus registros. Espera unos segundos antes de procesar exámenes para asegurar su guardado.');return}if(!contractorSelect.value){alert('Selecciona un contratante antes de subir los PDF.');contractorSelect.focus();return}for(const f of files){if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf')continue;try{const pdfjsLib=await extGetPdfEngine();const bytes=new Uint8Array(await f.arrayBuffer()),pdf=await pdfjsLib.getDocument({data:bytes}).promise;let pages=[],allRows=[],geometry=[];for(let p=1;p<=pdf.numPages;p++){let page=await pdf.getPage(p);let content=await page.getTextContent();let items=content.items.filter(i=>typeof i.str==='string');let rows=rowsFromItems(items);geometry.push(items);pages.push(rows.join('\n'));allRows.push(...rows)}const raw=pages.join('\n');let record=parse(raw,f.name,allRows,geometry);record.contratante=contractorSelect.value;record.usuario=currentUser?.name||'';if(raw.trim().length<100){record.warning=true;record.comentario='No se detectó texto suficiente. Este PDF podría requerir OCR.';}state.push(record);storeRecord(record)}catch(e){state.push({file:f.name,cliente:'',edad:'',amount:'',dictamen:'',apelable:'REVISAR',comentario:'No se pudo leer el PDF: '+e.message,apelacion:'',warning:true,contratante:contractorSelect.value,usuario:currentUser?.name||''})}}render()}
 function riskClass(r){let d=r.toLowerCase();return d.includes('alto')?'alto':d.includes('moderado')?'moderado':d.includes('normal')||d.includes('bajo')?'normal':'otro'}
 function render(){
  $('#counter').textContent=`Resultados (${state.length})`;
@@ -1974,6 +2001,7 @@ function ktLocalISO(d){return [d.getFullYear(),String(d.getMonth()+1).padStart(2
 function ktBroker(contractor){const c=String(contractor||'').toLocaleUpperCase('es');return KT_CONTRACTOR_MAP.find(([name])=>c.includes(name))||['','','']}
 function ktRegisterCopied(records){
  if(!currentUser)return;
+ if(!remoteReady){alert('EXT está sincronizando tus registros. Espera unos segundos antes de copiar y registrar KPI.');return;}
  const now=new Date(),stored=ktRecords(),ids=new Set(stored.map(r=>r.historyId));
  let count=0;
  for(const r of records){
@@ -2281,7 +2309,7 @@ async function asProcessPdf(file){
  if(!/\.pdf$/i.test(file.name)&&file.type!=='application/pdf'){asSetStatus('Selecciona un documento PDF válido.',true);return}
  asSetStatus('Leyendo el PDF y localizando cuadros de coberturas...');
  try{
-  const bytes=new Uint8Array(await file.arrayBuffer());const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
+  const pdfjsLib=await extGetPdfEngine();const bytes=new Uint8Array(await file.arrayBuffer());const pdf=await pdfjsLib.getDocument({data:bytes}).promise;
   const pages=[];let chars=0;
   for(let i=1;i<=pdf.numPages;i++){
    const page=await pdf.getPage(i),text=await page.getTextContent(),width=page.getViewport({scale:1}).width;
